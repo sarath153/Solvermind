@@ -1,0 +1,118 @@
+version: "0.2"
+user: mak.l
+key: oVWll37qqWzqQS1822t7wWYfqH9fpGoj08w4HPStM26Tk0ibu2
+testSuites: []
+pre: [pip install pandas, pip install openpyxl, python data.py, 'mvn -Dmaven.repo.local=./.m2 dependency:resolve']
+preDirectives:
+    commands: [pip install pandas, pip install openpyxl, python data.py, 'mvn -Dmaven.repo.local=./.m2 dependency:resolve']
+    maxRetries: 0
+    shell: ""
+    workingDirectory: ""
+post: [ls Snaptrude_Pr_2534/]
+postDirectives:
+    commands: [ls Snaptrude_Pr_2534/]
+    shell: ""
+    workingDirectory: ""
+env:
+    CACHE_DIR: m2_cache_dir
+jobLabel:
+    - selenium-testng
+    - win
+    - autosplit
+runson: win
+autosplit: true
+concurrency: 3
+testDiscoveryResult:
+    - commonMethods.Testcases#userflow_17_2
+    - commonMethods.Testcases#userflow_17_3
+    - commonMethods.Testcases#userflow_17_6
+    - commonMethods.Testcases#userflow_17_7
+    - commonMethods.Testcases#userflow_17_4
+    - commonMethods.Testcases#userflow_17_5
+    - commonMethods.Testcases#userflow_17_8
+    - commonMethods.Testcases#userflow_17_9
+    - commonMethods.Testcases#userflow_17_12
+    - commonMethods.Testcases#userflow_17_11
+    - commonMethods.Testcases#userflow_17_14
+    - commonMethods.Testcases#userflow_17_13
+    - commonMethods.Testcases#user_flow_20
+    - commonMethods.Testcases#userflow_17_10
+    - commonMethods.Testcases#userflow_17
+    - commonMethods.Testcases#user_flow_20_13
+    - commonMethods.Testcases#user_flow_20_7
+    - commonMethods.Testcases#user_flow_20_8
+    - commonMethods.Testcases#user_flow_20_12
+    - commonMethods.Testcases#user_flow_20_15
+    - commonMethods.Testcases#user_flow_20_9
+    - commonMethods.Testcases#user_flow_20_14
+    - commonMethods.Testcases#user_flow_20_3
+    - commonMethods.Testcases#user_flow_20_4
+    - commonMethods.Testcases#user_flow_20_11
+    - commonMethods.Testcases#user_flow_20_5
+    - commonMethods.Testcases#user_flow_20_10
+    - commonMethods.Testcases#user_flow_20_6
+    - commonMethods.Testcases#User_Flow__14_26
+    - commonMethods.Testcases#User_Flow__14_25
+    - commonMethods.Testcases#User_Flow__14_24
+    - commonMethods.Testcases#user_flow_20_1
+    - commonMethods.Testcases#User_Flow__14_23
+    - commonMethods.Testcases#user_flow_20_2
+    - commonMethods.Testcases#User_Flow__14_22
+    - commonMethods.Testcases#User_Flow__14_21
+globalTimeout: 300
+tunnelOpts:
+    testsPerTunnel: 10
+testSuiteTimeout: 300
+testSuiteStep: 300
+cacheDirectories:
+    - .m2
+cacheKey: '{{ checksum "pom.xml" }}'
+shell: bash
+jobID: 56ccd09a-8b8d-46f2-8e94-37cd7feaf91a
+uploadArtefacts:
+    - name: ExecutionSnapshots
+      path:
+        - Snaptrude_Pr_2534/
+      email:
+        to: []
+        metaInfo: []
+        linkValidity: 0
+codeDirectory: SnaptrudeDemo
+report: true
+partialReports:
+    type: html
+    location: Snaptrude_Pr_2534/
+    frameworkName: extent
+    email:
+        to: []
+        metaInfo: []
+        linkValidity: 0
+framework:
+    name: maven/testng
+    flags: []
+    discoveryFlags:
+        - -DsuiteXmlFile=testng2.xml
+    discoveryType: method
+    runnerFlags: []
+    workingDirectory: ""
+    isTestNGXMLSuite: true
+    defaultReports: false
+    additional_args: null
+    licenseKey: ""
+    userdefinediscovery: false
+    toscaArgs: null
+    version: ""
+    downloadURL: ""
+    baseCommand: ""
+cypress: false
+betaFeature:
+    setPartiallyCompletedAsCompleted: false
+combineTasksInMatrixMode: false
+captureScreenRecordingForScenarios: false
+maxRetriesPreSteps: 0
+triggerMode: false
+sourcePayload:
+    verifySSL: true
+collectLocalGitData: true
+dynamicAllocation: false
+appium: false

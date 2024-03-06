@@ -1,0 +1,91 @@
+<extentreports>
+
+<configuration>
+
+<!-- report theme -->
+
+<!-- standard, dark -->
+
+<theme>standard</theme>
+
+<!-- document encoding -->
+
+<!-- defaults to UTF-8 -->
+
+<encoding>UTF-8</encoding>
+
+<!-- protocol for script and stylesheets -->
+
+<!-- defaults to https -->
+
+<protocol>https</protocol>
+
+<!-- title of the document -->
+
+<documentTitle>Automation Reports</documentTitle>
+
+<!-- report headline - displayed at top-nav, after reportHeadline -->
+
+<reportHeadline>Test Report by TrackDfect</reportHeadline>
+
+<!-- global date format override -->
+
+<!-- defaults to yyyy-MM-dd -->
+
+<dateFormat>yyyy-MM-dd</dateFormat>
+
+<!-- global time format override -->
+
+<!-- defaults to HH:mm:ss -->
+
+<timeFormat>HH:mm:ss</timeFormat>
+
+<reportName>
+
+<![CDATA[
+
+<img class='logo' src='C:\Users\RBT\Desktop\Solver_Minds\uploads\TrackDfect.png' />
+
+
+]]>
+
+</reportName>
+
+<scripts>
+
+<![CDATA[
+
+$(document).ready(function() {
+
+$(".brand-logo").hide();
+
+});
+
+]]>
+
+</scripts>
+
+<!-- custom styles 
+
+<styles>
+
+<![CDATA[
+
+]]>
+
+</styles>-->
+
+<styles>   
+
+<![CDATA[
+
+.logo > img { float:left;height: 30%;margin-right: 30px;margin-top: 3px;width: auto;border: 1px solid red; }
+
+
+]]>
+
+</styles>
+
+</configuration>
+
+</extentreports>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose="0" name="Failed suite [TestSuite]">
+  <listeners>
+    <listener class-name="atu.testng.reports.listeners.ATUReportsListener"/>
+    <listener class-name="atu.testng.reports.listeners.ConfigurationListener"/>
+    <listener class-name="atu.testng.reports.listeners.MethodListener"/>
+  </listeners>
+  <test name="Test1">
+    <classes>
+      <class name="commonMethods.Testcases">
+        <methods>
+          <include name="User_Flow__14_21"/>
+          <include name="User_Flow__14_22"/>
+          <include name="User_Flow__14_23"/>
+          <include name="User_Flow__14_24"/>
+          <include name="User_Flow__14_25"/>
+          <include name="User_Flow__14_26"/>
+          <include name="user_flow_20"/>
+          <include name="user_flow_20_1"/>
+          <include name="user_flow_20_2"/>
+          <include name="user_flow_20_3"/>
+          <include name="user_flow_20_4"/>
+          <include name="user_flow_20_5"/>
+          <include name="user_flow_20_6"/>
+          <include name="user_flow_20_7"/>
+          <include name="user_flow_20_8"/>
+          <include name="user_flow_20_9"/>
+          <include name="user_flow_20_10"/>
+          <include name="user_flow_20_11"/>
+          <include name="user_flow_20_12"/>
+          <include name="user_flow_20_13"/>
+          <include name="user_flow_20_14"/>
+          <include name="user_flow_20_15"/>
+          <include name="userflow_17"/>
+          <include name="userflow_17_2"/>
+          <include name="userflow_17_3"/>
+          <include name="userflow_17_4"/>
+          <include name="userflow_17_5"/>
+          <include name="userflow_17_6"/>
+          <include name="userflow_17_7"/>
+          <include name="userflow_17_8"/>
+          <include name="userflow_17_9"/>
+          <include name="userflow_17_10"/>
+          <include name="userflow_17_11"/>
+          <include name="userflow_17_12"/>
+          <include name="userflow_17_13"/>
+          <include name="userflow_17_14"/>
+        </methods>
+      </class> <!-- commonMethods.Testcases -->
+    </classes>
+  </test> <!-- Test1 -->
+</suite> <!-- Failed suite [TestSuite] -->

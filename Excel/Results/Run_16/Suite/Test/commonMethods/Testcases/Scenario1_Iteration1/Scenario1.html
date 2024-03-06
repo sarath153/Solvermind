@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Pie Charts</title>
+
+        <link rel="stylesheet" type="text/css" href="../../../../../../../HTML_Design_Files/CSS/design.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../../../HTML_Design_Files/CSS/jquery.jqplot.css" />
+
+        <script type="text/javascript" src="../../../../../../../HTML_Design_Files/JS/jquery.min.js"></script>
+        <script type="text/javascript" src="../../../../../../../HTML_Design_Files/JS/jquery.jqplot.min.js"></script>
+        <!--[if lt IE 9]>
+        <script language="javascript" type="text/javascript" src="../../../../../../../HTML_Design_Files/JS/excanvas.js"></script>
+        <![endif]-->
+
+        <script language="javascript" type="text/javascript" src="../../../../../../../HTML_Design_Files/JS/jqplot.pieRenderer.min.js"></script>
+        <script language="javascript" type="text/javascript">$(document).ready(function() { $(".exception").hide(); $("#showmenu").show(); $('#showmenu').click(function() { $('.exception').toggle("slide"); }); });        </script>    </head>
+    <body>
+        <table id="mainTable">
+            <tr id="header" >
+                <td id="logo"><img src="../../../../../../../HTML_Design_Files/IMG/TrackDfect.jpg" alt="Logo" height="80" width="140" /> <br/></td>
+                <td id="headertext">
+           Snaptrude Test Reports         
+<div style="padding-right:20px;float:right"><img src="../../../../../../../HTML_Design_Files/IMG/snaptrude.png" height="70" width="140" /> </i></div>                </td>
+            </tr>
+
+            <tr id="container">
+                <td id="menu">
+                    <ul> 
+
+ <li class="menuStyle"><a href="../../../../../../../index.html" >Index</a></li><li style="padding-top: 4px;"><a href="../../../../../../ConsolidatedPage.html" >Consolidated Page</a></li>
+
+
+                    </ul>
+                </td>
+
+
+<td id="content">   
+                    <div class="info">
+       TestCase Name: <b>Scenario1  :  Iteration 1</b><br/>                        Time Taken for Executing: <b>294 Sec</b> <br/>
+                        Current Run Number: <b>Run 16</b></br>
+                    </div>
+<div class="chartStyle summary" style="background-color:#dbae0f;width: 30%; height: 200px;">          
+                        <b>Execution Platform Details</b><br/><br/>
+                        <table>
+                            <tr>
+                                <td>O.S</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>Windows 10, amd64Bit, v10.0</td>
+                            </tr>
+                            <tr>
+                                <td>Java</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>18.0.1</td>
+                            </tr>
+
+                            <tr>
+                                <td>Hostname</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>DESKTOP-HERP98R</td>
+                            </tr>
+
+                            <tr>
+                                <td>Appium</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>3.10.0</td>
+                            </tr>
+                        </table>  
+                    </div>
+                   
+ <div class="chartStyle summary" style="background-color:#03b78a; margin-left: 40px; height: 200px;width: 30%; ">
+                        <b>Summary</b><br/><br/>
+                        <table>
+                            <tr>
+                                <td>Status</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>Failed</td>
+                            </tr>
+                            <tr>
+                                <td>Execution Date</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>19-Feb-2024 02:06:38</td>
+                            </tr>
+                            
+
+                            <tr>
+                                <td>Browser</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>Chrome</td>
+                            </tr>
+                        </table> 
+                    </div>
+   <div>
+                        <table class="chartStyle" id="tableStyle" style="height:50px; float: left">
+                            <tr>
+                                <th>S.No</th>
+                                <th>Step Description</th>
+                                <th>Input Value</th>
+                    <th>Actual Value</th>
+                   <th>Time</th>
+                                <th>Line No</th>
+                                <th>Status</th>
+                                <th>Screen shot</th>
+                            </tr>
+                           
+
+<tr><td>1</td>
+<td> Navigated to https://sonata.solverminds.net/</td>
+<td></td>
+<td></td>
+<td>1708331511 Sec</td>
+<td>1808</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/1.PNG"><img alt="No Screenshot" src="img/1.PNG"/></a></td>
+</tr><tr><td>2</td>
+<td>Wait for the Element user</td>
+<td></td>
+<td></td>
+<td>398 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/2.PNG"><img alt="No Screenshot" src="img/2.PNG"/></a></td>
+</tr><tr><td>3</td>
+<td>Type on user</td>
+<td>trackdfectuser1</td>
+<td></td>
+<td>370 Milli Sec</td>
+<td>631</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/3.PNG"><img alt="No Screenshot" src="img/3.PNG"/></a></td>
+</tr><tr><td>4</td>
+<td>Wait for the Element pass</td>
+<td></td>
+<td></td>
+<td>1 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/4.PNG"><img alt="No Screenshot" src="img/4.PNG"/></a></td>
+</tr><tr><td>5</td>
+<td>Type on pass</td>
+<td>trackDfect@2h7s4</td>
+<td></td>
+<td>646 Milli Sec</td>
+<td>631</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/5.PNG"><img alt="No Screenshot" src="img/5.PNG"/></a></td>
+</tr><tr><td>6</td>
+<td>Wait for the Element login</td>
+<td></td>
+<td></td>
+<td>1 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/6.PNG"><img alt="No Screenshot" src="img/6.PNG"/></a></td>
+</tr><tr><td>7</td>
+<td>Wait for the Element login</td>
+<td></td>
+<td></td>
+<td>460 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/7.PNG"><img alt="No Screenshot" src="img/7.PNG"/></a></td>
+</tr><tr><td>8</td>
+<td>Click on login</td>
+<td></td>
+<td></td>
+<td>494 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/8.PNG"><img alt="No Screenshot" src="img/8.PNG"/></a></td>
+</tr><tr><td>9</td>
+<td>Wait for the Element vessel</td>
+<td></td>
+<td></td>
+<td>373 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/9.PNG"><img alt="No Screenshot" src="img/9.PNG"/></a></td>
+</tr><tr><td>10</td>
+<td>Wait for the Element vessel</td>
+<td></td>
+<td></td>
+<td>187 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/10.PNG"><img alt="No Screenshot" src="img/10.PNG"/></a></td>
+</tr><tr><td>11</td>
+<td>Click on vessel</td>
+<td></td>
+<td></td>
+<td>228 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/11.PNG"><img alt="No Screenshot" src="img/11.PNG"/></a></td>
+</tr><tr><td>12</td>
+<td>Wait for the Element clickvessel</td>
+<td></td>
+<td></td>
+<td>50 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/12.PNG"><img alt="No Screenshot" src="img/12.PNG"/></a></td>
+</tr><tr><td>13</td>
+<td>Wait for the Element clickvessel</td>
+<td></td>
+<td></td>
+<td>135 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/13.PNG"><img alt="No Screenshot" src="img/13.PNG"/></a></td>
+</tr><tr><td>14</td>
+<td>Click on clickvessel</td>
+<td></td>
+<td></td>
+<td>761 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/14.PNG"><img alt="No Screenshot" src="img/14.PNG"/></a></td>
+</tr><tr><td>15</td>
+<td>Wait for the Element OpenPlan_Topbar</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/15.PNG"><img alt="No Screenshot" src="img/15.PNG"/></a></td>
+</tr><tr><td>16</td>
+<td>Wait for the Element OpenPlan_Topbar</td>
+<td></td>
+<td></td>
+<td>383 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/16.PNG"><img alt="No Screenshot" src="img/16.PNG"/></a></td>
+</tr><tr><td>17</td>
+<td>Wait for the Element OpenPlan_Topbar</td>
+<td></td>
+<td></td>
+<td>1 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/17.PNG"><img alt="No Screenshot" src="img/17.PNG"/></a></td>
+</tr><tr><td>18</td>
+<td>Click on OpenPlan_Topbar</td>
+<td></td>
+<td></td>
+<td>384 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/18.PNG"><img alt="No Screenshot" src="img/18.PNG"/></a></td>
+</tr><tr><td>19</td>
+<td>Wait for the Element Globalplan</td>
+<td></td>
+<td></td>
+<td>225 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/19.PNG"><img alt="No Screenshot" src="img/19.PNG"/></a></td>
+</tr><tr><td>20</td>
+<td>Wait for the Element Globalplan</td>
+<td></td>
+<td></td>
+<td>970 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/20.PNG"><img alt="No Screenshot" src="img/20.PNG"/></a></td>
+</tr><tr><td>21</td>
+<td>Click on Globalplan</td>
+<td></td>
+<td></td>
+<td>265 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/21.PNG"><img alt="No Screenshot" src="img/21.PNG"/></a></td>
+</tr><tr><td>22</td>
+<td>Wait for the Element Ok</td>
+<td></td>
+<td></td>
+<td>276 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/22.PNG"><img alt="No Screenshot" src="img/22.PNG"/></a></td>
+</tr><tr><td>23</td>
+<td>Wait for the Element Ok</td>
+<td></td>
+<td></td>
+<td>257 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/23.PNG"><img alt="No Screenshot" src="img/23.PNG"/></a></td>
+</tr><tr><td>24</td>
+<td>Click on Ok</td>
+<td></td>
+<td></td>
+<td>409 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/24.PNG"><img alt="No Screenshot" src="img/24.PNG"/></a></td>
+</tr><tr><td>25</td>
+<td>Wait for the Element SelectPlan_766</td>
+<td></td>
+<td></td>
+<td>224 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/25.PNG"><img alt="No Screenshot" src="img/25.PNG"/></a></td>
+</tr><tr><td>26</td>
+<td>Double click on SelectPlan_766</td>
+<td></td>
+<td></td>
+<td>1 Sec</td>
+<td>612</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/26.PNG"><img alt="No Screenshot" src="img/26.PNG"/></a></td>
+</tr><tr><td>27</td>
+<td>Wait for the Element SelectPlan_766</td>
+<td></td>
+<td></td>
+<td>8 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/27.PNG"><img alt="No Screenshot" src="img/27.PNG"/></a></td>
+</tr><tr><td>28</td>
+<td>Double click on SelectPlan_766</td>
+<td></td>
+<td></td>
+<td>436 Milli Sec</td>
+<td>612</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/28.PNG"><img alt="No Screenshot" src="img/28.PNG"/></a></td>
+</tr><tr><td>29</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>2 Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/29.PNG"><img alt="No Screenshot" src="img/29.PNG"/></a></td>
+</tr><tr><td>30</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>2 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/30.PNG"><img alt="No Screenshot" src="img/30.PNG"/></a></td>
+</tr><tr><td>31</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>212 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/31.PNG"><img alt="No Screenshot" src="img/31.PNG"/></a></td>
+</tr><tr><td>32</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>501 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/32.PNG"><img alt="No Screenshot" src="img/32.PNG"/></a></td>
+</tr><tr><td>33</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>357 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/33.PNG"><img alt="No Screenshot" src="img/33.PNG"/></a></td>
+</tr><tr><td>34</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/34.PNG"><img alt="No Screenshot" src="img/34.PNG"/></a></td>
+</tr><tr><td>35</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>221 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/35.PNG"><img alt="No Screenshot" src="img/35.PNG"/></a></td>
+</tr><tr><td>36</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>536 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/36.PNG"><img alt="No Screenshot" src="img/36.PNG"/></a></td>
+</tr><tr><td>37</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>396 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/37.PNG"><img alt="No Screenshot" src="img/37.PNG"/></a></td>
+</tr><tr><td>38</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/38.PNG"><img alt="No Screenshot" src="img/38.PNG"/></a></td>
+</tr><tr><td>39</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>249 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/39.PNG"><img alt="No Screenshot" src="img/39.PNG"/></a></td>
+</tr><tr><td>40</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>341 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/40.PNG"><img alt="No Screenshot" src="img/40.PNG"/></a></td>
+</tr><tr><td>41</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>400 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/41.PNG"><img alt="No Screenshot" src="img/41.PNG"/></a></td>
+</tr><tr><td>42</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/42.PNG"><img alt="No Screenshot" src="img/42.PNG"/></a></td>
+</tr><tr><td>43</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>251 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/43.PNG"><img alt="No Screenshot" src="img/43.PNG"/></a></td>
+</tr><tr><td>44</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>358 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/44.PNG"><img alt="No Screenshot" src="img/44.PNG"/></a></td>
+</tr><tr><td>45</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>363 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/45.PNG"><img alt="No Screenshot" src="img/45.PNG"/></a></td>
+</tr><tr><td>46</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/46.PNG"><img alt="No Screenshot" src="img/46.PNG"/></a></td>
+</tr><tr><td>47</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>218 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/47.PNG"><img alt="No Screenshot" src="img/47.PNG"/></a></td>
+</tr><tr><td>48</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>395 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/48.PNG"><img alt="No Screenshot" src="img/48.PNG"/></a></td>
+</tr><tr><td>49</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>410 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/49.PNG"><img alt="No Screenshot" src="img/49.PNG"/></a></td>
+</tr><tr><td>50</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/50.PNG"><img alt="No Screenshot" src="img/50.PNG"/></a></td>
+</tr><tr><td>51</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>251 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/51.PNG"><img alt="No Screenshot" src="img/51.PNG"/></a></td>
+</tr><tr><td>52</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>388 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/52.PNG"><img alt="No Screenshot" src="img/52.PNG"/></a></td>
+</tr><tr><td>53</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>379 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/53.PNG"><img alt="No Screenshot" src="img/53.PNG"/></a></td>
+</tr><tr><td>54</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/54.PNG"><img alt="No Screenshot" src="img/54.PNG"/></a></td>
+</tr><tr><td>55</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>351 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/55.PNG"><img alt="No Screenshot" src="img/55.PNG"/></a></td>
+</tr><tr><td>56</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>502 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/56.PNG"><img alt="No Screenshot" src="img/56.PNG"/></a></td>
+</tr><tr><td>57</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>434 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/57.PNG"><img alt="No Screenshot" src="img/57.PNG"/></a></td>
+</tr><tr><td>58</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/58.PNG"><img alt="No Screenshot" src="img/58.PNG"/></a></td>
+</tr><tr><td>59</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>191 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/59.PNG"><img alt="No Screenshot" src="img/59.PNG"/></a></td>
+</tr><tr><td>60</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>494 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/60.PNG"><img alt="No Screenshot" src="img/60.PNG"/></a></td>
+</tr><tr><td>61</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>426 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/61.PNG"><img alt="No Screenshot" src="img/61.PNG"/></a></td>
+</tr><tr><td>62</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/62.PNG"><img alt="No Screenshot" src="img/62.PNG"/></a></td>
+</tr><tr><td>63</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>265 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/63.PNG"><img alt="No Screenshot" src="img/63.PNG"/></a></td>
+</tr><tr><td>64</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>549 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/64.PNG"><img alt="No Screenshot" src="img/64.PNG"/></a></td>
+</tr><tr><td>65</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>398 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/65.PNG"><img alt="No Screenshot" src="img/65.PNG"/></a></td>
+</tr><tr><td>66</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/66.PNG"><img alt="No Screenshot" src="img/66.PNG"/></a></td>
+</tr><tr><td>67</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>213 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/67.PNG"><img alt="No Screenshot" src="img/67.PNG"/></a></td>
+</tr><tr><td>68</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>443 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/68.PNG"><img alt="No Screenshot" src="img/68.PNG"/></a></td>
+</tr><tr><td>69</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>352 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/69.PNG"><img alt="No Screenshot" src="img/69.PNG"/></a></td>
+</tr><tr><td>70</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/70.PNG"><img alt="No Screenshot" src="img/70.PNG"/></a></td>
+</tr><tr><td>71</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>212 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/71.PNG"><img alt="No Screenshot" src="img/71.PNG"/></a></td>
+</tr><tr><td>72</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>435 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/72.PNG"><img alt="No Screenshot" src="img/72.PNG"/></a></td>
+</tr><tr><td>73</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>374 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/73.PNG"><img alt="No Screenshot" src="img/73.PNG"/></a></td>
+</tr><tr><td>74</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/74.PNG"><img alt="No Screenshot" src="img/74.PNG"/></a></td>
+</tr><tr><td>75</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>221 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/75.PNG"><img alt="No Screenshot" src="img/75.PNG"/></a></td>
+</tr><tr><td>76</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>377 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/76.PNG"><img alt="No Screenshot" src="img/76.PNG"/></a></td>
+</tr><tr><td>77</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>469 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/77.PNG"><img alt="No Screenshot" src="img/77.PNG"/></a></td>
+</tr><tr><td>78</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/78.PNG"><img alt="No Screenshot" src="img/78.PNG"/></a></td>
+</tr><tr><td>79</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>245 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/79.PNG"><img alt="No Screenshot" src="img/79.PNG"/></a></td>
+</tr><tr><td>80</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>506 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/80.PNG"><img alt="No Screenshot" src="img/80.PNG"/></a></td>
+</tr><tr><td>81</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>386 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/81.PNG"><img alt="No Screenshot" src="img/81.PNG"/></a></td>
+</tr><tr><td>82</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/82.PNG"><img alt="No Screenshot" src="img/82.PNG"/></a></td>
+</tr><tr><td>83</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>246 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/83.PNG"><img alt="No Screenshot" src="img/83.PNG"/></a></td>
+</tr><tr><td>84</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>635 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/84.PNG"><img alt="No Screenshot" src="img/84.PNG"/></a></td>
+</tr><tr><td>85</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>404 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/85.PNG"><img alt="No Screenshot" src="img/85.PNG"/></a></td>
+</tr><tr><td>86</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/86.PNG"><img alt="No Screenshot" src="img/86.PNG"/></a></td>
+</tr><tr><td>87</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>225 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/87.PNG"><img alt="No Screenshot" src="img/87.PNG"/></a></td>
+</tr><tr><td>88</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>361 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/88.PNG"><img alt="No Screenshot" src="img/88.PNG"/></a></td>
+</tr><tr><td>89</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>360 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/89.PNG"><img alt="No Screenshot" src="img/89.PNG"/></a></td>
+</tr><tr><td>90</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/90.PNG"><img alt="No Screenshot" src="img/90.PNG"/></a></td>
+</tr><tr><td>91</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>253 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/91.PNG"><img alt="No Screenshot" src="img/91.PNG"/></a></td>
+</tr><tr><td>92</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>522 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/92.PNG"><img alt="No Screenshot" src="img/92.PNG"/></a></td>
+</tr><tr><td>93</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>332 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/93.PNG"><img alt="No Screenshot" src="img/93.PNG"/></a></td>
+</tr><tr><td>94</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/94.PNG"><img alt="No Screenshot" src="img/94.PNG"/></a></td>
+</tr><tr><td>95</td>
+<td>Wait for the Element Aft</td>
+<td></td>
+<td></td>
+<td>235 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/95.PNG"><img alt="No Screenshot" src="img/95.PNG"/></a></td>
+</tr><tr><td>96</td>
+<td>Click on Aft</td>
+<td></td>
+<td></td>
+<td>275 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/96.PNG"><img alt="No Screenshot" src="img/96.PNG"/></a></td>
+</tr><tr><td>97</td>
+<td>Captured the screenshot </td>
+<td></td>
+<td></td>
+<td>300 Milli Sec</td>
+<td>2472</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/97.PNG"><img alt="No Screenshot" src="img/97.PNG"/></a></td>
+</tr><tr><td>98</td>
+<td>Wait for the Element Search</td>
+<td></td>
+<td></td>
+<td>3 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/98.PNG"><img alt="No Screenshot" src="img/98.PNG"/></a></td>
+</tr><tr><td>99</td>
+<td>Wait for the Element Search</td>
+<td></td>
+<td></td>
+<td>253 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/99.PNG"><img alt="No Screenshot" src="img/99.PNG"/></a></td>
+</tr><tr><td>100</td>
+<td>Click on Search</td>
+<td></td>
+<td></td>
+<td>295 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/100.PNG"><img alt="No Screenshot" src="img/100.PNG"/></a></td>
+</tr><tr><td>101</td>
+<td>Wait for the Element Input</td>
+<td></td>
+<td></td>
+<td>220 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/101.PNG"><img alt="No Screenshot" src="img/101.PNG"/></a></td>
+</tr><tr><td>102</td>
+<td>Type on Input</td>
+<td>Cargo list</td>
+<td></td>
+<td>313 Milli Sec</td>
+<td>631</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/102.PNG"><img alt="No Screenshot" src="img/102.PNG"/></a></td>
+</tr><tr><td>103</td>
+<td> Navigated to https://sonata.solverminds.net/</td>
+<td></td>
+<td></td>
+<td>38 Sec</td>
+<td>1808</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/103.PNG"><img alt="No Screenshot" src="img/103.PNG"/></a></td>
+</tr><tr><td>104</td>
+<td>Wait for the Element Home_Icon</td>
+<td></td>
+<td></td>
+<td>30 Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/104.PNG"><img alt="No Screenshot" src="img/104.PNG"/></a></td>
+</tr><tr><td>105</td>
+<td>Click on Home_Icon</td>
+<td></td>
+<td></td>
+<td>301 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/105.PNG"><img alt="No Screenshot" src="img/105.PNG"/></a></td>
+</tr><tr><td>106</td>
+<td>Wait for the Element Exit popup</td>
+<td></td>
+<td></td>
+<td>210 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/106.PNG"><img alt="No Screenshot" src="img/106.PNG"/></a></td>
+</tr><tr><td>107</td>
+<td>Wait for the Element Exist Btn</td>
+<td></td>
+<td></td>
+<td>195 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/107.PNG"><img alt="No Screenshot" src="img/107.PNG"/></a></td>
+</tr><tr><td>108</td>
+<td>Wait for the Element Exist Btn</td>
+<td></td>
+<td></td>
+<td>204 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/108.PNG"><img alt="No Screenshot" src="img/108.PNG"/></a></td>
+</tr><tr><td>109</td>
+<td>Click on Exist Btn</td>
+<td></td>
+<td></td>
+<td>542 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/109.PNG"><img alt="No Screenshot" src="img/109.PNG"/></a></td>
+</tr><tr><td>110</td>
+<td>Wait for the Element vessel</td>
+<td></td>
+<td></td>
+<td>174 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/110.PNG"><img alt="No Screenshot" src="img/110.PNG"/></a></td>
+</tr><tr><td>111</td>
+<td>Wait for the Element vessel</td>
+<td></td>
+<td></td>
+<td>203 Milli Sec</td>
+<td>329</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/111.PNG"><img alt="No Screenshot" src="img/111.PNG"/></a></td>
+</tr><tr><td>112</td>
+<td>Click on vessel</td>
+<td></td>
+<td></td>
+<td>194 Milli Sec</td>
+<td>415</td>
+<td><img style="height:20px;width:20px;border:none"  alt="PASS" src="../../../../../../..//HTML_Design_Files/IMG/logpass.png" /></td>
+<td><a href="img/112.PNG"><img alt="No Screenshot" src="img/112.PNG"/></a></td>
+</tr>
+                        </table>  
+ <div class="chartStyle summary" style="color: black;width: 98%; height: 100%; padding-bottom: 30px;">          
+
+                        <br/><br/><b>Reason for Failure:&nbsp;&nbsp;</b>org.openqa.selenium.JavascriptException{acceptInsecureCerts: false, browserName: chrome, browserVersion: 121.0.6167.185, chrome: {chromedriverVersion: 121.0.6167.85 (3f98d690ad7e..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:59920}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true<br/><br/>
+<b id="showmenu">Click Me to Show/Hide the Full Stack Trace</b><div class="exception">
+org.openqa.selenium.JavascriptException: javascript error: Invalid left-hand side in assignment
+  (Session info: chrome=121.0.6167.185)
+Build info: version: '3.10.0', revision: '176b4a9', time: '2018-03-02T19:03:16.397Z'
+System info: host: 'DESKTOP-HERP98R', ip: '192.168.0.245', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '18.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 121.0.6167.185, chrome: {chromedriverVersion: 121.0.6167.85 (3f98d690ad7e..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:59920}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 067a3f7a32aa1367763cf498eeaee90d
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:187)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:122)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:160)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:601)
+	at org.openqa.selenium.remote.RemoteWebDriver.executeScript(RemoteWebDriver.java:537)
+	at commonMethods.Keywords.waitForElement(Keywords.java:331)
+	at scripts.Scenario1.Semiautorun(Scenario1.java:175)
+	at commonMethods.Testcases.Scenario1(Testcases.java:73)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:577)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:133)
+	at org.testng.internal.TestInvoker.invokeMethod(TestInvoker.java:598)
+	at org.testng.internal.TestInvoker.invokeTestMethod(TestInvoker.java:173)
+	at org.testng.internal.MethodRunner.runInSequence(MethodRunner.java:46)
+	at org.testng.internal.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:824)
+	at org.testng.internal.TestInvoker.invokeTestMethods(TestInvoker.java:146)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:146)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.testng.TestRunner.privateRun(TestRunner.java:794)
+	at org.testng.TestRunner.run(TestRunner.java:596)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:377)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:371)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:276)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:53)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:96)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
+	at org.testng.TestNG.runSuites(TestNG.java:1063)
+	at org.testng.TestNG.run(TestNG.java:1031)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+</div>                    </div>                    </div>
+
+                </td>
+            </tr>            <tr id="footer">
+<td colspan="2">
+&nbsp;
+TrackDfect Reports&nbsp;
+ Reports by: <a href="http://www.trackdfect.com/">TrackDfect.com</a>
+</td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  <meta charset='utf-8'>
+  <title>TestNG reports</title>
+
+    <link type="text/css" href="testng-reports.css" rel="stylesheet" />  
+    <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="testng-reports.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {packages:['table']});
+      google.setOnLoadCallback(drawTable);
+      var suiteTableInitFunctions = new Array();
+      var suiteTableData = new Array();
+    </script>
+    <!--
+      <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
+     -->
+  </head>
+
+  <body>
+    <div class="top-banner-root">
+      <span class="top-banner-title-font">Test results</span>
+      <br/>
+      <span class="top-banner-font-1">1 suite, 5 failed tests</span>
+    </div> <!-- top-banner-root -->
+    <div class="navigator-root">
+      <div class="navigator-suite-header">
+        <span>All suites</span>
+        <a href="#" title="Collapse/expand all the suites" class="collapse-all-link">
+          <img src="collapseall.gif" class="collapse-all-icon">
+          </img> <!-- collapse-all-icon -->
+        </a> <!-- collapse-all-link -->
+      </div> <!-- navigator-suite-header -->
+      <div class="suite">
+        <div class="rounded-window">
+          <div class="suite-header light-rounded-window-top">
+            <a href="#" panel-name="suite-Suite" class="navigator-link">
+              <span class="suite-name border-failed">Suite</span>
+            </a> <!-- navigator-link -->
+          </div> <!-- suite-header light-rounded-window-top -->
+          <div class="navigator-suite-content">
+            <div class="suite-section-title">
+              <span>Info</span>
+            </div> <!-- suite-section-title -->
+            <div class="suite-section-content">
+              <ul>
+                <li>
+                  <a href="#" panel-name="test-xml-Suite" class="navigator-link ">
+                    <span>C:\Users\RBT\Desktop\Solver_Minds\testng.xml</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="testlist-Suite" class="navigator-link ">
+                    <span class="test-stats">1 test</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="group-Suite" class="navigator-link ">
+                    <span>0 groups</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="times-Suite" class="navigator-link ">
+                    <span>Times</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="reporter-Suite" class="navigator-link ">
+                    <span>Reporter output</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="ignored-methods-Suite" class="navigator-link ">
+                    <span>Ignored methods</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="chronological-Suite" class="navigator-link ">
+                    <span>Chronological view</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+              </ul>
+            </div> <!-- suite-section-content -->
+            <div class="result-section">
+              <div class="suite-section-title">
+                <span>Results</span>
+              </div> <!-- suite-section-title -->
+              <div class="suite-section-content">
+                <ul>
+                  <li>
+                    <span class="method-stats">6 methods, 5 failed,   1 passed</span>
+                  </li>
+                  <li>
+                    <span class="method-list-title failed">Failed methods</span>
+                    <span class="show-or-hide-methods failed">
+                      <a href="#" panel-name="suite-Suite" class="hide-methods failed suite-Suite"> (hide)</a> <!-- hide-methods failed suite-Suite -->
+                      <a href="#" panel-name="suite-Suite" class="show-methods failed suite-Suite"> (show)</a> <!-- show-methods failed suite-Suite -->
+                    </span>
+                    <div class="method-list-content failed suite-Suite">
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Suite" title="commonMethods.Testcases" class="method navigator-link" hash-for-method="Scenario2">Scenario2</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Suite" title="commonMethods.Testcases" class="method navigator-link" hash-for-method="Scenario3">Scenario3</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Suite" title="commonMethods.Testcases" class="method navigator-link" hash-for-method="Scenario4">Scenario4</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Suite" title="commonMethods.Testcases" class="method navigator-link" hash-for-method="Scenario5">Scenario5</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Suite" title="commonMethods.Testcases" class="method navigator-link" hash-for-method="Scenario6">Scenario6</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content failed suite-Suite -->
+                  </li>
+                  <li>
+                    <span class="method-list-title passed">Passed methods</span>
+                    <span class="show-or-hide-methods passed">
+                      <a href="#" panel-name="suite-Suite" class="hide-methods passed suite-Suite"> (hide)</a> <!-- hide-methods passed suite-Suite -->
+                      <a href="#" panel-name="suite-Suite" class="show-methods passed suite-Suite"> (show)</a> <!-- show-methods passed suite-Suite -->
+                    </span>
+                    <div class="method-list-content passed suite-Suite">
+                      <span>
+                        <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Suite" title="commonMethods.Testcases" class="method navigator-link" hash-for-method="Scenario1">Scenario1</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content passed suite-Suite -->
+                  </li>
+                </ul>
+              </div> <!-- suite-section-content -->
+            </div> <!-- result-section -->
+          </div> <!-- navigator-suite-content -->
+        </div> <!-- rounded-window -->
+      </div> <!-- suite -->
+    </div> <!-- navigator-root -->
+    <div class="wrapper">
+      <div class="main-panel-root">
+        <div panel-name="suite-Suite" class="panel Suite">
+          <div class="suite-Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">commonMethods.Testcases</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scenario2">
+                  </a> <!-- Scenario2 -->
+                  <span class="method-name">Scenario2</span>
+                  <div class="stack-trace">org.openqa.selenium.WebDriverException: target frame detached
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=122.0.6261.95)
+Build info: version: &apos;3.10.0&apos;, revision: &apos;176b4a9&apos;, time: &apos;2018-03-02T19:03:16.397Z&apos;
+System info: host: &apos;DESKTOP-HERP98R&apos;, ip: &apos;192.168.0.245&apos;, os.name: &apos;Windows 10&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;18.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 122.0.6261.95, chrome: {chromedriverVersion: 122.0.6261.94 (880dbf29479c..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60238}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4b451609a636569e80c551a9f44f2775
+*** Element info: {Using=xpath, value=//*[@alt=&apos;Partial Success&apos;]}
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:187)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:122)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:160)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:601)
+	at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:398)
+	at org.openqa.selenium.remote.RemoteWebDriver.findElementsByXPath(RemoteWebDriver.java:477)
+	at org.openqa.selenium.By$ByXPath.findElements(By.java:356)
+	at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:359)
+	at org.openqa.selenium.support.ui.ExpectedConditions.findElement(ExpectedConditions.java:895)
+	at org.openqa.selenium.support.ui.ExpectedConditions.access$000(ExpectedConditions.java:44)
+	at org.openqa.selenium.support.ui.ExpectedConditions$6.apply(ExpectedConditions.java:183)
+	at org.openqa.selenium.support.ui.ExpectedConditions$6.apply(ExpectedConditions.java:180)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:249)
+	at scripts.Scenario2.Semiautorun2(Scenario2.java:666)
+	at commonMethods.Testcases.Scenario2(Testcases.java:131)
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scenario3">
+                  </a> <!-- Scenario3 -->
+                  <span class="method-name">Scenario3</span>
+                  <div class="stack-trace">org.openqa.selenium.WebDriverException: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=122.0.6261.95)
+Build info: version: &apos;3.10.0&apos;, revision: &apos;176b4a9&apos;, time: &apos;2018-03-02T19:03:16.397Z&apos;
+System info: host: &apos;DESKTOP-HERP98R&apos;, ip: &apos;192.168.0.245&apos;, os.name: &apos;Windows 10&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;18.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 122.0.6261.95, chrome: {chromedriverVersion: 122.0.6261.94 (880dbf29479c..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60238}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4b451609a636569e80c551a9f44f2775
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:187)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:122)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:160)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:601)
+	at org.openqa.selenium.remote.RemoteWebDriver.get(RemoteWebDriver.java:325)
+	at org.openqa.selenium.remote.RemoteWebDriver$RemoteNavigation.to(RemoteWebDriver.java:912)
+	at commonMethods.Keywords.navigateUrl(Keywords.java:2077)
+	at scripts.Scenario3.Semiautorun3(Scenario3.java:48)
+	at commonMethods.Testcases.Scenario3(Testcases.java:145)
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scenario4">
+                  </a> <!-- Scenario4 -->
+                  <span class="method-name">Scenario4</span>
+                  <div class="stack-trace">org.openqa.selenium.WebDriverException: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=122.0.6261.95)
+Build info: version: &apos;3.10.0&apos;, revision: &apos;176b4a9&apos;, time: &apos;2018-03-02T19:03:16.397Z&apos;
+System info: host: &apos;DESKTOP-HERP98R&apos;, ip: &apos;192.168.0.245&apos;, os.name: &apos;Windows 10&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;18.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 122.0.6261.95, chrome: {chromedriverVersion: 122.0.6261.94 (880dbf29479c..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60238}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4b451609a636569e80c551a9f44f2775
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:187)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:122)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:160)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:601)
+	at org.openqa.selenium.remote.RemoteWebDriver.get(RemoteWebDriver.java:325)
+	at org.openqa.selenium.remote.RemoteWebDriver$RemoteNavigation.to(RemoteWebDriver.java:912)
+	at commonMethods.Keywords.navigateUrl(Keywords.java:2077)
+	at scripts.Scenario4.Semiautorun4(Scenario4.java:32)
+	at commonMethods.Testcases.Scenario4(Testcases.java:159)
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scenario5">
+                  </a> <!-- Scenario5 -->
+                  <span class="method-name">Scenario5</span>
+                  <div class="stack-trace">org.openqa.selenium.WebDriverException: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=122.0.6261.95)
+Build info: version: &apos;3.10.0&apos;, revision: &apos;176b4a9&apos;, time: &apos;2018-03-02T19:03:16.397Z&apos;
+System info: host: &apos;DESKTOP-HERP98R&apos;, ip: &apos;192.168.0.245&apos;, os.name: &apos;Windows 10&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;18.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 122.0.6261.95, chrome: {chromedriverVersion: 122.0.6261.94 (880dbf29479c..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60238}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4b451609a636569e80c551a9f44f2775
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:187)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:122)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:160)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:601)
+	at org.openqa.selenium.remote.RemoteWebDriver.get(RemoteWebDriver.java:325)
+	at org.openqa.selenium.remote.RemoteWebDriver$RemoteNavigation.to(RemoteWebDriver.java:912)
+	at commonMethods.Keywords.navigateUrl(Keywords.java:2077)
+	at scripts.Scenario5.Semiautorun5(Scenario5.java:47)
+	at commonMethods.Testcases.Scenario5(Testcases.java:173)
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scenario6">
+                  </a> <!-- Scenario6 -->
+                  <span class="method-name">Scenario6</span>
+                  <div class="stack-trace">org.openqa.selenium.WebDriverException: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=122.0.6261.95)
+Build info: version: &apos;3.10.0&apos;, revision: &apos;176b4a9&apos;, time: &apos;2018-03-02T19:03:16.397Z&apos;
+System info: host: &apos;DESKTOP-HERP98R&apos;, ip: &apos;192.168.0.245&apos;, os.name: &apos;Windows 10&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;18.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 122.0.6261.95, chrome: {chromedriverVersion: 122.0.6261.94 (880dbf29479c..., userDataDir: C:\Users\RBT\AppData\Local\...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60238}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4b451609a636569e80c551a9f44f2775
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:187)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:122)
+	at org.openqa.selenium.remote.http.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:160)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:601)
+	at org.openqa.selenium.remote.RemoteWebDriver.get(RemoteWebDriver.java:325)
+	at org.openqa.selenium.remote.RemoteWebDriver$RemoteNavigation.to(RemoteWebDriver.java:912)
+	at commonMethods.Keywords.navigateUrl(Keywords.java:2077)
+	at scripts.Scenario6.Semiautorun6(Scenario6.java:49)
+	at commonMethods.Testcases.Scenario6(Testcases.java:187)
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-Suite-class-failed -->
+          <div class="suite-Suite-class-passed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="passed.png"/>
+              <span class="class-name">commonMethods.Testcases</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scenario1">
+                  </a> <!-- Scenario1 -->
+                  <span class="method-name">Scenario1</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-Suite-class-passed -->
+        </div> <!-- panel Suite -->
+        <div panel-name="test-xml-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">C:\Users\RBT\Desktop\Solver_Minds\testng.xml</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE suite SYSTEM &quot;http://testng.org/testng-1.0.dtd&quot;&gt;
+&lt;suite configfailurepolicy=&quot;continue&quot; parallel=&quot;none&quot; name=&quot;Suite&quot; verbose=&quot;0&quot;&gt;
+  &lt;listeners&gt;
+    &lt;listener class-name=&quot;atu.testng.reports.listeners.ATUReportsListener&quot;/&gt;
+    &lt;listener class-name=&quot;atu.testng.reports.listeners.ConfigurationListener&quot;/&gt;
+    &lt;listener class-name=&quot;atu.testng.reports.listeners.MethodListener&quot;/&gt;
+  &lt;/listeners&gt;
+  &lt;test name=&quot;Test&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;commonMethods.Testcases&quot;&gt;
+        &lt;methods&gt;
+          &lt;include name=&quot;Scenario1&quot;/&gt;
+          &lt;include name=&quot;Scenario2&quot;/&gt;
+          &lt;include name=&quot;Scenario3&quot;/&gt;
+          &lt;include name=&quot;Scenario4&quot;/&gt;
+          &lt;include name=&quot;Scenario5&quot;/&gt;
+          &lt;include name=&quot;Scenario6&quot;/&gt;
+        &lt;/methods&gt;
+      &lt;/class&gt; &lt;!-- commonMethods.Testcases --&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- Test --&gt;
+&lt;/suite&gt; &lt;!-- Suite --&gt;
+            </pre>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="testlist-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Tests for Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <ul>
+              <li>
+                <span class="test-name">Test (1 class)</span>
+              </li>
+            </ul>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="group-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Groups for Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="times-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Times for Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="times-div">
+              <script type="text/javascript">
+suiteTableInitFunctions.push('tableData_Suite');
+function tableData_Suite() {
+var data = new google.visualization.DataTable();
+data.addColumn('number', 'Number');
+data.addColumn('string', 'Method');
+data.addColumn('string', 'Class');
+data.addColumn('number', 'Time (ms)');
+data.addRows(6);
+data.setCell(0, 0, 0)
+data.setCell(0, 1, 'Scenario2')
+data.setCell(0, 2, 'commonMethods.Testcases')
+data.setCell(0, 3, 1894314);
+data.setCell(1, 0, 1)
+data.setCell(1, 1, 'Scenario1')
+data.setCell(1, 2, 'commonMethods.Testcases')
+data.setCell(1, 3, 21025);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'Scenario6')
+data.setCell(2, 2, 'commonMethods.Testcases')
+data.setCell(2, 3, 12);
+data.setCell(3, 0, 3)
+data.setCell(3, 1, 'Scenario4')
+data.setCell(3, 2, 'commonMethods.Testcases')
+data.setCell(3, 3, 11);
+data.setCell(4, 0, 4)
+data.setCell(4, 1, 'Scenario3')
+data.setCell(4, 2, 'commonMethods.Testcases')
+data.setCell(4, 3, 7);
+data.setCell(5, 0, 5)
+data.setCell(5, 1, 'Scenario5')
+data.setCell(5, 2, 'commonMethods.Testcases')
+data.setCell(5, 3, 6);
+window.suiteTableData['Suite']= { tableData: data, tableDiv: 'times-div-Suite'}
+return data;
+}
+              </script>
+              <span class="suite-total-time">Total running time: 31 minutes</span>
+              <div id="times-div-Suite">
+              </div> <!-- times-div-Suite -->
+            </div> <!-- times-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="reporter-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Reporter output for Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">Scenario2</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">STEP1</span>
+                <span class="reporter-method-output">STEP2</span>
+                <span class="reporter-method-output">STEP3</span>
+                <span class="reporter-method-output">STEP4</span>
+                <span class="reporter-method-output">STEP5</span>
+                <span class="reporter-method-output">STEP6</span>
+                <span class="reporter-method-output">STEP7</span>
+                <span class="reporter-method-output">STEP8</span>
+                <span class="reporter-method-output">STEP9</span>
+                <span class="reporter-method-output">STEP10</span>
+                <span class="reporter-method-output">STEP11</span>
+                <span class="reporter-method-output">STEP12</span>
+                <span class="reporter-method-output">STEP13</span>
+                <span class="reporter-method-output">STEP14</span>
+                <span class="reporter-method-output">STEP15</span>
+                <span class="reporter-method-output">STEP16</span>
+                <span class="reporter-method-output">STEP17</span>
+                <span class="reporter-method-output">STEP18</span>
+                <span class="reporter-method-output">STEP19</span>
+                <span class="reporter-method-output">STEP20</span>
+                <span class="reporter-method-output">STEP21</span>
+                <span class="reporter-method-output">STEP22</span>
+                <span class="reporter-method-output">STEP23</span>
+                <span class="reporter-method-output">STEP24</span>
+                <span class="reporter-method-output">STEP25</span>
+                <span class="reporter-method-output">STEP26</span>
+                <span class="reporter-method-output">STEP27</span>
+                <span class="reporter-method-output">STEP28</span>
+                <span class="reporter-method-output">STEP29</span>
+                <span class="reporter-method-output">STEP30</span>
+                <span class="reporter-method-output">STEP31</span>
+                <span class="reporter-method-output">STEP32</span>
+                <span class="reporter-method-output">STEP33</span>
+                <span class="reporter-method-output">STEP34</span>
+                <span class="reporter-method-output">STEP35</span>
+                <span class="reporter-method-output">STEP36</span>
+                <span class="reporter-method-output">STEP37</span>
+                <span class="reporter-method-output">STEP38</span>
+                <span class="reporter-method-output">STEP39</span>
+                <span class="reporter-method-output">STEP40</span>
+                <span class="reporter-method-output">STEP41</span>
+                <span class="reporter-method-output">STEP42</span>
+                <span class="reporter-method-output">STEP43</span>
+                <span class="reporter-method-output">STEP44</span>
+                <span class="reporter-method-output">STEP45</span>
+                <span class="reporter-method-output">STEP46</span>
+                <span class="reporter-method-output">STEP47</span>
+                <span class="reporter-method-output">STEP48</span>
+                <span class="reporter-method-output">STEP49</span>
+                <span class="reporter-method-output">STEP50</span>
+                <span class="reporter-method-output">STEP51</span>
+                <span class="reporter-method-output">STEP52</span>
+                <span class="reporter-method-output">STEP53</span>
+                <span class="reporter-method-output">STEP54</span>
+                <span class="reporter-method-output">STEP55</span>
+                <span class="reporter-method-output">STEP56</span>
+                <span class="reporter-method-output">STEP57</span>
+                <span class="reporter-method-output">STEP58</span>
+                <span class="reporter-method-output">STEP59</span>
+                <span class="reporter-method-output">STEP60</span>
+                <span class="reporter-method-output">STEP61</span>
+                <span class="reporter-method-output">STEP62</span>
+                <span class="reporter-method-output">STEP63</span>
+                <span class="reporter-method-output">STEP64</span>
+                <span class="reporter-method-output">STEP65</span>
+                <span class="reporter-method-output">STEP66</span>
+                <span class="reporter-method-output">STEP67</span>
+                <span class="reporter-method-output">STEP68</span>
+                <span class="reporter-method-output">STEP69</span>
+                <span class="reporter-method-output">STEP70</span>
+                <span class="reporter-method-output">STEP71</span>
+                <span class="reporter-method-output">STEP72</span>
+                <span class="reporter-method-output">STEP73</span>
+                <span class="reporter-method-output">STEP74</span>
+                <span class="reporter-method-output">STEP75</span>
+                <span class="reporter-method-output">STEP76</span>
+                <span class="reporter-method-output">STEP77</span>
+                <span class="reporter-method-output">STEP78</span>
+                <span class="reporter-method-output">STEP79</span>
+                <span class="reporter-method-output">STEP80</span>
+                <span class="reporter-method-output">STEP81</span>
+                <span class="reporter-method-output">STEP82</span>
+                <span class="reporter-method-output">STEP83</span>
+                <span class="reporter-method-output">STEP84</span>
+                <span class="reporter-method-output">STEP85</span>
+                <span class="reporter-method-output">STEP86</span>
+                <span class="reporter-method-output">STEP87</span>
+                <span class="reporter-method-output">STEP88</span>
+                <span class="reporter-method-output">STEP89</span>
+                <span class="reporter-method-output">STEP90</span>
+                <span class="reporter-method-output">STEP91</span>
+                <span class="reporter-method-output">STEP92</span>
+                <span class="reporter-method-output">STEP93</span>
+                <span class="reporter-method-output">STEP94</span>
+                <span class="reporter-method-output">STEP95</span>
+                <span class="reporter-method-output">STEP96</span>
+                <span class="reporter-method-output">STEP97</span>
+                <span class="reporter-method-output">STEP98</span>
+                <span class="reporter-method-output">STEP99</span>
+                <span class="reporter-method-output">STEP100</span>
+                <span class="reporter-method-output">STEP101</span>
+                <span class="reporter-method-output">STEP102</span>
+                <span class="reporter-method-output">STEP103</span>
+                <span class="reporter-method-output">STEP104</span>
+                <span class="reporter-method-output">STEP105</span>
+                <span class="reporter-method-output">STEP106</span>
+                <span class="reporter-method-output">STEP107</span>
+                <span class="reporter-method-output">STEP108</span>
+                <span class="reporter-method-output">STEP109</span>
+                <span class="reporter-method-output">STEP110</span>
+                <span class="reporter-method-output">STEP111</span>
+                <span class="reporter-method-output">STEP112</span>
+                <span class="reporter-method-output">STEP113</span>
+                <span class="reporter-method-output">STEP114</span>
+                <span class="reporter-method-output">STEP115</span>
+                <span class="reporter-method-output">STEP116</span>
+                <span class="reporter-method-output">STEP117</span>
+                <span class="reporter-method-output">STEP118</span>
+                <span class="reporter-method-output">STEP119</span>
+                <span class="reporter-method-output">STEP120</span>
+                <span class="reporter-method-output">STEP121</span>
+                <span class="reporter-method-output">STEP122</span>
+                <span class="reporter-method-output">STEP123</span>
+                <span class="reporter-method-output">STEP124</span>
+                <span class="reporter-method-output">STEP125</span>
+                <span class="reporter-method-output">STEP126</span>
+                <span class="reporter-method-output">STEP127</span>
+                <span class="reporter-method-output">STEP128</span>
+                <span class="reporter-method-output">STEP129</span>
+                <span class="reporter-method-output">STEP130</span>
+                <span class="reporter-method-output">STEP131</span>
+                <span class="reporter-method-output">STEP132</span>
+                <span class="reporter-method-output">STEP133</span>
+                <span class="reporter-method-output">STEP134</span>
+                <span class="reporter-method-output">STEP135</span>
+                <span class="reporter-method-output">STEP136</span>
+                <span class="reporter-method-output">STEP137</span>
+                <span class="reporter-method-output">STEP138</span>
+                <span class="reporter-method-output">STEP139</span>
+                <span class="reporter-method-output">STEP140</span>
+                <span class="reporter-method-output">STEP141</span>
+                <span class="reporter-method-output">STEP142</span>
+                <span class="reporter-method-output">STEP143</span>
+                <span class="reporter-method-output">STEP144</span>
+                <span class="reporter-method-output">STEP145</span>
+                <span class="reporter-method-output">STEP146</span>
+                <span class="reporter-method-output">STEP147</span>
+                <span class="reporter-method-output">STEP148</span>
+                <span class="reporter-method-output">STEP149</span>
+                <span class="reporter-method-output">STEP150</span>
+                <span class="reporter-method-output">STEP151</span>
+                <span class="reporter-method-output">STEP152</span>
+                <span class="reporter-method-output">STEP153</span>
+                <span class="reporter-method-output">STEP154</span>
+                <span class="reporter-method-output">STEP155</span>
+                <span class="reporter-method-output">STEP156</span>
+                <span class="reporter-method-output">STEP157</span>
+                <span class="reporter-method-output">STEP158</span>
+                <span class="reporter-method-output">STEP159</span>
+                <span class="reporter-method-output">STEP160</span>
+                <span class="reporter-method-output">STEP161</span>
+                <span class="reporter-method-output">STEP162</span>
+                <span class="reporter-method-output">STEP163</span>
+                <span class="reporter-method-output">STEP164</span>
+                <span class="reporter-method-output">STEP165</span>
+                <span class="reporter-method-output">STEP166</span>
+                <span class="reporter-method-output">STEP167</span>
+                <span class="reporter-method-output">STEP168</span>
+                <span class="reporter-method-output">STEP169</span>
+                <span class="reporter-method-output">STEP170</span>
+                <span class="reporter-method-output">STEP171</span>
+                <span class="reporter-method-output">STEP172</span>
+                <span class="reporter-method-output">STEP173</span>
+                <span class="reporter-method-output">STEP174</span>
+                <span class="reporter-method-output">STEP175</span>
+                <span class="reporter-method-output">STEP176</span>
+                <span class="reporter-method-output">STEP177</span>
+                <span class="reporter-method-output">STEP178</span>
+                <span class="reporter-method-output">STEP179</span>
+                <span class="reporter-method-output">STEP180</span>
+                <span class="reporter-method-output">STEP181</span>
+                <span class="reporter-method-output">STEP182</span>
+                <span class="reporter-method-output">STEP183</span>
+                <span class="reporter-method-output">STEP184</span>
+                <span class="reporter-method-output">STEP185</span>
+                <span class="reporter-method-output">STEP186</span>
+                <span class="reporter-method-output">STEP187</span>
+                <span class="reporter-method-output">STEP188</span>
+                <span class="reporter-method-output">STEP189</span>
+                <span class="reporter-method-output">STEP190</span>
+                <span class="reporter-method-output">STEP191</span>
+                <span class="reporter-method-output">STEP192</span>
+                <span class="reporter-method-output">STEP193</span>
+                <span class="reporter-method-output">STEP194</span>
+                <span class="reporter-method-output">STEP195</span>
+                <span class="reporter-method-output">STEP196</span>
+                <span class="reporter-method-output">STEP197</span>
+                <span class="reporter-method-output">STEP198</span>
+                <span class="reporter-method-output">STEP199</span>
+                <span class="reporter-method-output">STEP200</span>
+                <span class="reporter-method-output">STEP201</span>
+                <span class="reporter-method-output">STEP202</span>
+                <span class="reporter-method-output">STEP203</span>
+                <span class="reporter-method-output">STEP204</span>
+                <span class="reporter-method-output">STEP205</span>
+                <span class="reporter-method-output">STEP206</span>
+                <span class="reporter-method-output">STEP207</span>
+                <span class="reporter-method-output">STEP208</span>
+                <span class="reporter-method-output">STEP209</span>
+                <span class="reporter-method-output">STEP210</span>
+                <span class="reporter-method-output">STEP211</span>
+                <span class="reporter-method-output">STEP212</span>
+                <span class="reporter-method-output">STEP213</span>
+                <span class="reporter-method-output">STEP214</span>
+                <span class="reporter-method-output">STEP215</span>
+                <span class="reporter-method-output">STEP216</span>
+                <span class="reporter-method-output">STEP217</span>
+                <span class="reporter-method-output">STEP218</span>
+                <span class="reporter-method-output">STEP219</span>
+                <span class="reporter-method-output">STEP220</span>
+                <span class="reporter-method-output">STEP221</span>
+                <span class="reporter-method-output">STEP222</span>
+                <span class="reporter-method-output">STEP223</span>
+                <span class="reporter-method-output">STEP224</span>
+                <span class="reporter-method-output">STEP225</span>
+                <span class="reporter-method-output">STEP226</span>
+                <span class="reporter-method-output">STEP227</span>
+                <span class="reporter-method-output">STEP228</span>
+                <span class="reporter-method-output">STEP229</span>
+                <span class="reporter-method-output">STEP230</span>
+                <span class="reporter-method-output">STEP231</span>
+                <span class="reporter-method-output">STEP232</span>
+                <span class="reporter-method-output">STEP233</span>
+                <span class="reporter-method-output">STEP234</span>
+                <span class="reporter-method-output">STEP235</span>
+                <span class="reporter-method-output">STEP236</span>
+                <span class="reporter-method-output">STEP237</span>
+                <span class="reporter-method-output">STEP238</span>
+                <span class="reporter-method-output">STEP239</span>
+                <span class="reporter-method-output">STEP240</span>
+                <span class="reporter-method-output">STEP241</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="ignored-methods-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">0 ignored methods</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="chronological-Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Methods in chronological order</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="chronological-class">
+              <div class="chronological-class-name">commonMethods.Testcases</div> <!-- chronological-class-name -->
+              <div class="configuration-test before">
+                <span class="method-name">Extentreport</span>
+                <span class="method-start">0 ms</span>
+              </div> <!-- configuration-test before -->
+              <div class="configuration-class before">
+                <span class="method-name">getDataFromConfig</span>
+                <span class="method-start">299 ms</span>
+              </div> <!-- configuration-class before -->
+              <div class="test-method">
+                <span class="method-name">Scenario1</span>
+                <span class="method-start">2562 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">Teardown([TestResult name=Scenario1 status=SUCCESS method=Testcases.Scenario1()[pri:0, instance:commonMethods...)</span>
+                <span class="method-start">23698 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Scenario2</span>
+                <span class="method-start">23849 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Teardown([TestResult name=Scenario2 status=FAILURE method=Testcases.Scenario2()[pri:0, instance:commonMethods...)</span>
+                <span class="method-start">1918176 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Scenario3</span>
+                <span class="method-start">1918208 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Teardown([TestResult name=Scenario3 status=FAILURE method=Testcases.Scenario3()[pri:0, instance:commonMethods...)</span>
+                <span class="method-start">1918220 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Scenario4</span>
+                <span class="method-start">1918230 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Teardown([TestResult name=Scenario4 status=FAILURE method=Testcases.Scenario4()[pri:0, instance:commonMethods...)</span>
+                <span class="method-start">1918243 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Scenario5</span>
+                <span class="method-start">1918258 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Teardown([TestResult name=Scenario5 status=FAILURE method=Testcases.Scenario5()[pri:0, instance:commonMethods...)</span>
+                <span class="method-start">1918269 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Scenario6</span>
+                <span class="method-start">1918279 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">Teardown([TestResult name=Scenario6 status=FAILURE method=Testcases.Scenario6()[pri:0, instance:commonMethods...)</span>
+                <span class="method-start">1918294 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-test after">
+                <span class="method-name">aftertest</span>
+                <span class="method-start">1918304 ms</span>
+              </div> <!-- configuration-test after -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+      </div> <!-- main-panel-root -->
+    </div> <!-- wrapper -->
+  </body>
+</html>
