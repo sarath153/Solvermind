@@ -1,0 +1,38 @@
+name: Run Maven Tests and Generate Extent Reports
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_tests_and_generate_reports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: '11'
+
+      - name: Run TestNG Tests
+        run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml
+
+      - name: Generate Extent Reports
+        run: |
+          timeStamp=$(date +"%H%M")
+          mvn -B exec:java -Dexec.mainClass="com.example.GenerateExtentReports" -Dexec.args="$timeStamp"
+
+  upload_reports:
+    needs: run_tests_and_generate_reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: Archive Extent Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: extent-reports
+          path: path/to/extent-report-directory
