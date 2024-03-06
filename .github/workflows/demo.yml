@@ -1,4 +1,4 @@
-name: Run Maven Tests and Generate Extent Reports
+name: Run Maven Tests and Collect Extent Reports
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  run_tests_and_generate_reports:
+  run_tests_and_collect_reports:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,17 +22,16 @@ jobs:
       - name: Run TestNG Tests
         run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml
 
-      - name: Generate Extent Reports
+      - name: Collect Extent Reports
         run: |
-          report_path="$(pwd)/Extent/TestReport1.html"
-          mvn -B exec:java -Dexec.mainClass="com.example.GenerateExtentReports" -Dexec.args="$report_path"
+          REPORT_PATH="$(echo "$(System.getProperty("user.dir") + "/Extent/TestReport_" + timeStamp + ".html")")"
+          echo "Report Path: $REPORT_PATH"
+          mkdir -p reports
+          mv "$REPORT_PATH" reports/
+        shell: bash
 
-  upload_reports:
-    needs: run_tests_and_generate_reports
-    runs-on: ubuntu-latest
-    steps:
-      - name: Archive Extent Reports
+      - name: Upload Extent Reports
         uses: actions/upload-artifact@v2
         with:
           name: extent-reports
-          path: ${{ github.workspace }}/Extent
+          path: reports/
