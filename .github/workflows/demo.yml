@@ -24,8 +24,8 @@ jobs:
 
       - name: Generate Extent Reports
         run: |
-          timeStamp=$(date +"%H%M")
-          report_path=$(echo "$(System.getProperty("user.dir"))/Extent/TestReport_${timeStamp}.html")
+          # timeStamp=$(date +"%H%M")
+          report_path=$(echo "$(System.getProperty("user.dir"))/Extent/TestReport1.html")
           mvn -B exec:java -Dexec.mainClass="com.example.GenerateExtentReports" -Dexec.args="$report_path"
 
   upload_reports:
