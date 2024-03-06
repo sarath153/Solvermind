@@ -16,7 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: adopt
+          distribution: 'adopt'
           java-version: '11'
 
       - name: Run TestNG Tests
@@ -25,7 +25,8 @@ jobs:
       - name: Generate Extent Reports
         run: |
           timeStamp=$(date +"%H%M")
-          mvn -B exec:java -Dexec.mainClass="com.example.GenerateExtentReports" -Dexec.args="$timeStamp"
+          report_path=$(echo "$(System.getProperty("user.dir"))/Extent/TestReport_${timeStamp}.html")
+          mvn -B exec:java -Dexec.mainClass="com.example.GenerateExtentReports" -Dexec.args="$report_path"
 
   upload_reports:
     needs: run_tests_and_generate_reports
@@ -35,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: extent-reports
-          path: path/to/extent-report-directory
+          path: ${{ github.workspace }}/Extent
