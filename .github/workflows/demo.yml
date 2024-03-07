@@ -30,5 +30,5 @@ jobs:
         choco install googlechrome -y
         choco install chromedriver -y
 
-    - name: Run TestNG tests
-      run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml
+    - name: Run custom script
+      run: .\run.bat
