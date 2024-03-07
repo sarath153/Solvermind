@@ -24,11 +24,9 @@ jobs:
 
       - name: Collect Extent Reports
         run: |
-          REPORT_PATH="$(echo "$(System.getProperty("user.dir") + "/Extent/TestReport_" + timeStamp + ".html")")"
-          echo "Report Path: $REPORT_PATH"
           mkdir -p reports
-          mv "$REPORT_PATH" reports/
-        shell: bash
+          find . -type f -name '*.html' -exec cp {} reports/ \;
+        if: always()
 
       - name: Upload Extent Reports
         uses: actions/upload-artifact@v2
