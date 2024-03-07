@@ -31,4 +31,4 @@ jobs:
         choco install chromedriver -y
 
     - name: Run custom script
-      run: .\run.bat
+      run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml -Dheadless=false
