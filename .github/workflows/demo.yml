@@ -20,4 +20,4 @@ jobs:
           java-version: '11'
 
       - name: Run TestNG Tests
-        run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml
+        run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml -Dheadless=false
