@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_tests_and_collect_reports:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
