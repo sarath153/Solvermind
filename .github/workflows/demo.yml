@@ -25,7 +25,7 @@ jobs:
       - name: Collect Extent Reports
         run: |
           mkdir -p reports
-          find . -type f -name '*.html' -exec cp {} reports/ \;
+          cp -r "$(System.getProperty('user.dir'))/Extent/TestReport" reports/
         if: always()
 
       - name: Upload Extent Reports
