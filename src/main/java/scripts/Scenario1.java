@@ -79,7 +79,7 @@ public class Scenario1 extends Keywords {
 		driver.findElement(By.xpath("//*[contains(text(),'" + Vessel + "')]")).click();
 
 		waitForElement(driver, Openplantop);
-/*
+
 		driver.findElement(By.xpath("//*[contains(text(),'Single Screen Plan')]/preceding::input[@type='checkbox']"))
 				.click();
 
@@ -106,6 +106,8 @@ public class Scenario1 extends Keywords {
 
 		wait(driver, "1");
 
+		System.out.println("Started to take screenshot");
+		
 		int i = 2;
 		while (isDisplayed(driver, PreviousBay)) {
 			click(driver, PreviousBay);
@@ -119,6 +121,8 @@ public class Scenario1 extends Keywords {
 			i++;
 		}
 
+		System.out.println("completed to take screenshot");
+		
 		waitForElement(driver, Search);
 		click(driver, Search);
 
@@ -151,6 +155,7 @@ public class Scenario1 extends Keywords {
 //		    e.printStackTrace();
 //		}
 
+		System.out.println("start download file");
 		String Master = System.getProperty("user.dir") + "\\Uploads\\01Masterfile_" + path + ".xlsx";
 		String autoITExecutable = System.getProperty("user.dir") + "/driver/MasterDownloadfile.exe " + Master;
 
@@ -162,12 +167,14 @@ public class Scenario1 extends Keywords {
 		wait.until(ExpectedConditions
 				.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Created successfully')]")));
 
+		System.out.println("completed download file");
+		
 //		// Test Plan
 
 		newTab2(driver);
 		wait(driver, "2");
-		switchtotab(driver, 1);
-		robot.keyRelease(KeyEvent.VK_CONTROL);
+		// switchtotab(driver, 1);
+		// robot.keyRelease(KeyEvent.VK_CONTROL);
 		navigateUrl(driver, URL);
 //		if (isDisplayed(driver, username)) {
 //
@@ -365,7 +372,7 @@ public class Scenario1 extends Keywords {
 		wait.until(ExpectedConditions
 				.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Created successfully')]")));
 		
-		
+		/*
 		Fillocomparison();
 		*/
 		
