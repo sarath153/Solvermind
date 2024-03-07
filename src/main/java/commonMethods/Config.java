@@ -135,7 +135,6 @@ public class Config extends Keywords {
 
 			ChromeOptions options = new ChromeOptions();
 			WebDriverManager.chromedriver().setup();
-			DesiredCapabilities.chrome();
 			// options.addArguments("--headless");
 			options.addArguments("disable-notifications");
 //			options.setExperimentalOption("excludeSwitches", Arrays.asList("disable-popup-blocking"));
