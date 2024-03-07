@@ -33,3 +33,13 @@ jobs:
         with:
           name: extent-reports
           path: reports/
+
+      - name: Download Extent Reports
+        uses: actions/download-artifact@v2
+        with:
+          name: extent-reports
+          path: reports/
+
+      - name: Open Extent Reports
+        run: |
+          google-chrome reports/index.html
