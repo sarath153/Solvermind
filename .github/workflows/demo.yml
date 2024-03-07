@@ -7,7 +7,7 @@ on:
 
 jobs:
   run_tests_and_collect_reports:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Repository
@@ -24,8 +24,8 @@ jobs:
 
       - name: Collect Extent Reports
         run: |
-          mkdir -p reports
-          cp -r "$(System.getProperty('user.dir'))/Extent/TestReport" reports/
+          mkdir reports
+          copy .\Extent\TestReport reports\
         if: always()
 
       - name: Upload Extent Reports
@@ -42,4 +42,4 @@ jobs:
 
       - name: Open Extent Reports
         run: |
-          google-chrome reports/index.html
+          start reports\index.html
