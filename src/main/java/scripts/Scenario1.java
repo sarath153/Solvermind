@@ -57,7 +57,7 @@ public class Scenario1 extends Keywords {
 
 	public void Semiautorun(WebDriver driver) throws AWTException {
 
-		Robot robot = new Robot();
+		// Robot robot = new Robot();
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 
 		navigateUrl(driver, URL);
