@@ -1,4 +1,4 @@
-name: Run Maven Tests and Collect Extent Reports
+name: Java CI
 
 on:
   push:
@@ -6,18 +6,22 @@ on:
       - main
 
 jobs:
-  run_tests_and_collect_reports:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
 
-      - name: Run TestNG Tests
-        run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml -Dheadless=false
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Run tests
+      run: mvn test
+      env:
+        CHROME_HEADLESS: 'false' # Disable headless mode
