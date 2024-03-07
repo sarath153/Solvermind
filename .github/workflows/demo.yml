@@ -1,4 +1,4 @@
-name: Run Automation Script
+name: Run Maven Tests and Collect Extent Reports
 
 on:
   push:
@@ -6,29 +6,18 @@ on:
       - main
 
 jobs:
-  build:
+  run_tests_and_collect_reports:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Install Chocolatey
-      run: |
-        Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-
-    - name: Install Chrome and chromedriver
-      run: |
-        choco install googlechrome -y
-        choco install chromedriver -y
-
-    - name: Run custom script
-      run: mvn clean test -B -Dsurefire.suiteXmlFiles=testng.xml
+      - name: Run TestNG Tests
+        run: mvn -B test -Dsurefire.suiteXmlFiles=testng.xml
