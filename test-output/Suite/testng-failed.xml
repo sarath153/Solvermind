@@ -10,11 +10,11 @@
     <classes>
       <class name="commonMethods.Testcases">
         <methods>
-          <include name="Teardown"/>
+          <include name="Scenario9"/>
           <include name="Extentreport"/>
           <include name="aftertest"/>
-          <include name="Scenario3"/>
           <include name="getDataFromConfig"/>
+          <include name="Scenario7"/>
         </methods>
       </class> <!-- commonMethods.Testcases -->
     </classes>

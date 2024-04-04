@@ -4,44 +4,46 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
+import com.aventstack.extentreports.Status;
+import org.testng.ITestResult;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.json.JSONException;
-import org.json.JSONObject;
 //import java.awt.Color;
 //import java.awt.image.BufferedImage;
 //import javax.imageio.ImageIO;
@@ -50,52 +52,38 @@ import org.json.JSONObject;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.IClass;
+import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
-import org.testng.Reporter;
-import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.codoid.products.exception.FilloException;
 import com.codoid.products.fillo.Connection;
 import com.codoid.products.fillo.Fillo;
 import com.codoid.products.fillo.Recordset;
-//import com.jayway.jsonpath.JsonPath;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
 
 import atu.testng.reports.ATUReports;
 import atu.testng.reports.logging.LogAs;
 import atu.testng.reports.utils.Directory;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
+//import commonMethods.ExtentTestConverter.CustomTestResult;
 
 public class Keywords extends ATUReports implements Solvermindslocator {
-	private static final String HMAC_SHA1_ALGORITHM = "HMACSHA1";
 
 	public String ElementWait = Utils.getDataFromTestConfig("Wait Time");
 	public int WaitElementSeconds = new Integer(ElementWait);
-	public String Main_Window = "";
-	public ArrayList<String> tabs;
-	public WebElement fromElement;
-	public ITestResult result;
 	public String report_Filepath = Utils.getDataFromTestConfig("Reports  path");
 	public String date = getCurrentDate();
 	public String folder_name = report_Filepath.concat(date);
@@ -106,8 +94,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 	public String screenshot_folder_name = folder_name_subfolder.concat("Screenshot");
 	public String screenshot_folder_path = screenshot_folder_name.concat("/");
 	public String screenshot_folder_create = screenshot_folder_path;
-	public String firstValue;
-	public String secondValue;
+
 	public boolean failureScreenshot = Directory.TestPassScreenshot;
 	String DSW_GM = Utils.getDataFromTestData("TEMPANOS", "DSW_GM");
 	private static String Stowagevalue1;
@@ -116,23 +103,40 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 	private static HashMap<String, String> map1 = new HashMap<>();
 	private static String columnName;
 	public static ExtentTest test;
+	public static ExtentTest test2;
+//	private static ArrayList<String> OOGPassStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> OOGFailStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> DGFailStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> DGPassStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> DG_NAStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> CODPassStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> CODFailStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> ReeferPassStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> ReeferFailStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> SpecialPassStowageNumberList = new ArrayList<String>();
+//	private static ArrayList<String> SpecialFailStowageNumberList = new ArrayList<String>();
+
+//	private static Map<String, Integer> stowageSheet1 = new HashMap<>();
 
 	private static Map<String, Integer> passCountMap = new HashMap<>();
 	private static Map<String, Integer> failCountMap = new HashMap<>();
-	private static Map<String, Integer> passCountMap1 = new HashMap<>();
+//	private static Map<String, Integer> passCountMap1 = new HashMap<>();
 	private static Map<String, Integer> failCountMap1 = new HashMap<>();
 	private static Map<String, List<String>> failStowageValues = new HashMap<>();
 
 	private static Map<String, List<String>> failStowageValues1 = new HashMap<>();
-	
-	
+
 	Set<String> DGGroupFailuresStowageNumbers = new HashSet<>();
 	Set<String> OOGGroupFailuresStowageNumbers = new HashSet<>();
 	Set<String> CODGroupFailuresStowageNumbers = new HashSet<>();
 	Set<String> ReeferGroupFailuresStowageNumbers = new HashSet<>();
 	Set<String> SpecialGroupFailuresStowageNumbers = new HashSet<>();
-	
-	
+
+	static LocalDateTime currentDateTime = LocalDateTime.now();
+
+
+//	private static List<String> stowagesheet1 = new ArrayList<>();
+	private static Workbook workbook;
 	static List<String> elsePartData = new ArrayList<>();
 
 	private static Map<String, Integer> totalMap = new HashMap<>();
@@ -142,190 +146,139 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 	List<String> DG_Excepted = new ArrayList<>();
 	List<String> DG_Actual = new ArrayList<>();
 
-//	    List <String> DG_stow = new ArrayList<>();
-//	    List <String> DG_Excepted = new ArrayList<>();
-//	    List <String> DG_Actual = new ArrayList<>();
-
 	List<String> Rfr_stow = new ArrayList<>();
 	List<String> Rfr_Excepted = new ArrayList<>();
 	List<String> Rfr_Actual = new ArrayList<>();
-//	    String Rfr_Excepted;
-//	    String Rfr_Actual;
 
 	List<String> IsSpl_stow = new ArrayList<>();
 	List<String> IsSpl_Excepted = new ArrayList<>();
 	List<String> IsSpl_Actual = new ArrayList<>();
-//	    String IsSpl_stow;
-//	    String IsSpl_Excepted;
-//	    String IsSpl_Actual;
 
 	List<String> OOG_stow = new ArrayList<>();
 	List<String> OOG_Excepted = new ArrayList<>();
 	List<String> OOG_Actual = new ArrayList<>();
-//	    String OOG_stow;
-//	    String OOG_Excepted;
-//	    String OOG_Actual;
 
 	List<String> IsCOD_stow = new ArrayList<>();
 	List<String> IsCOD_Excepted = new ArrayList<>();
 	List<String> IsCOD_Actual = new ArrayList<>();
-//	    String IsCOD_stow;
-//	    String IsCOD_Excepted;
-//	    String IsCOD_Actual;
 
 	List<String> DGclass_stow = new ArrayList<>();
 	List<String> DGclass_Excepted = new ArrayList<>();
 	List<String> DGclass_Actual = new ArrayList<>();
-//	    String DGclass_stow;
-//	    String DGclass_Excepted;
-//	    String DGclass_Actual;
-
+	
 	List<String> mulHaz_stow = new ArrayList<>();
 	List<String> mulHaz_Excepted = new ArrayList<>();
 	List<String> mulHaz_Actual = new ArrayList<>();
-//	    String mulHaz_stow;
-//	    String mulHaz_Excepted;
-//	    String mulHaz_Actual;
 
 	List<String> UNNO_stow = new ArrayList<>();
 	List<String> UNNO_Excepted = new ArrayList<>();
 	List<String> UNNO_Actual = new ArrayList<>();
-//	    String UNNO_stow;
-//	    String UNNO_Excepted;
-//	    String UNNO_Actual;
 
 	List<String> Variant_stow = new ArrayList<>();
 	List<String> Variant_Excepted = new ArrayList<>();
 	List<String> Variant_Actual = new ArrayList<>();
-//	    String Variant_stow;
-//		String Variant_Excepted;
-//		String Variant_Actual;
+	
 
 	List<String> FlashPoint_stow = new ArrayList<>();
 	List<String> FlashPoint_Excepted = new ArrayList<>();
 	List<String> FlashPoint_Actual = new ArrayList<>();
-//		String FlashPoint_stow;
-//		String FlashPoint_Excepted;
-//		String FlashPoint_Actual;
 
 	List<String> DGLQ_stow = new ArrayList<>();
 	List<String> DGLQ_Excepted = new ArrayList<>();
 	List<String> DGLQ_Actual = new ArrayList<>();
-//		String DGLQ_stow;
-//		String DGLQ_Excepted;
-//		String DGLQ_Actual;
-
+	
 	List<String> OOH_stow = new ArrayList<>();
 	List<String> OOH_Excepted = new ArrayList<>();
 	List<String> OOH_Actual = new ArrayList<>();
-//		String OOH_stow;
-//		String OOH_Excepted;
-//		String OOH_Actual;
 
 	List<String> OLF_stow = new ArrayList<>();
 	List<String> OLF_Excepted = new ArrayList<>();
 	List<String> OLF_Actual = new ArrayList<>();
-//		String OLF_stow;
-//		String OLF_Excepted;
-//		String OLF_Actual;
 
 	List<String> OLA_stow = new ArrayList<>();
 	List<String> OLA_Excepted = new ArrayList<>();
 	List<String> OLA_Actual = new ArrayList<>();
-//		String OLA_stow;
-//		String OLA_Excepted;
-//		String OLA_Actual;
-
+	
 	List<String> OWP_stow = new ArrayList<>();
 	List<String> OWP_Excepted = new ArrayList<>();
 	List<String> OWP_Actual = new ArrayList<>();
-//		String OWP_stow;
-//		String OWP_Excepted;
-//		String OWP_Actual;
 
 	List<String> OWS_stow = new ArrayList<>();
 	List<String> OWS_Excepted = new ArrayList<>();
 	List<String> OWS_Actual = new ArrayList<>();
-//		String OWS_stow;
-//		String OWS_Excepted;
-//		String OWS_Actual;
 
 	List<String> COD_stow = new ArrayList<>();
 	List<String> COD_Excepted = new ArrayList<>();
 	List<String> COD_Actual = new ArrayList<>();
-//		String COD_stow;
-//		String COD_Excepted;
-//		String COD_Actual;
-	
-	
+
 	List<String> DG_stownumber = new ArrayList<>();
 	List<String> DG_Group_Excepted = new ArrayList<>();
 	List<String> DG_Group_Actual = new ArrayList<>();
-	
+
 	List<String> DG_Class_stownumber = new ArrayList<>();
 	List<String> DG_Class_Group_Excepted = new ArrayList<>();
 	List<String> DG_Class_Group_Actual = new ArrayList<>();
-	
+
 	List<String> mul_Haz_stownumber = new ArrayList<>();
 	List<String> mul_Haz_Group_Excepted = new ArrayList<>();
 	List<String> mul_Haz_Group_Actual = new ArrayList<>();
-	
+
 	List<String> UNNO_stownumber = new ArrayList<>();
 	List<String> UNNO_Group_Excepted = new ArrayList<>();
 	List<String> UNNO_Group_Actual = new ArrayList<>();
-	
+
 	List<String> Variant_stownumber = new ArrayList<>();
 	List<String> Variant_Group_Excepted = new ArrayList<>();
 	List<String> Variant_Group_Actual = new ArrayList<>();
-	
+
 	List<String> FlashPoint_stownumber = new ArrayList<>();
 	List<String> FlashPoint_Group_Excepted = new ArrayList<>();
 	List<String> FlashPoint_Group_Actual = new ArrayList<>();
-	
+
 	List<String> DGLQ_stownumber = new ArrayList<>();
 	List<String> DGLQ_Group_Excepted = new ArrayList<>();
 	List<String> DGLQ_Group_Actual = new ArrayList<>();
-	
+
 	List<String> OOG_stownumber = new ArrayList<>();
 	List<String> OOG_Group_Excepted = new ArrayList<>();
-	List<String> OOG_Group_Actual = new ArrayList<>();	
-	
+	List<String> OOG_Group_Actual = new ArrayList<>();
+
 	List<String> OOH_stownumber = new ArrayList<>();
 	List<String> OOH_Group_Excepted = new ArrayList<>();
-	List<String> OOH_Group_Actual = new ArrayList<>();	
-	
+	List<String> OOH_Group_Actual = new ArrayList<>();
+
 	List<String> OLF_stownumber = new ArrayList<>();
 	List<String> OLF_Group_Excepted = new ArrayList<>();
-	List<String> OLF_Group_Actual = new ArrayList<>();	
-	
+	List<String> OLF_Group_Actual = new ArrayList<>();
+
 	List<String> OLA_stownumber = new ArrayList<>();
 	List<String> OLA_Group_Excepted = new ArrayList<>();
-	List<String> OLA_Group_Actual = new ArrayList<>();	
+	List<String> OLA_Group_Actual = new ArrayList<>();
 
 	List<String> OWP_stownumber = new ArrayList<>();
 	List<String> OWP_Group_Excepted = new ArrayList<>();
-	List<String> OWP_Group_Actual = new ArrayList<>();	
-	
+	List<String> OWP_Group_Actual = new ArrayList<>();
+
 	List<String> OWS_stownumber = new ArrayList<>();
 	List<String> OWS_Group_Excepted = new ArrayList<>();
-	List<String> OWS_Group_Actual = new ArrayList<>();	
+	List<String> OWS_Group_Actual = new ArrayList<>();
 
 	List<String> Is_COD_stownumber = new ArrayList<>();
 	List<String> Is_COD_Group_Excepted = new ArrayList<>();
-	List<String> Is_COD_Group_Actual = new ArrayList<>();	
-	
+	List<String> Is_COD_Group_Actual = new ArrayList<>();
+
 	List<String> COD_stownumber = new ArrayList<>();
 	List<String> COD_Group_Excepted = new ArrayList<>();
-	List<String> COD_Group_Actual = new ArrayList<>();	
-	
+	List<String> COD_Group_Actual = new ArrayList<>();
+
 	List<String> IsSpl_stownumber = new ArrayList<>();
 	List<String> IsSpl_Group_Excepted = new ArrayList<>();
-	List<String> IsSpl_Group_Actual = new ArrayList<>();	
-	
+	List<String> IsSpl_Group_Actual = new ArrayList<>();
+
 	List<String> Rfr_stownumber = new ArrayList<>();
 	List<String> Rfr_Group_Excepted = new ArrayList<>();
-	List<String> Rfr_Group_Actual = new ArrayList<>();	
-	
+	List<String> Rfr_Group_Actual = new ArrayList<>();
+
 	
 	public String getCurrentDate() {
 		Format formatter = new SimpleDateFormat("dd-MM-YYYY HH-mm-ss");
@@ -339,90 +292,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		return a;
 	}
 
-	public String screenshot(WebDriver driver, String screenshotName) {
-		String image_dest = null;
-		try {
 
-			TakesScreenshot ts = (TakesScreenshot) driver;
-			File source = ts.getScreenshotAs(OutputType.FILE);
-			String currenttime = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
-			image_dest = System.getProperty("user.dir").concat("\\snaptrude\\" + currenttime + screenshotName)
-					.concat(".png");
-			System.out.println(image_dest);
-			File destination = new File(image_dest);
-			FileUtils.copyFile(source, destination);
-			return image_dest;
-		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			System.out.println("Exception while taking Screenshot" + e.getMessage());
-			return e.getMessage();
-		}
-	}
-
-	public String readimage(WebDriver driver, String filepath) {
-		String image_res = null;
-		try {
-			File imgfile = new File(filepath);
-			ITesseract instance = new Tesseract();
-			instance.setDatapath("C:\\snapautomation\\Comdex\\testdata");
-			// String result=instance.doOCR(imgfile);
-			Rectangle rect = new Rectangle(10, 20, 150, 100);
-			// String result = instance.doOCR(imgfile,rect);
-			String result = instance.doOCR(imgfile, rect);
-			System.out.println("Get for the text : " + result);
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return image_res;
-
-	}
-
-	public String ScreenCompareImage(WebDriver driver, String img_filepath1, String img_filepath2) {
-		String image_res = null;
-		try {
-			BufferedImage img1 = ImageIO.read(new File(img_filepath1));
-			BufferedImage img2 = ImageIO.read(new File(img_filepath2));
-			int w1 = img1.getWidth();
-			int w2 = img2.getWidth();
-			int h1 = img1.getHeight();
-			int h2 = img2.getHeight();
-			if ((w1 != w2) || (h1 != h2)) {
-				System.out.println("Both images should have same dimwnsions");
-			} else {
-				long diff = 0;
-				for (int j = 0; j < h1; j++) {
-					for (int i = 0; i < w1; i++) {
-						// Getting the RGB values of a pixel
-						int pixel1 = img1.getRGB(i, j);
-						Color color1 = new Color(pixel1, true);
-						int r1 = color1.getRed();
-						int g1 = color1.getGreen();
-						int b1 = color1.getBlue();
-						int pixel2 = img2.getRGB(i, j);
-						Color color2 = new Color(pixel2, true);
-						int r2 = color2.getRed();
-						int g2 = color2.getGreen();
-						int b2 = color2.getBlue();
-						// sum of differences of RGB values of the two images
-						long data = Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
-						diff = diff + data;
-					}
-				}
-				double avg = diff / (w1 * h1 * 3);
-				double percentage = (avg / 255) * 100;
-				System.out.println("Difference: " + percentage);
-				if (percentage == 0.0) {
-					image_res = "Pass";
-				}
-
-			}
-		} catch (Exception e) {
-			System.out.println("Exception while taking Screenshot" + e.getMessage());
-			return e.getMessage();
-		}
-		return image_res;
-	}
 
 	public void wait(WebDriver driver, String inputData) {
 		try {
@@ -431,128 +301,8 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			Thread.sleep(seconds);
 		} catch (InterruptedException e) {
 			add1(driver, "Unable to wait ", LogAs.FAILED, true, "Wait");
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
 			Assert.fail();
 		}
-	}
-
-	public void uploadFileAutoIT(String filelocation) {
-		try {
-			String autoitscriptpath = System.getProperty("user.dir") + "\\" + "File_upload_selenium_webdriver.au3";
-
-			Runtime.getRuntime().exec("cmd.exe /c Start AutoIt3.exe " + autoitscriptpath + " \"" + filelocation + "\"");
-
-		} catch (Exception exp) {
-
-			Assert.fail();
-		}
-	}
-
-	public void CopyAll() {
-		Robot rb3;
-		try {
-			rb3 = new Robot();
-			rb3.delay(1000);
-			rb3.keyPress(KeyEvent.VK_CONTROL);
-			rb3.keyPress(KeyEvent.VK_A);
-			rb3.keyRelease(KeyEvent.VK_A);
-			rb3.keyRelease(KeyEvent.VK_CONTROL);
-			rb3.delay(1000);
-		} catch (Exception e) {
-			System.out.println("robot class its not working");
-		}
-	}
-
-	public static int getXCoordOffsetFromCentre(WebDriver driver, Point centre, int x, int y, int z) {
-
-		Integer intX = Integer.valueOf(x);
-		Integer intY = Integer.valueOf(y);
-		Integer intZ = Integer.valueOf(z);
-		int firstValue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					intX, intY, intZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			firstValue = Integer.parseInt(first[0].replace("[", "").trim()) - centre.x;
-			System.out.println(firstValue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return firstValue;
-
-	}
-
-	public static int getYCoordOffsetFromCentre(WebDriver driver, Point centre, int x, int y, int z) {
-
-		Integer intX = Integer.valueOf(x);
-		Integer intY = Integer.valueOf(y);
-		Integer intZ = Integer.valueOf(z);
-		int secondvalue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					intX, intY, intZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			secondvalue = Integer.parseInt(first[1].replace("]", "").trim()) - centre.y;
-			System.out.println(secondvalue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return secondvalue;
-
-	}
-
-	public static void dropdown(WebDriver driver, String xpath) {
-
-		String[] values = splitXpath(xpath);
-
-		List<WebElement> li = driver.findElements(By.xpath(values[1]));
-		try {
-			for (int i = 0; i < li.size(); i++) {
-				System.out.println(li.get(i).getText());
-				Thread.sleep(2000);
-				if (li.get(i).getText().contains("Apple iPhone 12")) {
-
-					li.get(i).click();
-					break;
-				}
-			}
-		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-
 	}
 
 	public void waitForElement(WebDriver driver, String xpath) {
@@ -565,9 +315,8 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(values[1])));
 			add(driver, "Wait for the Element " + values[0], LogAs.PASSED, true, values[0]);
 		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,
-					values[0]);
+			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,values[0]);
+			Extent_fail(driver, "Element is not present " + values[0], test);
 			Assert.fail();
 		}
 	}
@@ -576,15 +325,13 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		String[] values = splitXpath(xpath);
 		try {
 			// int WaitElementSeconds1 = new Integer(ElementWait);
-			driver.manage().timeouts().implicitlyWait(600, TimeUnit.SECONDS);
-			WebDriverWait wait = new WebDriverWait(driver, 600);
+			driver.manage().timeouts().implicitlyWait(6000, TimeUnit.SECONDS);
+			WebDriverWait wait = new WebDriverWait(driver, 6000);
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(values[1])));
 			// wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(values[1])));
 			add(driver, "Wait for the Element " + values[0], LogAs.PASSED, true, values[0]);
 		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,
-					values[0]);
+			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,values[0]);
 			Assert.fail();
 		}
 	}
@@ -598,9 +345,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(values[1])));
 			add(driver, "Wait for the Element " + values[0], LogAs.PASSED, true, values[0]);
 		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,
-					values[0]);
+			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,values[0]);
 			Assert.fail();
 		}
 	}
@@ -617,29 +362,10 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			add(driver, "Wait for visibility of Element" + values[0], LogAs.PASSED, true, values[0]);
 		} catch (Exception e) {
 			System.out.println(" Exception " + e);
-			add1(driver, "Element not visible " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Element not visible " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,values[0]);
 			Assert.fail();
 		}
 
-	}
-
-	public void waitForElement5(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			// int WaitElementSeconds1 = new Integer(ElementWait);
-			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-			WebDriverWait wait = new WebDriverWait(driver, 30);
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(values[1])));
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(values[1])));
-			add(driver, "Wait for the Element " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			add1(driver, "Element Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,
-					values[0]);
-			Assert.fail();
-		}
 	}
 
 	public void click(WebDriver driver, String Xpath) {
@@ -651,107 +377,34 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(values[1])));
 			WebElement element = driver.findElement(By.xpath(values[1]));
 			element.click();
-			// JavascriptExecutor executor = (JavascriptExecutor) driver;
-			// executor.executeScript("arguments[0].setAttribute('style', 'background:
-			// yellow; border: 2px solid red;');",element);
-			// executor.executeScript("arguments[0].click();", element);
-
 			add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]);
 
 			Extent_pass(driver, "Click on " + values[0], test);
 
-			// Object de = executor.executeScript("return
-			// store.scene.getEngine().getFps()");
-			// System.out.println("Duration of action performed : "+de);
-
-			// this.getfps(driver);
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,values[0]);
 			Extent_fail(driver, "Unable to click on " + values[0], test);
 			Assert.fail();
 		}
-		// String[] values = splitXpath(path);
-		// try {
-		//
-		// WebDriverWait wait1 = new WebDriverWait(driver, 30);
-		// wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(values[1])));
-		// WebElement element = driver.findElement(By.xpath(values[1]));
-		// JavascriptExecutor executor = (JavascriptExecutor) driver;
-		// executor.executeScript("arguments[0].click();", element);
-		//
-		// WebElement webElement = driver.findElement(By.xpath(values[1]));
-		// JavascriptExecutor js = (JavascriptExecutor) driver;
-		// js.executeScript("arguments[0].setAttribute('style', 'background: yellow;
-		// border: 2px solid red;');",
-		// webElement);
-		// // webElement.click();
-		// jsClickByXPath(driver, path);
-		// System.out.println(values[0] + " clicked");
-		// //add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]);
-		// } catch (Exception e) {
-		// System.out.println(" Exception " + e);
-		// add1(driver, "Unable to click on " + values[0], LogAs.FAILED, true,
-		// values[0]);
-		// Assert.fail();
-		// }
-		// //String[] values = splitXpath(path);
-		// /*
-		// * try { // waitForElement(driver,Xpath); WebElement element =
-		// * driver.findElement(By.xpath(values[1])); JavascriptExecutor executor =
-		// * (JavascriptExecutor) driver; executor.
-		// * executeScript("arguments[0].setAttribute('style', 'background: yellow;
-		// border: 2px solid red;');"
-		// * , element); executor.executeScript("arguments[0].click();", element);
-		// * add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]); }
-		// catch
-		// * (Exception e) { add1(driver, "Unable to click on " + values[0],
-		// LogAs.FAILED,
-		// * true, values[0]); Assert.fail(); }
-		// */
+	
 	}
 
-	public void click1(WebDriver driver, String path, int input) {
+	public void click1(WebDriver driver, String path) {
 		String[] values = splitXpath(path);
 		try {
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement webElement = driver.findElement(By.xpath(values[input]));
-			System.out.println(webElement);
+			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			System.out.println(webElement);
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');",
 					webElement);
-			webElement.click();
+			js.executeScript("arguments[0].click();", webElement);
 			System.out.println(values[0] + " clicked");
 			add(driver, "Click1 on " + values[0], LogAs.PASSED, true, values[0]);
 		} catch (Exception e) {
 			System.out.println(" Exception " + e);
-			add1(driver, "Unable to click1 on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void switchToActiveElement(WebDriver driver) {
-		try {
-			driver.switchTo().activeElement();
-		} catch (Exception e) {
-		}
-	}
-
-	public void clickByClassName(WebDriver driver, String className) {
-		String[] values = splitXpath(className);
-		try {
-			WebElement webElement = driver.findElement(By.className(values[1]));
-			webElement.click();
-			// add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			// add1(driver, "Unable to click on " + values[0], LogAs.FAILED, true,
-			// values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Unable to click1 on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,values[0]);
 			Assert.fail();
 		}
 	}
@@ -764,103 +417,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-	public void jsClickByXPath(WebDriver driver, String Xpath) {
-		String[] values = splitXpath(Xpath);
-		try {
-			// waitForElement(driver,Xpath);
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			JavascriptExecutor executor = (JavascriptExecutor) driver;
-			executor.executeScript("arguments[0].click();", element);
-			add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void waitForTexttopresent(WebDriver driver, String xpath, String text) {
-		String[] values = splitXpath(xpath);
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			// int WaitElementSeconds1 = new Integer(ElementWait);
-			WebDriverWait wait = new WebDriverWait(driver, 30);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(values[1])));
-			wait.until(ExpectedConditions.textToBePresentInElement(By.xpath(values[1]), text));
-			add(driver, "Wait for the Text " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Text Not Found - " + values[0] + "- " + e.getLocalizedMessage() + e, LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public String clearAndType(WebDriver driver, String xpaths, String keysToSend) {
-		String[] values = splitXpath(xpaths);
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebDriverWait wait1 = new WebDriverWait(driver, 20);
-			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(values[1])));
-
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			JavascriptExecutor js = (JavascriptExecutor) driver;
-			js.executeScript("arguments[0].value='';", webElement);
-			js.executeScript("arguments[0].click();", webElement);
-			// webElement.clear();
-			// webElement.sendKeys(keysToSend, Keys.ENTER);
-			// JavascriptExecutor jse = (JavascriptExecutor)driver;
-
-			wait(driver, "1");
-			js.executeScript("arguments[0].value=" + "\'" + keysToSend + "\'" + ";", webElement);
-			// js.executeScript("arguments[0].click();", webElement);
-			webElement.sendKeys(Keys.ENTER);
-
-			add(driver, "Clear and Type on " + values[0], keysToSend, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), keysToSend, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return keysToSend;
-	}
-
-	public String actionType(WebDriver driver, String xpath, String keysToSend) {
-		String[] values = splitXpath(xpath);
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			Actions action = new Actions(driver);
-			action.sendKeys(webElement, keysToSend).build().perform();
-			add(driver, "Type on " + values[0], keysToSend, true, values[0]);
-		} catch (StaleElementReferenceException e) {
-			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return keysToSend;
-	}
-
-	public void actionClick(WebDriver driver, String Xpath) {
-		String[] values = splitXpath(Xpath);
-		WebElement webElement = driver.findElement(By.xpath(values[1]));
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			Actions action = new Actions(driver);
-			action.click(webElement).build().perform();
-			add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
+	
 	public void doubleClick(WebDriver driver, String element) {
 		String[] values = splitXpath(element);
 		try {
@@ -870,9 +427,8 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			action.build().perform();
 			add(driver, "Double click on " + values[0], LogAs.PASSED, true, values[0]);
 		} catch (Exception e) {
-			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,values[0]);
+
 			Assert.fail();
 		}
 	}
@@ -891,9 +447,8 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			add(driver, "Type on " + values[0], keysToSend, true, values[0]);
 			wait(driver, "1");
 		} catch (Exception e) {
-			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), keysToSend, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), keysToSend, true,values[0]);
+
 			Assert.fail();
 		}
 		return keysToSend;
@@ -915,199 +470,22 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			add(driver, "Type on " + values[0], keysToSend, true, values[0]);
 
 		} catch (Exception e) {
-			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), keysToSend, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), keysToSend, true,values[0]);
+
 			Assert.fail();
 		}
 		return keysToSend;
 
 	}
-
-	public void clear(WebDriver driver, String xpaths) {
-		String[] values = splitXpath(xpaths);
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			webElement.clear();
-			add(driver, "Clear on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to clear on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.PASSED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void webelementfunction(WebDriver driver, String xpaths) {
-		String[] values = splitXpath(xpaths);
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			// WebElement webElement = driver.findElement(By.xpath(values[1]));
-			// webElement.clear();
-			List<WebElement> bakeries = driver.findElements(By.xpath(values[1]));
-			JavascriptExecutor js = (JavascriptExecutor) driver;
-			js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');",
-					bakeries);
-			System.out.println(bakeries.size());
-			add(driver, "Clear on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to clear on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.PASSED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-
-	}
-
-	public void selectCheckBox(WebDriver driver, String xpaths) {
-		String[] values = splitXpath(xpaths);
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			if (element.isSelected()) {
-			} else {
-				element.click();
-			}
-			add(driver, "Select the checkbox on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to select the checkbox on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED,
-					true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void deSelectCheckBox(WebDriver driver, String xpaths) {
-		String[] values = splitXpath(xpaths);
-		try {
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			if (element.isSelected()) {
-				element.click();
-			} else {
-			}
-			add(driver, "Deselect the checkbox on " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to deselect the checkbox on " + values[0] + "- " + e.getLocalizedMessage(),
-					LogAs.FAILED, true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void selectByIndex(WebDriver driver, String xpaths, String inputData) {
-		String[] values = splitXpath(xpaths);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			Integer index = new Integer(inputData);
-			Select selectBox = new Select(webElement);
-			selectBox.selectByIndex(index);
-			add(driver, "Select the Dropdown by Index " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to select the Dropdown by Index " + values[0] + "- " + e.getLocalizedMessage(),
-					inputData, true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void selectByText(WebDriver driver, String xpaths, String inputData) {
-		String[] values = splitXpath(xpaths);
-		try {
-			Select selectBox = new Select(driver.findElement(By.xpath(values[1])));
-			selectBox.selectByVisibleText(inputData);
-			add(driver, "Select the Dropdown by text " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to select the Dropdown by text " + values[0] + "- " + e.getLocalizedMessage(),
-					inputData, true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void selectByValue(WebDriver driver, String xpaths, String inputData) {
-		String[] values = splitXpath(xpaths);
-		try {
-
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			Select selectBox = new Select(webElement);
-			selectBox.selectByValue(inputData);
-			add(driver, "Select the Dropdown by Value " + values[0], inputData, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to select the Dropdown by Value " + values[0] + "- " + e.getLocalizedMessage(),
-					inputData, true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void checkTwoString(WebDriver driver, String GetText1, String GetText2) {
-		try {
-			if (GetText1.equalsIgnoreCase(GetText2)) {
-				add(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are matched", LogAs.PASSED, true,
-						GetText1);
-			} else if (GetText1.equals(null)) {
-				add(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are not matched", LogAs.FAILED,
-						true, GetText1);
-				Assert.fail();
-			} else if (GetText2.equals(null)) {
-				add(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are not matched", LogAs.FAILED,
-						true, GetText1);
-				Assert.fail();
-			} else {
-				add(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are not matched", LogAs.FAILED,
-						true, GetText1);
-				Assert.fail();
-			}
-		} catch (NoSuchElementException e) {
-			add1(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are not matched", LogAs.FAILED, true,
-					GetText1);
-			Assert.fail();
-		}
-	}
-
-	public void checkPartialText(WebDriver driver, String GetText1, String GetText2) {
-		try {
-			if ((GetText1.contains(GetText2)) || (GetText2.contains(GetText1))) {
-				add(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are matched", LogAs.PASSED, true,
-						GetText1);
-			} else {
-				add(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are not matched", LogAs.FAILED,
-						true, GetText1);
-				Assert.fail();
-			}
-		} catch (NoSuchElementException e) {
-			add1(driver, "The Value1 " + GetText1 + " and Value2 " + GetText2 + " are not matched", LogAs.FAILED, true,
-					GetText1);
-			Assert.fail();
-		}
-	}
-
-	public void close(WebDriver driver) {
-		try {
-			driver.close();
-			add(driver, "Application is closed", LogAs.PASSED, true, "Not Req");
-		} catch (Exception e) {
-			add1(driver, "Unable to close the application ", LogAs.FAILED, true,
-					"Not Req" + "- " + e.getLocalizedMessage());
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
+	
 	public String getText(WebDriver driver, String xpath) {
 		String[] values = splitXpath(xpath);
 		try {
 			WebElement webElement = driver.findElement(By.xpath(values[1]));
 			String text = webElement.getText();
-			add(driver, "The value ' " + text + " ' is retrieved from the element ' " + values[0] + "'", LogAs.PASSED,
-					true, values[0]);
 			return text;
 
 		} catch (Exception e) {
-			add1(driver, "Unable to retrieve the text " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED,
-					true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
 			Assert.fail();
 			return null;
 		}
@@ -1128,8 +506,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		String[] values = splitXpath(xpath);
 		WebElement webElement = driver.findElement(By.xpath(values[1]));
 		String text = webElement.getText();
-		add(driver, "The value ' " + text + " ' is retrieved for the element ' " + values[0] + "'", LogAs.PASSED, true,
-				values[0]);
+		add(driver, "The value ' " + text + " ' is retrieved for the element ' " + values[0] + "'", LogAs.PASSED, true,values[0]);
 		return text;
 
 	}
@@ -1147,7 +524,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			// add(driver, "Scrolled to the bottom ", LogAs.PASSED, true, "Not");
 		} catch (Exception e) {
 			// add1(driver, "Unable to scroll to the bottom", LogAs.FAILED, true, "Not");
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+
 			Assert.fail();
 		}
 	}
@@ -1160,48 +537,26 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 		} catch (Exception e) {
 			add1(driver, "Unable to scroll to the Top", LogAs.FAILED, true, "Not" + "- " + e.getLocalizedMessage());
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+
 			Assert.fail();
 		}
 	}
 
-	public boolean verifyElementIsPresent(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			element.isDisplayed();
-			add(driver, "Element '" + values[0] + "' is verified ", LogAs.PASSED, true, values[0]);
-			return true;
-		} catch (NoSuchElementException e) {
-			add1(driver, "Element is Not Present " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-			return true;
-		}
-	}
-
-	public void verifyElementHasText(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			String text = driver.findElement(By.xpath(values[1])).getText();
-			if (!text.equals("")) {
-				add(driver, "Element '" + values[0] + "' has text " + text, LogAs.PASSED, true, values[0]);
-			} else {
-				add1(driver, "No text on the element " + values[0], LogAs.FAILED, true, values[0]);
-				((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-				Assert.fail();
-			}
-		} catch (NoSuchElementException e) {
-			add1(driver, "Element is Not Present " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
+	
 	public boolean isDisplayed(WebDriver driver, String xpath) {
 		String[] values = splitXpath(xpath);
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		try {
+			WebElement webElement = driver.findElement(By.xpath(values[1]));
+			return webElement.isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean isDisplayed1(WebDriver driver, String xpath) {
+		String[] values = splitXpath(xpath);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		try {
 			WebElement webElement = driver.findElement(By.xpath(values[1]));
 			return webElement.isDisplayed();
@@ -1241,7 +596,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		} catch (NoSuchElementException e) {
 			add1(driver, "Unable to retrieve the value " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED,
 					true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+
 			Assert.fail();
 			return null;
 		}
@@ -1282,288 +637,107 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-	public void scrollUsingElement(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
-			add(driver, "Scrolled to " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to scroll " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
+//	public void scrollUsingElement(WebDriver driver, String xpath) {
+//		String[] values = splitXpath(xpath);
+//		try {
+//			WebElement element = driver.findElement(By.xpath(values[1]));
+//			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+//			add(driver, "Scrolled to " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to scroll " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
+//					values[0]);
+//
+//			Assert.fail();
+//		}
+//	}
+//
 
-	public void goBack(WebDriver driver) {
-
-		try {
-			driver.navigate().back();
-			add(driver, "Go Back", LogAs.PASSED, true, "goback");
-
-		} catch (Exception e) {
-			add(driver, "Unable to Go Back", LogAs.FAILED, true, "goback");
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-
-		}
-	}
-
-	public void keyBoardEvent(int eventNumber) {
-		try {
-
-			Thread.sleep(1000);
-
-			Runtime.getRuntime().exec(
-
-					"cmd /C adb shell input keyevent " + eventNumber);
-
-			Thread.sleep(3000);
-
-		} catch (Throwable t) {
-
-			t.printStackTrace();
-
-		}
-	}
-
-	public void team_Arrow(WebDriver driver, String value) {
-
-		driver.findElement(By.xpath("//td[text()='" + value + "@trackd.com']/..//div[@class='action-icon-container']"))
-				.click();
-
-	}
-
-	public void type(WebDriver driver, int value) {
-
-		driver.findElement(By.xpath("(//div[@class='sc-jcFjpl fOTaNF'])[" + value + "]")).click();
-	}
-
-	public void manufacturer(WebDriver driver, int value, String value1) {
-
-		driver.findElement(By.xpath("(//*[text()='₹']//following::input[1])[" + value + "]")).sendKeys(value1);
-
-		add(driver, "type on " + "manufacture", LogAs.PASSED, true, "");
-	}
-
-	public void Description(WebDriver driver, int value, String value1) {
-		// *[@placeholder='Description']
-		driver.findElement(By.xpath("(//*[text()='₹']//following::input[2])[" + value + "]")).sendKeys(value1);
-		add(driver, "type on  " + "Description", LogAs.PASSED, true, "");
-	}
-
-	public void cost(WebDriver driver, int value, String value1) {
-
-		driver.findElement(By.xpath("(//*[text()='₹']//preceding::input[1])[" + value + "]")).sendKeys(value1);
-		add(driver, "type on  " + "Cost", LogAs.PASSED, true, "");
-	}
-
-	public void vendor(WebDriver driver, int value, String value1) {
-
-		driver.findElement(By.xpath("(//*[text()='₹']//following::input[1])[" + value + "]")).sendKeys(value1);
-		add(driver, "type on  " + "vendor", LogAs.PASSED, true, "");
-
-	}
-
-	public void familyname(WebDriver driver, int value, String value1) {
-
-		driver.findElement(By.xpath("(//*[@placeholder='Furniture Family'])[" + value + "]")).sendKeys(value1);
-		add(driver, "type on  " + "Furniture Family", LogAs.PASSED, true, "");
-	}
-
-	public void waitTillVisibilityElement(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-
-		try {
-			driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			WebDriverWait wait = new WebDriverWait(driver, 30);
-			wait.until(ExpectedConditions.visibilityOf(webElement));
-			add(driver, "Waited till the element is visible", LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add(driver, "Unable to wait till an element is visible", LogAs.FAILED, true,
-					values[0] + "-" + e.getLocalizedMessage());
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-
-		}
-	}
-
-	public void waitTillElementIsClickable(WebDriver driver, String xpath) {
-		try {
-			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-			String[] values = splitXpath(xpath);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			WebDriverWait wait = new WebDriverWait(driver, 30);
-			wait.until(ExpectedConditions.elementToBeClickable(webElement));
-			add(driver, "Waited till the element is clickable", LogAs.PASSED, true, "Scroll down");
-		} catch (Exception e) {
-			add(driver, "Unable to wait till an element is clickable", LogAs.FAILED, true,
-					"Scroll down" + "- " + e.getLocalizedMessage());
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-
-		}
-	}
-
-	public void IsElementEnabled(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			webElement.isEnabled();
-			add(driver, "Element is enabled" + values[0], LogAs.PASSED, true, values[0]);
-
-		} catch (NoSuchElementException e) {
-			add(driver, "Element is not enabled", LogAs.FAILED, true, values[0]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public int getRandomNum(WebDriver driver, int upperlimit) {
-		List<Integer> randomZeroToSeven = new ArrayList<>();
-		for (int i = 1; i <= upperlimit; i++) {
-			randomZeroToSeven.add(i);
-		}
-		Collections.shuffle(randomZeroToSeven);
-
-		return randomZeroToSeven.get(0);
-
-	}
-
-	public void deSelectByIndex(WebDriver driver, String xpath, String inputData) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			Integer index = new Integer(inputData);
-			Select selectBox = new Select(webElement);
-			selectBox.deselectByIndex(index);
-			add(driver, "Deselect the dropdown by index " + values[0], LogAs.PASSED, true, values[1]);
-		} catch (Exception e) {
-			add1(driver, "Unable to deselect the dropdown by index" + values[0], LogAs.FAILED, true, values[1]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void deSelectByValue(WebDriver driver, String xpath, String inputData) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			Select selectBox = new Select(webElement);
-			selectBox.deselectByValue(inputData);
-			add(driver, "Deselect the dropdown by index " + values[0], LogAs.PASSED, true, values[1]);
-		} catch (Exception e) {
-			add(driver, "Unable to deselect the dropdown by index" + values[0], LogAs.FAILED, true, values[1]);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public void getWindow(WebDriver driver, String path) {
-		try {
-			waitTime(driver, "5");
-			Main_Window = driver.getWindowHandle();
-			System.out.println("Main_Window:" + Main_Window);
-			String[] values = splitXpath(path);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			webElement.click();
-			Thread.sleep(500);
-			ArrayList<String> allWindows = new ArrayList<String>(driver.getWindowHandles());
-			System.out.println("2nd Window:" + allWindows.get(1));
-			driver.switchTo().window(allWindows.get(1));
-		} catch (InterruptedException e) {
-		}
-	}
-
-	public void switchWindow(WebDriver driver) {
-		try {
-			driver.switchTo().window(Main_Window);
-		} catch (Exception e) {
-		}
-	}
-
-	public void switchDefaultContent(WebDriver driver) {
-		driver.switchTo().defaultContent();
-	}
-
-	public void getAutoit(String exePath) {
-		try {
-			Runtime.getRuntime().exec(exePath);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	public void dragElement(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			fromElement = webElement;
-			add(driver, "Drag an element " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to drag an element " + values[0], LogAs.FAILED, true, values[0]);
-		}
-
-	}
-
-	public void dropElement(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			Actions action = new Actions(driver);
-			Action dragDrop = action.dragAndDrop(fromElement, webElement).build();
-			dragDrop.perform();
-			add(driver, "Drop an element " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Unable to drag an element " + values[0], LogAs.FAILED, true, values[0]);
-		}
-	}
-
-	public boolean isElementSelected(WebDriver driver, String xpaths) {
-		String[] values = splitXpath(xpaths);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			webElement.isSelected();
-			add(driver, "Verified Element is selected " + values[0], LogAs.PASSED, true, values[0]);
-			return true;
-		} catch (NoSuchElementException e) {
-
-			add1(driver, "Element is not selected " + values[0], LogAs.FAILED, true, values[0]);
-			return false;
-		}
-	}
-
-	public void inVisibilityElement(WebDriver driver, String NormalXpath) {
-		try {
-			WebDriverWait wait = new WebDriverWait(driver, WaitElementSeconds);
-			wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(NormalXpath)));
-		} catch (Exception e) {
-		}
-	}
-
-	public void IstextPresent(WebDriver driver, String inputData) {
-		if (driver.getPageSource().contains(inputData)) {
-			add(driver, "Text is Present " + inputData, LogAs.PASSED, true, inputData);
-		} else {
-			add1(driver, "Text is not Present " + inputData, LogAs.FAILED, true, inputData);
-		}
-	}
-
-	public void waitTillTextIsLoaded(WebDriver driver, String xpath, String inputData) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			WebDriverWait waits = new WebDriverWait(driver, WaitElementSeconds);
-			waits.until(ExpectedConditions.textToBePresentInElement(webElement, inputData));
-			add(driver, "Waited till the text " + inputData + " is loaded", LogAs.PASSED, true, inputData);
-		} catch (Exception e) {
-			add1(driver, "Unable to Wait till the text " + inputData + "- " + e.getLocalizedMessage() + " is loaded",
-					LogAs.FAILED, true, inputData);
-		}
-	}
-
+//
+//	public void waitTillVisibilityElement(WebDriver driver, String xpath) {
+//		String[] values = splitXpath(xpath);
+//
+//		try {
+//			driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			WebDriverWait wait = new WebDriverWait(driver, 30);
+//			wait.until(ExpectedConditions.visibilityOf(webElement));
+//			add(driver, "Waited till the element is visible", LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add(driver, "Unable to wait till an element is visible", LogAs.FAILED, true,values[0] + "-" + e.getLocalizedMessage());
+//
+//			Assert.fail();
+//
+//		}
+//	}
+//
+////	
+//	public int getRandomNum(WebDriver driver, int upperlimit) {
+//		List<Integer> randomZeroToSeven = new ArrayList<>();
+//		for (int i = 1; i <= upperlimit; i++) {
+//			randomZeroToSeven.add(i);
+//		}
+//		Collections.shuffle(randomZeroToSeven);
+//
+//		return randomZeroToSeven.get(0);
+//
+//	}
+//
+//	
+//
+//	public void deSelectByValue(WebDriver driver, String xpath, String inputData) {
+//		String[] values = splitXpath(xpath);
+//		try {
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			Select selectBox = new Select(webElement);
+//			selectBox.deselectByValue(inputData);
+//			add(driver, "Deselect the dropdown by index " + values[0], LogAs.PASSED, true, values[1]);
+//		} catch (Exception e) {
+//			add(driver, "Unable to deselect the dropdown by index" + values[0], LogAs.FAILED, true, values[1]);
+//
+//			Assert.fail();
+//		}
+//	}
+//
+//
+//	public void switchDefaultContent(WebDriver driver) {
+//		driver.switchTo().defaultContent();
+//	}
+//
+//	public void getAutoit(String exePath) {
+//		try {
+//			Runtime.getRuntime().exec(exePath);
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+//	}
+//
+//	public void dragElement(WebDriver driver, String xpath) {
+//		String[] values = splitXpath(xpath);
+//		try {
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			fromElement = webElement;
+//			add(driver, "Drag an element " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to drag an element " + values[0], LogAs.FAILED, true, values[0]);
+//		}
+//
+//	}
+//
+//	public void dropElement(WebDriver driver, String xpath) {
+//		String[] values = splitXpath(xpath);
+//		try {
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			Actions action = new Actions(driver);
+//			Action dragDrop = action.dragAndDrop(fromElement, webElement).build();
+//			dragDrop.perform();
+//			add(driver, "Drop an element " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to drag an element " + values[0], LogAs.FAILED, true, values[0]);
+//		}
+//	}
+//
+//	
+	
 	public void verifyTextIsNotPresent(WebDriver driver, String NormalXpath, String inputData) {
 		try {
 			WebDriverWait waits = new WebDriverWait(driver, WaitElementSeconds);
@@ -1575,128 +749,8 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-	public void isElementClickable(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			WebDriverWait waits = new WebDriverWait(driver, WaitElementSeconds);
-			waits.until(ExpectedConditions.elementToBeClickable(webElement));
-			add(driver, "Element is clickable " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Element is not clickable " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-		}
-	}
 
-	public void isElementSelectable(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			WebDriverWait waits = new WebDriverWait(driver, WaitElementSeconds);
-			waits.until(ExpectedConditions.elementToBeSelected(webElement));
-			add(driver, "Element is selectable " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Element is not selectable " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-		}
-	}
-
-	public void waitUntilVisibilityOfElement(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			WebDriverWait wait = new WebDriverWait(driver, WaitElementSeconds);
-			wait.until(ExpectedConditions.visibilityOf(webElement));
-			add(driver, "Wait till the Element is visible " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Element is not visible " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-		}
-
-	}
-
-	public void waitForElementNotpresent(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		try {
-			WebDriverWait wait = new WebDriverWait(driver, WaitElementSeconds);
-			wait.until(ExpectedConditions.not(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath))));
-			add(driver, "Wait till the Element is visible " + values[0], LogAs.PASSED, true, values[0]);
-		} catch (Exception e) {
-			add1(driver, "Element is not visible " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
-					values[0]);
-		}
-	}
-
-	public String dynamicSendkeys(WebDriver driver, String inputData, String xpath) {
-		String[] values = splitXpath(xpath);
-		WebElement webElement = driver.findElement(By.xpath(values[1]));
-		webElement.clear();
-		try {
-			Thread.sleep(500);
-			// String currenttime = new
-			// SimpleDateFormat("E_yyyyMMddHHmmssa").format(Calendar.getInstance().getTime());
-			String currenttime = new SimpleDateFormat("HHmmssa").format(Calendar.getInstance().getTime());
-			String originalValue = inputData;
-			String combinedValues = currenttime + originalValue;
-			sendKeys(driver, xpath, combinedValues);
-			return combinedValues;
-		} catch (InterruptedException e) {
-
-			return null;
-		}
-
-	}
-
-	public void partialTextVerify(String sentence, String word) {
-		if (sentence.contains(word)) {
-		} else {
-		}
-
-	}
-
-	public String enterUniquePhone(WebDriver driver, String path) {
-		String[] values = splitXpath(path);
-		WebElement webElement = driver.findElement(By.xpath(values[1]));
-		webElement.clear();
-		try {
-			Thread.sleep(500);
-			String phonenumber = new SimpleDateFormat("MMddHHmmss").format(Calendar.getInstance().getTime());
-			sendKeys(driver, path, phonenumber);
-			return phonenumber;
-		} catch (InterruptedException e) {
-			return null;
-		}
-
-	}
-
-	public String dynamicTypeName(WebDriver driver, String inputData, String webElementxPath) {
-		String[] values = splitXpath(webElementxPath);
-		WebElement webElement = driver.findElement(By.xpath(values[1]));
-		webElement.clear();
-		try {
-			Thread.sleep(500);
-			String currenttime = new SimpleDateFormat("HH_mmss").format(Calendar.getInstance().getTime());
-			String combinedValues = inputData + currenttime;
-			sendKeys(driver, webElementxPath, combinedValues);
-			return combinedValues;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public String sumOfTwoNumbers(String GetText1, String GetText2) {
-		try {
-			int string1 = Integer.parseInt(GetText1);
-			int string2 = Integer.parseInt(GetText2);
-			int sum1 = string1 + string2;
-			String sum = Integer.toString(sum1);
-			return sum;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
+	
 	public void quit(WebDriver driver) {
 		try {
 			driver.quit();
@@ -1732,33 +786,6 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		}
 	}
 
-	public void uploadFileRobot(String fileLocation) {
-		try {
-			StringSelection stringSelection = new StringSelection(fileLocation);
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-			Robot robot = new Robot();
-			robot.keyPress(KeyEvent.VK_CONTROL);
-			robot.keyPress(KeyEvent.VK_V);
-			robot.keyRelease(KeyEvent.VK_V);
-			robot.keyRelease(KeyEvent.VK_CONTROL);
-			robot.keyPress(KeyEvent.VK_ENTER);
-			robot.keyRelease(KeyEvent.VK_ENTER);
-
-		} catch (Exception exp) {
-			Assert.fail();
-		}
-	}
-
-	public void goForward(WebDriver driver) {
-		try {
-			driver.navigate().forward();
-
-		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
 	public void keyboardTab(WebDriver driver) {
 		Actions actionObject = new Actions(driver);
 		actionObject.keyDown(Keys.CONTROL).sendKeys(Keys.TAB).perform();
@@ -1769,240 +796,9 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			Actions actionObject = new Actions(driver);
 			actionObject.sendKeys(Keys.ENTER).build().perform();
 		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+
 			Assert.fail();
 		}
-	}
-
-	public String alertAccept(WebDriver driver, String path) {
-		String[] values = splitXpath(path);
-
-		try {
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			webElement.click();
-			Alert alert = driver.switchTo().alert();
-			String alertText = alert.getText();
-			alert.accept();
-			return alertText;
-		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-			return null;
-		}
-	}
-
-	public void dismissAlert(WebDriver driver) {
-		Alert alert = driver.switchTo().alert();
-		alert.dismiss();
-	}
-
-	public String promptBox(WebDriver driver, String path, String inputData) {
-		String[] values = splitXpath(path);
-		try {
-
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			element.click();
-			Alert alert = driver.switchTo().alert();
-			driver.switchTo().alert().sendKeys(inputData);
-			String alertText = alert.getText();
-			alert.accept();
-			return alertText;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	public void switchToFrame(WebDriver driver, String frameName) {
-		String[] values = splitXpath(frameName);
-		try {
-			WebElement element = driver.findElement(By.xpath(values[1]));
-			driver.switchTo().frame(element);
-
-		} catch (NoSuchFrameException e) {
-
-		}
-	}
-
-	public void switchToDefaultFrame(WebDriver driver) {
-		try {
-			driver.switchTo().defaultContent();
-		} catch (Exception e) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-	}
-
-	public static void uniqueObjects(WebDriver driver) {
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			js1.executeScript("checkBox = store.exposed.getBabylonGUIElementByName(\"arrayCheckbox\");\r\n"
-					+ "if (checkBox){\r\n"
-					+ "    const currentValue = store.arrayFunctionGlobalVariables.uniqueObjects;\r\n"
-					+ "    const newValue = !currentValue;\r\n" + "\r\n" + "    checkBox.isChecked = newValue;\r\n"
-					+ "    checkBox.onIsCheckedChangedObservable.notifyObservers(newValue);\r\n" + "}");
-
-		}
-
-		catch (Exception e1) {
-			System.out.println(e1);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-
-		}
-
-	}
-
-	public static void zoomin(WebDriver driver, int n, int x, int z, int y) {
-
-		try {
-			WebElement canvas = driver.findElement(By.id("canvas"));
-			System.out.println(canvas.getLocation());
-			Point leftTop = canvas.getLocation();
-			Dimension size = canvas.getSize();
-			System.out.println(size);
-			int centreX = leftTop.x + size.width / 2;
-			int centreY = leftTop.y + size.height / 2;
-			Point centre = new Point(centreX, centreY);
-			System.out.println(centre);
-			Actions builder = new Actions(driver);
-
-			driver.findElement(By.xpath("//*[@alt='zoomIn']")).click();
-
-			for (int i = 0; i < n; i++) {
-				builder.moveToElement(canvas, getXCoordOffsetFromCentre(driver, centre, x, z, y),
-						getYCoordOffsetFromCentre(driver, centre, x, z, y)).click().perform();
-
-			}
-
-			driver.findElement(By.xpath("//*[@alt='zoomIn']")).click();
-
-		}
-
-		catch (Exception e) {
-			System.out.println("Can able to view zoomout canvas");
-		}
-
-	}
-
-	public static void zoomout(WebDriver driver, int n, int x, int z, int y) {
-
-		try {
-			WebElement canvas = driver.findElement(By.id("canvas"));
-			System.out.println(canvas.getLocation());
-			Point leftTop = canvas.getLocation();
-			Dimension size = canvas.getSize();
-			System.out.println(size);
-			int centreX = leftTop.x + size.width / 2;
-			int centreY = leftTop.y + size.height / 2;
-			Point centre = new Point(centreX, centreY);
-			System.out.println(centre);
-			Actions builder = new Actions(driver);
-
-			driver.findElement(By.xpath("//*[@alt='zoomOut']")).click();
-
-			for (int i = 0; i < n; i++) {
-				builder.moveToElement(canvas, getXCoordOffsetFromCentre(driver, centre, x, z, y),
-						getYCoordOffsetFromCentre(driver, centre, x, z, y)).click().perform();
-
-			}
-
-			driver.findElement(By.xpath("//*[@alt='zoomOut']")).click();
-
-		}
-
-		catch (Exception e) {
-			System.out.println("Can able to view zoomout canvas");
-
-		}
-
-	}
-
-	public void escape(WebDriver driver) {
-
-		Robot key;
-		try {
-			key = new Robot();
-
-			key.keyPress(KeyEvent.VK_ESCAPE);
-			key.delay(500);
-			key.keyRelease(KeyEvent.VK_ESCAPE);
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	public static int getXCoordOffsetFromCentredouble(WebDriver driver, Point centre, double x, double y, double z) {
-
-		Double doubleX = Double.valueOf(x);
-		Double doubleY = Double.valueOf(y);
-		Double doubleZ = Double.valueOf(z);
-		int firstValue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					doubleX, doubleY, doubleZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			firstValue = Integer.parseInt(first[0].replace("[", "").trim()) - centre.x;
-			System.out.println(firstValue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return firstValue;
-
-	}
-
-	public static int getYCoordOffsetFromCentredouble(WebDriver driver, Point centre, double x, double y, double z) {
-
-		Double doubleX = Double.valueOf(x);
-		Double doubleY = Double.valueOf(y);
-		Double doubleZ = Double.valueOf(z);
-		int secondvalue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					doubleX, doubleY, doubleZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			secondvalue = Integer.parseInt(first[1].replace("]", "").trim()) - centre.y;
-			System.out.println(secondvalue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return secondvalue;
-
 	}
 
 	public void keyDown(WebDriver driver) {
@@ -2079,54 +875,13 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 	public void navigateUrl(WebDriver driver, String inputData) {
 		if (inputData == null) {
 			add(driver, " Navigated to " + inputData, LogAs.FAILED, true, inputData);
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+
 			Assert.fail(inputData);
 		} else {
 			driver.navigate().to(inputData);
 			add(driver, " Navigated to " + inputData, LogAs.PASSED, true, inputData);
 			driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		}
-
-	}
-
-	public void highLightElement(WebDriver driver, String xpath) {
-		String[] values = splitXpath(xpath);
-		WebElement webElement = driver.findElement(By.xpath(values[1]));
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].setAttribute('style', arguments[1]);", webElement,
-				"color: red; border: 3px solid red;");
-		js.executeScript("arguments[0].setAttribute('style', arguments[1]);", webElement, "");
-	}
-
-	/*
-	 * public void newTab(WebDriver driver) { try { Robot r = new Robot();
-	 * r.keyPress(KeyEvent.VK_CONTROL); r.keyPress(KeyEvent.VK_T);
-	 * if(Config.browserName.equalsIgnoreCase("firefox")) { ArrayList<String> tabs =
-	 * new ArrayList<String> (driver.get()); driver.switchTo().window(tabs.get(1));
-	 * } else if(Config.browserName.equalsIgnoreCase("chrome")) {
-	 * System.out.println("askjdfkdlaj"); ArrayList<String> tabs = new
-	 * ArrayList<String> (driver.getWindowHandles());
-	 * System.out.println("321356132"); driver.switchTo().window(tabs.get(0));
-	 * System.out.println("!@$@#%"); driver.get("http://facebook.com");
-	 * System.out.println("{{{{{{{{{{"); } } catch (Exception e) { // TODO: handle
-	 * exception }
-	 *
-	 * }
-	 */
-	public void windowhandlesframe(WebDriver driver, int values) {
-
-		try {
-			ArrayList<String> tabs1 = new ArrayList<String>(driver.getWindowHandles());
-			// Set<String>windowhandles1=driver.getWindowHandles();
-			System.out.println(tabs1);
-			Thread.sleep(5000);
-			// List<String>list=new ArrayList<>(windowhandles1)
-			driver.switchTo().window(tabs1.get(values));
-			System.out.println(driver.getCurrentUrl());
-		} catch (InterruptedException e) {
-
-			e.printStackTrace();
 		}
 
 	}
@@ -2140,120 +895,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		System.out.println(driver.getCurrentUrl());
 
 	}
-
-	public void Arrow_Click(WebDriver driver, String xpaths, String name) {
-		String[] values = splitXpath(xpaths);
-
-		List<WebElement> titletext1 = driver.findElements(By.xpath(values[1]));
-
-		System.out.println("titlesize" + titletext1.size());
-
-		for (WebElement webElement1 : titletext1) {
-			String name1 = webElement1.getText();
-			if (name1.contains(name)) {
-				webElement1.click();
-				System.out.println(name1);
-				add(driver, " Click on " + values[0], LogAs.PASSED, true, values[0]);
-				wait(driver, "1");
-				break;
-
-			}
-		}
-	}
-
-	public void Folder_Select(WebDriver driver, String xpaths, String name) {
-		String[] values = splitXpath(xpaths);
-
-		try {
-			WebDriverWait wait1 = new WebDriverWait(driver, 20);
-			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(values[1])));
-
-			List<WebElement> title3 = driver.findElements(By.xpath(values[1]));
-			System.out.println("title3" + title3.size());
-			for (WebElement webElement3 : title3) {
-				String text11 = webElement3.getText();
-				if ((text11.equalsIgnoreCase(name))) {
-					webElement3.click();
-					System.out.println("text11 :" + text11);
-					add(driver, " Able to select the folder " + text11, LogAs.PASSED, true, "");
-					break;
-
-				}
-			}
-
-		} catch (Exception e) {
-			// add(driver, " Unable to select the folder " + "", LogAs.FAILED, true, "");
-		}
-	}
-
-	public void Upload_File(WebDriver driver, String Location, String xpaths) {
-		String[] values = splitXpath(xpaths);
-		Robot rb1;
-		try {
-			rb1 = new Robot();
-			rb1.delay(1000);
-			StringSelection ss = new StringSelection(Location);
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-
-			rb1.keyPress(KeyEvent.VK_CONTROL);
-			rb1.keyPress(KeyEvent.VK_V);
-			rb1.keyRelease(KeyEvent.VK_V);
-			rb1.keyRelease(KeyEvent.VK_CONTROL);
-			wait(driver, "2");
-			rb1.keyPress(KeyEvent.VK_ENTER);
-			wait(driver, "10");
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-			JavascriptExecutor js = (JavascriptExecutor) driver;
-			js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');",
-					webElement);
-			webElement.click();
-			wait(driver, "2");
-		} catch (AWTException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	public void windowhandles1(WebDriver driver) {
-
-		Set<String> windowhandles1 = driver.getWindowHandles();
-		System.out.println(windowhandles1);
-		List<String> list = new ArrayList<>(windowhandles1);
-		driver.switchTo().window(list.get(0));
-		System.out.println(driver.getCurrentUrl());
-
-	}
-
-	public void windowhandles2(WebDriver driver) {
-
-		Set<String> windowhandles1 = driver.getWindowHandles();
-		System.out.println(windowhandles1);
-		List<String> list = new ArrayList<>(windowhandles1);
-		driver.switchTo().window(list.get(2));
-		System.out.println(driver.getCurrentUrl());
-
-	}
-
-	public void newtapopen(WebDriver driver) {
-		// driver.switchTo()
-	}
-
-	/*
-	 * public void windowhandles1(WebDriver driver) throws InterruptedException {
-	 * Robot r; try { r = new Robot(); r.keyPress(KeyEvent.VK_CONTROL);
-	 * r.keyPress(KeyEvent.VK_T); Thread.sleep(5000);
-	 * Set<String>windowhandles1=driver.getWindowHandles();
-	 * System.out.println(windowhandles1); List<String>list=new
-	 * ArrayList<>(windowhandles1); driver.switchTo().window(list.get(1));
-	 * System.out.println(driver.getCurrentUrl()); Thread.sleep(5000);
-	 * driver.navigate().to("https://www.mailinator.com/"); //get(driver,
-	 * "https://www.mailinator.com/"); } catch (AWTException e) {
-	 * 
-	 * e.printStackTrace(); }
-	 * 
-	 * }
-	 */
+	
 
 	public void newTab(WebDriver driver) {
 		try {
@@ -2270,66 +912,19 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		}
 	}
 
-	public void newTabpaste(WebDriver driver) {
-		try {
-			wait(driver, "5");
-			Robot r = new Robot();
-			r.delay(1000);
-			r.keyPress(KeyEvent.VK_CONTROL);
 
-			r.keyPress(KeyEvent.VK_T);
-			wait(driver, "5");
-			r.keyRelease(KeyEvent.VK_T);
-			r.keyRelease(KeyEvent.VK_CONTROL);
 
-			ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
-			driver.switchTo().window(tabs.get(1));
-			wait(driver, "5");
-			r.keyPress(KeyEvent.VK_CONTROL);
-			r.keyPress(KeyEvent.VK_V);
-			wait(driver, "5");
-			r.keyPress(KeyEvent.VK_ENTER);
-		} catch (Exception e) {
-		}
-	}
-
-	public void get(WebDriver driver, String url) {
-		Capabilities localCapabilities = ((RemoteWebDriver) driver).getCapabilities();
-		String browser = localCapabilities.getBrowserName().toLowerCase();
-		driver.get(url);
-		if (browser.equalsIgnoreCase("ie") || browser.equalsIgnoreCase("UnKnown")) {
-			wait(driver, "5");
-			driver.get("javascript:document.getElementById('overridelink').click();");
-			wait(driver, "5");
-		}
-
-	}
-
-	public void closeTab(WebDriver driver) {
-		driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "w");
-		// tabs.remove(tabs.get(0));
-		driver.switchTo().defaultContent();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		ArrayList<String> tabs1 = new ArrayList<String>(driver.getWindowHandles());
-		driver.switchTo().window(tabs1.get(0));
-	}
-
-	public void closeTab1(WebDriver driver, int input) {
-		driver.findElement(By.xpath("body")).sendKeys(Keys.CONTROL + "w");
-		// tabs.remove(tabs.get(0));
-		driver.switchTo().defaultContent();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		ArrayList<String> tabs1 = new ArrayList<String>(driver.getWindowHandles());
-		driver.switchTo().window(tabs1.get(input));
-	}
+//	public void closeTab(WebDriver driver) {
+//		driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "w");
+//		driver.switchTo().defaultContent();
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		ArrayList<String> tabs1 = new ArrayList<String>(driver.getWindowHandles());
+//		driver.switchTo().window(tabs1.get(0));
+//	}
 
 	public void switchtotab(WebDriver driver, int inputData) {
 		Capabilities localCapabilities = ((RemoteWebDriver) driver).getCapabilities();
@@ -2349,363 +944,24 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		}
 	}
 
-	public Response apiValidRequest(String URL1, String method, String body, String APIName, int statusCode1)
-			throws IOException, JSONException {
-		String line = body;
-		Response res = null;
-		JSONObject jsonObject = null;
-		try {
-			String URL = URL1;
-			// String values[] = header.split(":");
-			if (method.equalsIgnoreCase("POST")) {
-				res = RestAssured.given().body(line).with().contentType("application/json").then().when().post(URL);
-			} else if (method.equalsIgnoreCase("get")) {
-				res = RestAssured.given().with().contentType("application/json").then().when().get(URL);
-			}
 
-			if (res.statusCode() == statusCode1) {
-				add("Requested API " + APIName + " and got  " + res.statusCode() + " response code", LogAs.PASSED, true,
-						res.print().toString(), (res.getTime()));
 
-			} else {
-				add1("Unsuccessfull API hit:" + APIName + " and got  " + res.statusCode() + " response code",
-						LogAs.FAILED, true, res.print().toString());
-				Assert.fail();
-			}
-
-		} catch (Exception e) {
-			add1("Unable to hit the API " + APIName, LogAs.FAILED, true, "");
-
-			Assert.fail();
-		}
-		return res;
-	}
-
-	public Response apiValidRequest2(String URL1, String method, String header, String body, String APIName,
-			String statusCode1) throws IOException, JSONException {
-		String line = null;
-		Response res = null;
-		try {
-			String URL = URL1;
-			// String values[] = header.split(":");
-			if (method.equalsIgnoreCase("POST")) {
-
-				res = RestAssured.given().header("Authorization", header).body(line).with()
-						.contentType("application/json").then().expect().when().post(URL);
-			} else if (method.equalsIgnoreCase("get")) {
-				res = RestAssured.given().header("Authorization", header).with().contentType("application/json").then()
-						.expect().when().get(URL);
-			}
-			add("Requested API " + APIName + " and got  " + res.statusCode() + " response code", LogAs.PASSED, true,
-					res.print().toString(), (res.getTime()));
-
-		} catch (Exception e) {
-
-			add1("Requested API " + APIName + " and got the " + res.statusCode() + " response code", LogAs.FAILED, true,
-					"");
-
-			Assert.fail();
-		}
-		return res;
-	}
-
-	public Response apiValidRequest3(String url, String method, String header, String body, String APIName,
-			int statuscode1) throws IOException, JSONException {
-		String body1 = body;
-		// int statuscode= statuscode1;
-
-		Response res = null;
-
-		try {
-			String URL = url;
-
-			if (method.equalsIgnoreCase("POST")) {
-				res = RestAssured.given().headers("Authorization", header).body(body1).with()
-						.contentType("application/json").then().expect().when().post(URL);
-			} else if (method.equalsIgnoreCase("GET")) {
-				res = RestAssured.given().headers("Authorization", header).with().contentType("application/json").then()
-						.expect().when().get(URL);
-			}
-			add("Requested API " + APIName + " and got  " + res.statusCode() + " as response code", LogAs.PASSED, true,
-					res.print().toString(), (res.getTime()));
-
-		} catch (Exception e) {
-
-			add1("Requested API " + APIName + " and got the " + res.statusCode() + " as response code", LogAs.FAILED,
-					false, "");
-
-			Assert.fail();
-		}
-
-		JSONObject jsonObject = null;
-		jsonObject = new JSONObject(res.asString());
-		System.out.println("---output----" + jsonObject.toString() + "---output---");
-		return res;
-	}
-
-	// public static String apigetRequest(String url, String method, String header)
-	// throws IOException, JSONException {
-	//
-	// Response res = null;
-	// Response res2 = null;
-	//
-	// String URL = url;
-	// String link = "null";
-	// try {
-	// if (method.equalsIgnoreCase("GET")) {
-	//
-	// res = RestAssured.given().header("Authorization",
-	// "86cba60611324b9a8297d709f4029698").with().contentType("application/json").then().expect().when().get("https://mailinator.com/api/v2/domains/private/inboxes/:*");
-	// System.out.println(res);
-	// JSONObject jsonObject = null;
-	// jsonObject = new JSONObject(res.asString());
-	// String messageID = JsonPath.read(jsonObject.toString(), "$.msgs[0].id");
-	// System.out.println(messageID);
-	// res2 = RestAssured.given().header("Authorization",
-	// "86cba60611324b9a8297d709f4029698").with().contentType("application/json").then().expect().when().get("https://api.mailinator.com/v2/domains/private/inboxes/test1/messages/"+messageID+"/links");
-	// System.out.println(res2);
-	// jsonObject = new JSONObject(res2.asString());
-	// System.out.println(jsonObject.toString());
-	// link = JsonPath.read(jsonObject.toString(), "$.links[0]");
-	// System.out.println(link);
-	// }
-	// }catch(Exception e) {
-	// e.printStackTrace();
-	// System.out.println(e.getLocalizedMessage());
-	// }
-	// return link;
-	// }
-
-	private static Object parse(String json) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static void apideleteRequest(String url, String method, String header) throws IOException, JSONException {
-
-		Response res = null;
-
-		String URL = url;
-		if (method.equalsIgnoreCase("DELETE")) {
-			res = RestAssured.given().headers("Authorization", header).with().contentType("application/json").then()
-					.expect().when().delete(URL);
-			System.out.println(res);
-			JSONObject jsonObject = null;
-			jsonObject = new JSONObject(res.asString());
-			System.out.println("---output----" + jsonObject.toString() + "---output---");
-		}
-
-	}
-
-	public static String apiPutBodyRequest(String url, String method, String header, String body) throws JSONException {
-		String body1 = body;
-		String URL = url;
-
-		Response res = null;
-
-		if (method.equalsIgnoreCase("PUT")) {
-			res = RestAssured.given().headers("Authorization", header).body(body1).with()
-					.contentType("application/json").then().expect().when().put(URL);
-		}
-
-		JSONObject jsonObject = null;
-		jsonObject = new JSONObject(res.asString());
-		System.out.println("---output----" + jsonObject.toString() + "---output---");
-		return res.asString();
-
-	}
-
-	public static String apiputrequest(String url, String method, String header) throws JSONException {
-
-		String URL = url;
-
-		Response res = null;
-
-		if (method.equalsIgnoreCase("PUT")) {
-			res = RestAssured.given().headers("Authorization", header).with().contentType("application/json").then()
-					.expect().when().put(URL);
-		}
-
-		JSONObject jsonObject = null;
-		jsonObject = new JSONObject(res.asString());
-		System.out.println("---output----" + jsonObject.toString() + "---output---");
-		return res.asString();
-
-	}
-
-	public static int GenerateRandomNumber() {
-
-		System.out.println("Random Numbers:");
-		Random rand = new Random();
-		int num = rand.nextInt(900000) + 100000;
-		System.out.println("***************");
-
-		System.out.println(num);
-
-		return num;
-	}
-
+//	
+	
 	public void mouseOverAndClick(WebDriver driver, String element) {
 		String[] values = splitXpath(element);
 		WebElement webElement = driver.findElement(By.xpath(values[1]));
 		try {
 			Actions builder = new Actions(driver);
 			builder.moveToElement(webElement).click().build().perform();
-			// builder.moveToElement(webElement).build().perform();
 
 		} catch (Exception e) {
 
 		}
 	}
 
-	public String movetoelement(WebDriver driver, WebElement element, String filepath, String filepath1,
-			String filepath2, String filepath3, String filepath4, String filepath5, String filepath6, String filepath7,
-			String filepath8, String filepath9) {
-
-		int number = Integer.parseInt(filepath);
-		int number1 = Integer.parseInt(filepath1);
-		int number2 = Integer.parseInt(filepath2);
-		int number3 = Integer.parseInt(filepath3);
-		int number4 = Integer.parseInt(filepath4);
-		int number5 = Integer.parseInt(filepath5);
-		int number6 = Integer.parseInt(filepath6);
-		int number7 = Integer.parseInt(filepath7);
-		int number8 = Integer.parseInt(filepath8);
-		int number9 = Integer.parseInt(filepath9);
-
-		try {
-			Actions builder = new Actions(driver);
-			// builder.moveToElement(element, -220, -160).click().moveByOffset(-335,
-			// 0).click().moveByOffset(0,
-			// 230).click().moveByOffset(335,0).click().moveByOffset(0,
-			// -230).click().perform();
-			builder.moveToElement(element, number, number1).click().moveByOffset(number2, number3).click()
-					.moveByOffset(number4, number5).click().moveByOffset(number6, number7).click()
-					.moveByOffset(number8, number9).click().perform();
-		} catch (Exception e) {
-
-		}
-		return null;
-
-	}
-
-	// Draw rectangle, rotate
-	public String Rectangle(WebDriver driver, String xpath, String Path, String Path1, String Path2, String Path3,
-			String Path4, String Path5, String Path6, String Path7, String Path8, String Path9) {
-		String[] values = splitXpath(xpath);
-		int line1 = Integer.parseInt(Path);
-		int line2 = Integer.parseInt(Path1);
-		int line3 = Integer.parseInt(Path2);
-		int line4 = Integer.parseInt(Path3);
-		int line5 = Integer.parseInt(Path4);
-		int line6 = Integer.parseInt(Path5);
-		int line7 = Integer.parseInt(Path6);
-		int line8 = Integer.parseInt(Path7);
-		int line9 = Integer.parseInt(Path8);
-		int line10 = Integer.parseInt(Path9);
-		try {
-			Actions builder = new Actions(driver);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-
-			builder.moveToElement(webElement, line1, line2).click().moveByOffset(line3, line4).click()
-					.moveByOffset(line5, line6).click().moveByOffset(line7, line8).click().moveByOffset(line9, line10)
-					.click().perform();
-			wait(driver, "5");
-			add(driver, " Draw on the Rectangle Shape " + "", LogAs.PASSED, true, "");
-
-		} catch (Exception e) {
-			add(driver, " Unable to draw the rectangle shape " + "", LogAs.FAILED, true, "");
-		}
-		return null;
-
-	}
-
-	// Draw Triangle
-	public String Triangle(WebDriver driver, WebElement element, String Path, String Path1, String Path2, String Path3,
-			String Path4, String Path5) {
-
-		int line1 = Integer.parseInt(Path);
-		int line2 = Integer.parseInt(Path1);
-		int line3 = Integer.parseInt(Path2);
-		int line4 = Integer.parseInt(Path3);
-		int line5 = Integer.parseInt(Path4);
-		int line6 = Integer.parseInt(Path5);
-
-		try {
-			Actions builder = new Actions(driver);
-
-			builder.moveToElement(element).click().moveByOffset(line1, line2).click().moveByOffset(line3, line4).click()
-					.moveByOffset(line5, line6).click().perform();
-		} catch (Exception e) {
-
-		}
-		return null;
-
-	}
-
-	// To circle,move the object, measure the object, flip
-	public String objectmove(WebDriver driver, String xpath, String Path, String Path1, String Path2, String Path3) {
-		String[] values = splitXpath(xpath);
-		int line1 = Integer.parseInt(Path);
-		int line2 = Integer.parseInt(Path1);
-		int line3 = Integer.parseInt(Path2);
-		int line4 = Integer.parseInt(Path3);
-
-		try {
-			Actions builder = new Actions(driver);
-			WebElement webElement = driver.findElement(By.xpath(values[1]));
-
-			builder.moveToElement(webElement, line1, line2).click().moveByOffset(line3, line4).click().perform();
-			add(driver, " Able to Object move on " + "", LogAs.PASSED, true, "");
-		} catch (Exception e) {
-			add(driver, " Unable to Object move on " + "", LogAs.FAILED, true, "");
-		}
-		return null;
-
-	}
-
-	// To flip the object
-	public String Flipmove(WebDriver driver, WebElement element, String Path, String Path1) {
-
-		int line1 = Integer.parseInt(Path);
-		int line2 = Integer.parseInt(Path1);
-
-		try {
-			Actions builder = new Actions(driver);
-
-			builder.moveToElement(element, line1, line2).click().perform();
-			add(driver, "Able to flip move on " + "", LogAs.PASSED, true, "");
-		} catch (Exception e) {
-			add(driver, "Unable to flip move on " + "", LogAs.FAILED, true, "");
-		}
-		return null;
-
-	}
-
-	// Click to given day
-	public static void clickGivenDay(List<WebElement> elementList, String day) {
-		// DatePicker is a table. Thus we can navigate to each cell
-		// and if a cell matches with the current date then we will click it.
-		/** Functional JAVA version of this method. */
-		elementList.stream().filter(element -> element.getText().contains(day)).findFirst()
-				.ifPresent(WebElement::click);
-	}
-
-	public static String getCurrentDay() {
-		// Create a Calendar Object
-		Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-
-		// Get Current Day as a number
-		int todayInt = calendar.get(Calendar.DAY_OF_MONTH);
-		System.out.println("Today Int: " + todayInt + "\n");
-
-		// Integer to String Conversion
-		String todayStr = Integer.toString(todayInt);
-		System.out.println("Today Str: " + todayStr + "\n");
-
-		return todayStr;
-	}
-
+	
+	
 	public void scrolltill(WebDriver driver) {
 		try {
 
@@ -2716,7 +972,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		} catch (Exception e) {
 			// add1(driver, "Unable to scroll to the bottom", LogAs.FAILED, true, "Not");
 			Assert.fail();
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+
 		}
 	}
 
@@ -2828,7 +1084,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 				double avg = diff / (w1 * h1 * 3);
 				double percentage = (avg / 255) * 100;
 				System.out.println("Difference: " + percentage);
-				if (percentage < 1.5) {
+				if (percentage < 0.5) {
 					image_res = "Pass";
 
 					add(driver, s[1] + " - " + s[2] + " - Image compared sucessfully" + "", LogAs.PASSED, true,
@@ -2855,281 +1111,12 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-	public static void disableToast(WebDriver driver) {
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript("store.exposed.autoSaveConfig.disableToasts()");
-			System.out.println(de);
-
-		}
-
-		catch (Exception e1) {
-			Assert.fail();
-		}
-
-	}
-
-	public void getfps(WebDriver driver, String action) {
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript("return store.scene.getEngine().getFps()");
-			System.out.println(action + " FPS value : " + de);
-
-			// add(driver, action+" : FPS", LogAs.PASSED, true, ""+de);
-			addfps(driver, action + " FPS", de.toString(), true, "");
-
-		}
-
-		catch (Exception e1) {
-			add1(driver, "Could not retrieve FPS value", LogAs.FAILED, true, "");
-		}
-
-	}
-
-	public void Upload_PDF_file(WebDriver driver, String Location) {
-
-		Robot rb1;
-		try {
-			rb1 = new Robot();
-			rb1.delay(1000);
-			StringSelection ss = new StringSelection(Location);
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-
-			rb1.keyPress(KeyEvent.VK_CONTROL);
-			rb1.keyPress(KeyEvent.VK_V);
-			rb1.keyRelease(KeyEvent.VK_V);
-			rb1.keyRelease(KeyEvent.VK_CONTROL);
-			wait(driver, "2");
-			rb1.keyPress(KeyEvent.VK_ENTER);
-
-			wait(driver, "2");
-
-		} catch (AWTException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	public static int getXCoordOffsetFromCentre1(WebDriver driver, Point centre, int x, int y, double z) {
-
-		Integer intX = Integer.valueOf(x);
-		Integer intY = Integer.valueOf(y);
-		Double doubleZ = Double.valueOf(z);
-		int firstValue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()"
-					intX, intY, doubleZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			firstValue = Integer.parseInt(first[0].replace("[", "").trim()) - centre.x;
-			System.out.println(firstValue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return firstValue;
-
-	}
-
-	public static int getYCoordOffsetFromCentre1(WebDriver driver, Point centre, int x, int y, double z) {
-
-		Integer intX = Integer.valueOf(x);
-		Integer intY = Integer.valueOf(y);
-		Double doubleZ = Double.valueOf(z);
-		int secondvalue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					intX, intY, doubleZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			secondvalue = Integer.parseInt(first[1].replace("]", "").trim()) - centre.y;
-			System.out.println(secondvalue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return secondvalue;
-
-	}
-
-	public static int getXCoordOffsetFromCentre2(WebDriver driver, Point centre, double x, int y, int z) {
-
-		Double doubleX = Double.valueOf(x);
-		Integer intY = Integer.valueOf(y);
-		Integer intZ = Integer.valueOf(z);
-		int firstValue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					doubleX, intY, intZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			firstValue = Integer.parseInt(first[0].replace("[", "").trim()) - centre.x;
-			System.out.println(firstValue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return firstValue;
-
-	}
-
-	public static int getYCoordOffsetFromCentre2(WebDriver driver, Point centre, double x, int y, int z) {
-
-		Double doubleX = Double.valueOf(x);
-		Integer intY = Integer.valueOf(y);
-		Integer intZ = Integer.valueOf(z);
-		int secondvalue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					doubleX, intY, intZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			secondvalue = Integer.parseInt(first[1].replace("]", "").trim()) - centre.y;
-			System.out.println(secondvalue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return secondvalue;
-
-	}
-
-	public static int getXCoordOffsetFromCentre3(WebDriver driver, Point centre, double x, double y, double z) {
-
-		Double doubleX = Double.valueOf(x);
-		Double doubleY = Double.valueOf(y);
-		Double doubleZ = Double.valueOf(z);
-		int firstValue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					doubleX, doubleY, doubleZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			firstValue = Integer.parseInt(first[0].replace("[", "").trim()) - centre.x;
-			System.out.println(firstValue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return firstValue;
-
-	}
-
-	public static int getYCoordOffsetFromCentre3(WebDriver driver, Point centre, double x, double y, double z) {
-
-		Double doubleX = Double.valueOf(x);
-		Double doubleY = Double.valueOf(y);
-		Double doubleZ = Double.valueOf(z);
-		int secondvalue = 0;
-
-		try {
-
-			JavascriptExecutor js1 = (JavascriptExecutor) driver;
-			Object de = js1.executeScript(
-
-					"const v3= new store.exposed.BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-							+ "		return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-
-					// "const v3= new BABYLON.Vector3(arguments[0],arguments[1],arguments[2]);\r\n"
-					// + " return store.exposed.getV3ProjectedOntoScreenSpace(v3).asArray()",
-					doubleX, doubleY, doubleZ);
-			System.out.println(de);
-
-			String str = de.toString();
-			String[] first = str.split(",");
-			secondvalue = Integer.parseInt(first[1].replace("]", "").trim()) - centre.y;
-			System.out.println(secondvalue);
-
-		}
-
-		catch (Exception e1) {
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
-		}
-		return secondvalue;
-
-	}
-
-	public void addCargo(WebDriver driver) {
+	
+	public void addCargo(WebDriver driver) {  
 		waitForElement(driver, AddCargoTab);
 		waitForElement(driver, ISOCode);
 		doubleClick(driver, ISOCode);
-		sendKeys(driver, ISOCode, "45G1");
+		sendKeys(driver, ISOCode, "45G1"); // need to change
 
 		waitForElement(driver, selectISO);
 		click(driver, selectISO);
@@ -3145,97 +1132,7 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-	public void Upload_File1(WebDriver driver, String Location) {
-		// String[] values = splitXpath(xpaths);
-		Robot rb1;
-		try {
-			rb1 = new Robot();
-			rb1.delay(1000);
-			StringSelection ss = new StringSelection(Location);
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-
-			rb1.keyPress(KeyEvent.VK_CONTROL);
-			rb1.keyPress(KeyEvent.VK_V);
-			rb1.keyRelease(KeyEvent.VK_V);
-			rb1.keyRelease(KeyEvent.VK_CONTROL);
-			wait(driver, "4");
-			rb1.keyPress(KeyEvent.VK_ENTER);
-			wait(driver, "10");
-			// WebElement webElement = driver.findElement(By.xpath(values[1]));
-			wait(driver, "2");
-
-			// JavascriptExecutor js = (JavascriptExecutor) driver;
-			wait(driver, "2");
-
-			wait(driver, "2");
-		} catch (AWTException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void orbit(WebDriver driver, int n, int x, int y) {
-
-		try {
-			WebElement canvas = driver.findElement(By.id("canvas"));
-			System.out.println(canvas.getLocation());
-			Point leftTop = canvas.getLocation();
-			Dimension size = canvas.getSize();
-			System.out.println(size);
-			int centreX = leftTop.x + size.width / 2;
-			int centreY = leftTop.y + size.height / 2;
-			Point centre = new Point(centreX, centreY);
-			System.out.println(centre);
-			Actions builder = new Actions(driver);
-
-			driver.findElement(By.xpath("//img[@data-for='orbit']")).click();
-
-			for (int i = 0; i < n; i++) {
-				builder.clickAndHold(canvas).moveByOffset(0, 0).moveByOffset(x, y).click().perform();
-			}
-
-			driver.findElement(By.xpath("//img[@data-for='orbit']")).click();
-		}
-
-		catch (Exception e) {
-			System.out.println("Can able to view zoomout canvas");
-		}
-
-	}
-
-	public static void orbit1(WebDriver driver, int n, int x, int y, int m, int a, int b) {
-
-		try {
-			WebElement canvas = driver.findElement(By.id("canvas"));
-			System.out.println(canvas.getLocation());
-			Point leftTop = canvas.getLocation();
-			Dimension size = canvas.getSize();
-			System.out.println(size);
-			int centreX = leftTop.x + size.width / 2;
-			int centreY = leftTop.y + size.height / 2;
-			Point centre = new Point(centreX, centreY);
-			System.out.println(centre);
-			Actions builder = new Actions(driver);
-
-			driver.findElement(By.xpath("//img[@data-for='orbit']")).click();
-
-			for (int i = 0; i < n; i++) {
-				builder.clickAndHold(canvas).moveByOffset(0, 0).moveByOffset(x, y).click().perform();
-			}
-
-			for (int i = 0; i < m; i++) {
-				builder.clickAndHold(canvas).moveByOffset(0, 0).moveByOffset(a, b).click().perform();
-			}
-
-			driver.findElement(By.xpath("//img[@data-for='orbit']")).click();
-		}
-
-		catch (Exception e) {
-			System.out.println("Can able to view zoomout canvas");
-		}
-
-	}
+	
 
 	public void verifyElementText(WebDriver driver, String xpath, String expectedtext) {
 		String[] values = splitXpath(xpath);
@@ -3316,71 +1213,602 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		return image_res;
 	}
 
-	public void uploadfile(WebDriver driver, String path) {
+//	public void uploadfile(WebDriver driver, String path) {
+//		try {
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//			WebElement element = driver.findElement(By.xpath("//input[@type='file']"));
+//			File file = new File(path);
+//			System.out.println(file.getAbsolutePath());
+//			element.sendKeys(file.getAbsolutePath());
+//			add(driver, "uploaded the file " + path, LogAs.PASSED, true, path);
+//			wait(driver, "2");
+//		} catch (Exception e) {
+//			add1(driver, "upload is falied - " + path + e, LogAs.FAILED, true, e.getLocalizedMessage());
+//			e.printStackTrace();
+//
+//			Assert.fail();
+//		}
+//	}
+
+
+
+	public void clickVessel(WebDriver driver, String Vesseltype) {
+
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'" + Vesseltype + "')]")));
+		driver.findElement(By.xpath("//*[contains(text(),'" + Vesseltype + "')]")).click();
+
+	}
+
+	//new
+	public void clickVWR(WebDriver driver, String VWR_value) {
+
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//option[contains(@value,'"+VWR_value+"')]")));
+		driver.findElement(By.xpath("//option[contains(@value,'"+VWR_value+"')]")).click();
+		
+	}
+	
+	//new
+		public void clickPlanTemplate(WebDriver driver, String plantypeValue) {
+
+			WebDriverWait wait = new WebDriverWait(driver, 20);
+			//option[text()='Lashing']
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//option[text()='"+plantypeValue+"']")));
+			driver.findElement(By.xpath("//option[text()='"+plantypeValue+"']")).click();
+			
+		}
+	
+	//new  
+	public void bayClose(WebDriver driver) {
+		wait(driver, "1");
+		List<WebElement> closeIcon=driver.findElements(By.xpath("(//div[contains(@id,'TwinBayCanvas')]//preceding::button[@aria-label='Close'])"));
+		int l=closeIcon.size();
+		
+		driver.findElement(By.xpath("(//div[contains(@id,'TwinBayCanvas')]//preceding::button[@aria-label='Close'])["+l+"]")).click();		
+	}
+	
+	public void clickPlan(WebDriver driver, String planName) {
+
+		WebDriverWait wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(text(),'" + planName + "')]")));
+
 		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement element = driver.findElement(By.xpath("//input[@type='file']"));
-			File file = new File(path);
-			System.out.println(file.getAbsolutePath());
-			element.sendKeys(file.getAbsolutePath());
-			add(driver, "uploaded the file " + path, LogAs.PASSED, true, path);
-			wait(driver, "2");
+			WebElement element = driver.findElement(By.xpath("//*[contains(text(),'" + planName + "')]"));
+			Actions action = new Actions(driver).doubleClick(element);
+			action.build().perform();
+			add(driver, "Double click on " + planName, LogAs.PASSED, true, "");
 		} catch (Exception e) {
-			add1(driver, "upload is falied - " + path + e, LogAs.FAILED, true, e.getLocalizedMessage());
-			e.printStackTrace();
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+			add1(driver, "Unable to click on " + planName, LogAs.FAILED, true, "");
 			Assert.fail();
 		}
 	}
 
-	public void uploadfile1(WebDriver driver, String path) {
-		try {
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			WebElement element = driver.findElement(By.xpath("//input[contains(@type,'file')]"));
-			File file = new File(path);
-			System.out.println(file.getAbsolutePath());
-			element.sendKeys(file.getAbsolutePath());
-			add(driver, "uploaded the file " + path, LogAs.PASSED, true, path);
-			wait(driver, "2");
-		} catch (Exception e) {
-			add1(driver, "upload is falied - " + path + e, LogAs.FAILED, true, e.getLocalizedMessage());
-			e.printStackTrace();
-			((JavascriptExecutor) driver).executeScript("lambda-status=failed");
-			Assert.fail();
+	public int columnCountValue(WebDriver driver) {
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		List<WebElement> elements = driver.findElements(
+				By.xpath("(//div[@ref='rightContainer'])[1]/preceding::div[@aria-colindex and @tabindex='-1']"));
+		String colId;
+		int colCount = 0;
+		int act;
+
+		for (WebElement element : elements) {
+			colId = element.getAttribute("aria-colindex");
+			act = Integer.parseInt(colId.trim());
+			if (colCount <= act) {
+				colCount = act;
+			}
 		}
+		System.out.println("Final Column Count : " + colCount);
+
+		return colCount;
 	}
 
-	public static void Autosave(WebDriver driver) {
+	// 7th validation 2nd
+	public int RowCountValue(WebDriver driver) {
 
-		try {
+		WebElement ele = driver.findElement(By.xpath("(//div[contains(@class,'ag-row-last')])[2]"));
+//				"(//div[contains(@class,'ag-row-level-0 ag-row-position-absolute ag-row-last')])[2]"));
+//		         (//div[@class='ag-row ag-row-no-focus ag-row-odd ag-row-level-0 ag-row-position-absolute ag-row-last'])[2]
+		String rowValue = ele.getAttribute("aria-rowindex");
+		int lastRowCount = Integer.parseInt(rowValue);
+		System.out.println("Last row count : " + lastRowCount);
 
-			int k = 1;
+		return lastRowCount;
+	}
 
-			for (int i = 1; i <= k; i++) {
-				JavascriptExecutor js1 = (JavascriptExecutor) driver;
-				Object de = js1.executeScript("store.exposed.AutoSave.getQueue().length === 0");
-				System.out.println(de);
-				boolean di = ((Boolean) de).booleanValue();
-				if (di == false) {
-					Thread.sleep(2000);
-					k = k + 1;
-					if (k == 150) {
-						System.out.println("Waited for 5 min autosave didn't complete");
-						break;
-					}
-					if (di == true) {
-						System.out.println("Autosave completed");
-					}
+	// 7th validation 3rd
+	public ArrayList<String> headerValueList(WebDriver driver, int colCount) {
+
+		ArrayList<String> headerValues = new ArrayList<String>();
+
+		for (int i = 1; i <= colCount; i++) {
+			WebElement headElement = driver.findElement(
+					By.xpath("((//div[@ref='rightContainer'])[1]/preceding::div[@aria-colindex='" + i + "'])[1]"));
+			String header = headElement.getAttribute("col-id");
+			headerValues.add(header);
+		}
+
+		return headerValues;
+	}
+
+	// 7th validation 4th
+	public Map<String, ArrayList<String>> cellListMap(WebDriver driver, int colCount, int lastRowCount,
+			ArrayList<String> headerValues) {
+
+		Map<String, ArrayList<String>> cellvalues = new HashMap<String, ArrayList<String>>();
+
+		for (int j = 0; j < colCount; j++) {
+			ArrayList<String> firstColoumn = new ArrayList<String>();
+			String head = headerValues.get(j);
+
+			for (int l = 1; l < lastRowCount; l++) {
+
+				WebElement CelElement = driver.findElement(By.xpath(
+						"(//div[@class='ag-cell ag-cell-not-inline-editing ag-cell-auto-height ag-cell-value' and @col-id='"
+								+ head + "'])[" + l + "]"));
+				String CellText = CelElement.getText();
+				firstColoumn.add(CellText);
+			}
+			cellvalues.put(head, firstColoumn);
+			// System.out.println("Text taken and stored...");
+		}
+
+		return cellvalues;
+	}
+
+	// 7th validation 5th
+	public void createExcelForContainerPool(int colCount, int lastRowCount, ArrayList<String> headerValues,
+			Map<String, ArrayList<String>> cellvalues, String filePath) {
+
+		int rowCount = lastRowCount;
+		int columnCount = colCount;
+
+		Workbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Sheet1");
+
+		for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+			Row row = sheet.createRow(rowIndex);
+			if (rowIndex == 0) {
+
+				for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+
+					Cell cell = row.createCell(columnIndex);
+					cell.setCellValue(headerValues.get(columnIndex));
+				}
+
+			} else {
+
+				for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+					String key = headerValues.get(columnIndex);
+					ArrayList<String> value = cellvalues.get(key);
+					String b = value.get(rowIndex - 1);
+					Cell cell = row.createCell(columnIndex);
+					cell.setCellValue(b);
+
 				}
 			}
 
 		}
 
-		catch (Exception e1) {
-			Assert.fail();
+		try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+			workbook.write(outputStream);
+			System.out.println("Excel sheet created successfully at: " + filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				workbook.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
+
+	public void CompareContainerData(String mastFilePath, String testFilePath) throws Exception {
+
+		Fillo fillo = new Fillo();
+
+//			System.setProperty("Row", "2");
+
+		Connection connection1 = fillo.getConnection(mastFilePath);
+		Connection connection2 = fillo.getConnection(testFilePath);
+
+		Recordset recordset1 = connection1.executeQuery("Select * from `Sheet1`");
+		Recordset recordset2 = connection2.executeQuery("Select * from `Sheet1`");
+
+		List<String> columnsToCompare1 = recordset1.getFieldNames();
+		List<String> columnsToCompare2 = recordset2.getFieldNames();
+
+		// Compare column counts
+		if (columnsToCompare1.size() != columnsToCompare2.size()) {
+			System.out.println("Column count mismatch between two sheets.");
+
+		}
+
+		while (recordset1.next()) {
+			recordset2.next(); // Move to the next row in recordset2
+			for (String columnName : columnsToCompare1) {
+				// Check if the column exists in connection2
+				if (!columnsToCompare2.contains(columnName)) {
+					System.out.println("Column '" + columnName + "' is present in connection1 but not in connection2");
+					continue; // Skip this column and proceed to the next one
+				}
+
+				String valueSheet1Column = recordset1.getField(columnName);
+				String valueSheet2Column = recordset2.getField(columnName);
+
+				// Perform comparison
+				if (valueSheet1Column.equals(valueSheet2Column)) {
+//		                System.out.println("Matched - POD Name: " + recordset1.getField("sPod") + " || Column name: " + columnName + " || Expected value: " + valueSheet1Column + " || Actual value: " + valueSheet2Column);
+				} else {
+					System.out.println("Not matched - POD Name: " + recordset1.getField("sPod") + " || Column name: "
+							+ columnName + " || Expected value: " + valueSheet1Column + " || Actual value: "
+							+ valueSheet2Column);
+				}
+			}
+		}
+
+		recordset1.close();
+		recordset2.close();
+		connection1.close();
+		connection2.close();
+
+	}
+
+	// ******************* Script_4 start ************************
+
+	// script_4
+	public void addCargo(WebDriver driver, String Code) {
+
+		waitForElement(driver, AddCargoTab);
+		waitForElement(driver, ISOCode);
+		doubleClick(driver, ISOCode);
+		sendKeys(driver, ISOCode, Code);
+
+		try {
+			Robot robot = new Robot();
+			robot.delay(100);
+			robot.keyPress(KeyEvent.VK_ENTER);
+			robot.delay(100);
+			robot.keyRelease(KeyEvent.VK_ENTER);
+			robot.delay(300);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		waitForElement(driver, add_Ok);
+		click(driver, add_Ok);
+
+		if (isDisplayed(driver, clickyes)) {
+			click(driver, clickyes);
+		} else {
+			System.out.println("Element dragged");
+		}
+
+	}
+
+	// script_4
+	public void writeToExcel(String filePath, String sheetName, int rowNum, int colNum, String value) {
+		try (FileInputStream fis = new FileInputStream(new File(filePath)); Workbook workbook = new XSSFWorkbook(fis)) {
+
+			Sheet sheet = workbook.getSheet(sheetName);
+			Row row = sheet.getRow(rowNum - 1);
+			if (row == null) {
+				row = sheet.createRow(rowNum - 1);
+			}
+
+			Cell cell = row.createCell(colNum - 1);
+			cell.setCellValue(value);
+
+			try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+				workbook.write(fos);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// script_4
+	public void writeToExcelInteger(String filePath, String sheetName, int rowNum, int colNum, int value) {
+		try (FileInputStream fis = new FileInputStream(new File(filePath)); Workbook workbook = new XSSFWorkbook(fis)) {
+
+			Sheet sheet = workbook.getSheet(sheetName);
+			Row row = sheet.getRow(rowNum - 1);
+			if (row == null) {
+				row = sheet.createRow(rowNum - 1);
+			}
+
+			Cell cell = row.createCell(colNum - 1);
+			cell.setCellValue(value);
+
+			try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+				workbook.write(fos);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// script_4
+	public void excelWriteGM(String filePathValue, String gmValue) throws IOException {
+
+		FileInputStream fis = new FileInputStream(filePathValue);
+		XSSFWorkbook wb = new XSSFWorkbook(fis);
+		XSSFSheet ws = wb.getSheet("Vessel Weight Range");
+
+		int lastrow = ws.getLastRowNum() + 1;
+		for (int i = 0; i < lastrow; i++) {
+			short row = ws.getRow(i).getLastCellNum();
+			for (int k = 0; k <= row; k++) {
+				XSSFCell columnname = ws.getRow(i).getCell(k);
+				String clmname = columnname.getStringCellValue().toString();
+				if (clmname.contains("gm")) {
+					for (int j = 2; j < lastrow + 1; j++) {
+						writeToExcel(filePathValue, "Vessel Weight Range", j, k + 1, gmValue);
+					}
+
+				}
+
+				if (clmname.contains("bayno")) {
+					for (int j = 2; j < lastrow + 1; j++) {
+						writeToExcelInteger(filePathValue, "Vessel Weight Range", j, k + 1, j - 1);
+					}
+				}
+			}
+		}
+
+	}
+
+	// script_4
+	public void typeWeight(String filePath, String weightType, ArrayList<Integer> arrayList) throws IOException {
+
+		FileInputStream fis = new FileInputStream(filePath);
+		XSSFWorkbook wb = new XSSFWorkbook(fis);
+		XSSFSheet ws = wb.getSheet("Vessel Weight Range");
+
+		int lastrow = ws.getLastRowNum() + 1;
+		for (int i = 0; i < lastrow; i++) {
+			short row = ws.getRow(i).getLastCellNum();
+			for (int k = 0; k <= row; k++) {
+				XSSFCell columnname = ws.getRow(i).getCell(k);
+				String clmname = columnname.getStringCellValue().toString();
+
+				if (clmname.equals(weightType)) {
+					for (int j = 2; j <= arrayList.size() + 1; j++) {
+
+						writeToExcelInteger(filePath, "Vessel Weight Range", j, k + 1, arrayList.get(j - 2));
+					}
+
+				}
+			}
+		}
+	}
+
+	// script_4
+	public ArrayList<Integer>[] readHighestValue1(WebDriver driver, int size, int[] out_X, int[] out_Y, int[] inner_X,
+			int[] inner_Y) {
+
+		ArrayList<Integer>[] result = new ArrayList[2];
+
+		ArrayList<Integer> weightListOuter = new ArrayList<Integer>();
+		ArrayList<Integer> weightListInner = new ArrayList<Integer>();
+		waitForElement(driver, Bay1);
+		doubleClick(driver, Bay1);
+		wait(driver, "4");
+		int outer;
+		int inner;
+
+		for (int k = 0; k < size; k++) {
+			Actions action3 = new Actions(driver);
+			WebElement Bay_element = driver.findElement(By.xpath("//div[contains(text(),' / ')]"));
+
+			// moving to outer first stow
+			action3.moveToElement(Bay_element);
+			action3.moveByOffset(out_X[k], out_Y[k]).pause(Duration.ofSeconds(1)).build().perform();
+
+			outer = getStowNoOuter(driver);
+			weightListOuter.add(outer);
+
+			// moving to inner first stow
+
+			action3.moveToElement(Bay_element);
+			action3.moveByOffset(inner_X[k], inner_Y[k]).pause(Duration.ofSeconds(1)).build().perform();
+
+			inner = getStowNoInner(driver);
+			weightListInner.add(inner);
+
+			if (k != (size - 1)) {
+
+				waitForElement(driver, PreviousBay);
+				click(driver, PreviousBay);
+			}
+
+		}
+
+		waitForElement(driver, bayClose);
+		click(driver, bayClose);
+
+		result[0] = weightListOuter;
+		result[1] = weightListInner;
+
+		return result;
+
+	}
+
+	// script_4
+	public int getStowNoInner(WebDriver driver) {
+
+		waitForElement(driver, stowNo);
+		WebElement stow;
+		String stowNoVal;
+		String stowNoValue;
+		String lastTwoDigits;
+		int expectStowNo;
+		//
+
+		String st = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]")).getText();
+		String middleTwo = st.substring(st.indexOf('=') + 4, st.indexOf('=') + 6);
+		int target = Integer.parseInt(middleTwo);
+		int b = target - 1;
+
+		Actions act = new Actions(driver);
+		while (isDisplayed(driver, stowNo)) {
+
+			int left = 1;
+			while (b <= target + 1) {
+
+				if (isDisplayed(driver, WeightTrue)) {
+					WebElement weightEle = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]"));
+					stowNoValue = weightEle.getText();
+					System.out.println(" *************** ");
+					System.out.println(" Inner Highest StowageNo : " + stowNoValue);
+
+					lastTwoDigits = stowNoValue.substring(stowNoValue.length() - 2);
+					expectStowNo = Integer.parseInt(lastTwoDigits);
+					System.out.println(" *************** ");
+					System.out.println("Last two digits : " + expectStowNo);
+					System.out.println();
+					add(driver, stowNoValue + " : Last two digits : " + expectStowNo, LogAs.PASSED, true, "");
+
+					return expectStowNo;
+				} else {
+
+					if ((b + 1) > (target + 1)) {
+						break;
+
+					}
+
+					if (b == target + 1) {
+						break;
+					}
+					act.moveByOffset(-5, 0).build().perform();
+
+					if (b <= (target + 1)) {
+						if (!isDisplayed(driver, stowNo)) {
+							act.moveByOffset(4, 0).build().perform();
+						}
+					}
+
+//						System.out.println(left+" Completed");
+//						left++;
+				}
+
+				st = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]")).getText();
+				middleTwo = st.substring(st.indexOf('=') + 4, st.indexOf('=') + 6);
+				b = Integer.parseInt(middleTwo);
+
+			}
+
+			act.moveByOffset(0, 7).build().perform();
+			wait(driver, "1");
+
+			if (!isDisplayed(driver, stowNo)) {
+				return 0;
+			}
+
+			String rightmove = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]")).getText();
+			middleTwo = rightmove.substring(rightmove.indexOf('=') + 4, rightmove.indexOf('=') + 6);
+			int c = Integer.parseInt(middleTwo);
+
+			int k = 0;
+			while (c < (target + 2)) {
+
+				if (isDisplayed(driver, WeightTrue)) {
+					WebElement weightEle = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]"));
+					stowNoValue = weightEle.getText();
+					System.out.println(" *************** ");
+					System.out.println(" Inner Highest StowageNo : " + stowNoValue);
+
+					lastTwoDigits = stowNoValue.substring(stowNoValue.length() - 2);
+					expectStowNo = Integer.parseInt(lastTwoDigits);
+					System.out.println(" *************** ");
+					System.out.println("Last two digits : " + expectStowNo);
+					System.out.println();
+					add(driver, stowNoValue + " : Last two digits : " + expectStowNo, LogAs.PASSED, true, "");
+					return expectStowNo;
+				} else {
+
+					act.moveByOffset(6, 0).build().perform();
+					if (k > 3) {
+
+						if ((c + 2) == (target + 2)) {
+							break;
+						}
+					}
+
+					if (c < (target + 2)) {
+						if (!isDisplayed(driver, stowNo)) {
+							act.moveByOffset(-3, 0).build().perform();
+						}
+					}
+
+					rightmove = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]")).getText();
+					middleTwo = rightmove.substring(rightmove.indexOf('=') + 4, rightmove.indexOf('=') + 6);
+					c = Integer.parseInt(middleTwo);
+					k++;
+				}
+
+			}
+
+			act.moveByOffset(0, 7).build().perform();
+
+			if (!isDisplayed(driver, stowNo)) {
+				break;
+			}
+			wait(driver, "1");
+			String leftmove = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]")).getText();
+			middleTwo = leftmove.substring(leftmove.indexOf('=') + 4, leftmove.indexOf('=') + 6);
+			b = Integer.parseInt(middleTwo);
+
+		}
+
+		///
+
+		return 0;
+	}
+
+	public int getStowNoOuter(WebDriver driver) {
+
+		waitForElement(driver, stowNo);
+		WebElement stow;
+		String stowNoVal;
+		String stowNoValue;
+		String lastTwoDigits;
+		int expectStowNo;
+		Actions act = new Actions(driver);
+		while (isDisplayed(driver, stowNo)) {
+
+			if (isDisplayed(driver, WeightTrue)) {
+				WebElement weightEle = driver.findElement(By.xpath("(//div[@class='tooltiptext'])[1]"));
+				stowNoValue = weightEle.getText();
+				System.out.println(" *************** ");
+				System.out.println(" Outer Highest StowageNo : " + stowNoValue);
+
+				lastTwoDigits = stowNoValue.substring(stowNoValue.length() - 2);
+				expectStowNo = Integer.parseInt(lastTwoDigits);
+				System.out.println(" *************** ");
+				System.out.println("Last two digits : " + expectStowNo);
+				add(driver, stowNoValue + " : Last two digits : " + expectStowNo, LogAs.PASSED, true, "");
+
+				System.out.println();
+				return expectStowNo;
+			} else {
+				act.moveByOffset(0, 6).build().perform();
+			}
+		}
+
+		return 0;
+	}
+
+	// ***************************** Script_4 End ****************************
 
 	public void Excel1(String master, String actual) {
 		try {
@@ -4438,8 +2866,9 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-	public static void ActionTest(ExtentTest extentTest) {
+	public static void ActionTest(ExtentTest extentTest,ExtentTest extentTest2) {
 		test = extentTest;
+		test2=extentTest2;
 	}
 
 	public static void compareAndIncrementCount(String category, String expected, String actual, String stowageValue) {
@@ -4587,15 +3016,14 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 
 	}
 
-//	@Test
-	public void Fillocomparison() {
+	public void Fillocomparison(String Master, String Test, ExtentTest test, ExtentTest testDetail, String detailreportPath) {
 		try {
 
 			System.setProperty("ROW", "11");
 			Fillo fillo = new Fillo();
 
-			Connection connection1 = fillo.getConnection("C:\\Users\\RBT\\Pictures\\MASTER CARGO LIST.xlsx");
-			Connection connection2 = fillo.getConnection("C:\\Users\\RBT\\Pictures\\TEST CARGO LIST.xlsx");
+			Connection connection1 = fillo.getConnection(Master);
+			Connection connection2 = fillo.getConnection(Test);
 
 			String query1 = "Select * from `CARGO LIST`";
 			Recordset recordset1 = connection1.executeQuery(query1);
@@ -4612,366 +3040,386 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 			Set<String> uniqueFailedStowageNumbers = new HashSet<>();
 			Set<String> stowageNotInTest = new HashSet<>();
 			Map<String, Integer> failGroupCountMapnew = new HashMap<>();
-	
-			
+
+			String passReportpath=detailreportPath+"_Pass.html";
+			String failReportPath=detailreportPath+"_Fail.html";
+			Extent_passLink(test,"Detailed Pass Result",passReportpath);
+			Extent_passLink(test,"Detailed Failed Result",failReportPath);
+
 			while (recordset1.next()) {
 				String stowageSheet1 = recordset1.getField("Stowage");
 
 				recordset2.moveFirst();
 
-				boolean matchFound = false;			
-				    while (recordset2.next()) {
-				        String stowageSheet2 = recordset2.getField("Stowage");
+				boolean matchFound = false;
+				while (recordset2.next()) {
+					String stowageSheet2 = recordset2.getField("Stowage");
 
-				        if (stowageSheet1 != null && stowageSheet1.trim().equals(stowageSheet2 != null ? stowageSheet2.trim() : "")) {
-				            matchFound = true;
+					if (stowageSheet1 != null
+							&& stowageSheet1.trim().equals(stowageSheet2 != null ? stowageSheet2.trim() : "")) {
+						matchFound = true;
 
-				            for (String columnName : columnsToCompare) {
-				                String valueSheet1Column = recordset1.getField(columnName);
-				                String valueSheet2Column = recordset2.getField(columnName);
+						for (String columnName : columnsToCompare) {
+							String valueSheet1Column = recordset1.getField(columnName);
+							String valueSheet2Column = recordset2.getField(columnName);
 
-				                if ((valueSheet1Column == null && valueSheet2Column == null)
-				                        || ((stowageSheet1 == null || stowageSheet1.trim().isEmpty()) && "0".equals(stowageSheet2))
-				                        || ((stowageSheet2 == null || stowageSheet2.trim().isEmpty()) && "0".equals(stowageSheet1))
-				                        || (valueSheet1Column != null && valueSheet1Column.equals(valueSheet2Column))) {
+							if ((valueSheet1Column == null && valueSheet2Column == null)
+									|| ((stowageSheet1 == null || stowageSheet1.trim().isEmpty())
+											&& "0".equals(stowageSheet2))
+									|| ((stowageSheet2 == null || stowageSheet2.trim().isEmpty())
+											&& "0".equals(stowageSheet1))
+									|| (valueSheet1Column != null && valueSheet1Column.equals(valueSheet2Column))) {
 
-//				                	 Extent_pass1(test, "Values are matched for " + "Stowage number : " +stowageSheet1 + "||" + " Column name is :" + columnName + "||" + " Master value: " + valueSheet1Column + "||" + " Test value: " + valueSheet2Column);
-				                } else {
-				                    uniqueFailedStowageNumbers.add(stowageSheet1);
-				                    failedStowageMap.computeIfAbsent(columnName, k -> new HashSet<>()).add(stowageSheet1);
-				                    failureCountByColumn.put(columnName, failureCountByColumn.getOrDefault(columnName, 0) + 1);
-//				                    Extent_fail2(test, "Values are not matched for " + "Stowage number : " + stowageSheet1 + "||"
-//				                            + "Column name is :" + columnName + "||" + " Master value: " + valueSheet1Column + "||"
-//				                            + " Test value: " + valueSheet2Column);
-				                }
-				            }
-
-				            if (recordset1.getField("DG") != null && recordset1.getField("DG").contains("Yes")) {
-								if (recordset2.getField("DG") == null
-										|| !recordset1.getField("DG").equals(recordset2.getField("DG"))) {
-									failGroupCountMapnew.put("DG", failGroupCountMapnew.getOrDefault("DG", 0) + 1);
-									DG_stownumber.add(stowageSheet1);
-									DG_Group_Excepted.add(recordset1.getField("DG"));
-									DG_Group_Actual.add(recordset2.getField("DG"));
-								}
+								Extent_pass1(test2,
+										"Values are matched for " + "Stowage number : " + stowageSheet1 + "||"
+												+ " Column name is :" + columnName + "||" + " Master value: "
+												+ valueSheet1Column + "||" + " Test value: " + valueSheet2Column);
+							} else {
+								uniqueFailedStowageNumbers.add(stowageSheet1);
+								failedStowageMap.computeIfAbsent(columnName, k -> new HashSet<>()).add(stowageSheet1);
+								failureCountByColumn.put(columnName,
+										failureCountByColumn.getOrDefault(columnName, 0) + 1);
+								Extent_fail2(testDetail,
+										"Values are not matched for " + "Stowage number : " + stowageSheet1 + "||"
+												+ "Column name is :" + columnName + "||" + " Master value: "
+												+ valueSheet1Column + "||" + " Test value: " + valueSheet2Column);
 							}
-				            
-				            
-				            if ("Yes".equals(recordset1.getField("DG")) && "Yes".equals(recordset2.getField("DG"))) {
-				                if (recordset2.getField("DG class") == null
-				                        || !recordset1.getField("DG class").equals(recordset2.getField("DG class"))) {
-				                    failGroupCountMapnew.put("DG class", failGroupCountMapnew.getOrDefault("DG class", 0) + 1);
-				                    DG_Class_stownumber.add(stowageSheet1);
-				                    DG_Class_Group_Excepted.add(recordset1.getField("DG class"));
-				                    DG_Class_Group_Actual.add(recordset2.getField("DG class"));
-				                }
-				                
-				                if (recordset2.getField("mul Haz") == null
-				                        || !recordset1.getField("mul Haz").equals(recordset2.getField("mul Haz"))) {
-				                    failGroupCountMapnew.put("mul Haz", failGroupCountMapnew.getOrDefault("mul Haz", 0) + 1);
-				                    mul_Haz_stownumber.add(stowageSheet1);
-				                    mul_Haz_Group_Excepted.add(recordset1.getField("mul Haz"));
-				                    mul_Haz_Group_Actual.add(recordset2.getField("mul Haz"));
-				                }
-				                
-				                if (recordset2.getField("UNNO") == null
-				                        || !recordset1.getField("UNNO").equals(recordset2.getField("UNNO"))) {
-				                    failGroupCountMapnew.put("UNNO", failGroupCountMapnew.getOrDefault("UNNO", 0) + 1);
-				                    UNNO_stownumber.add(stowageSheet1);
-				                    UNNO_Group_Excepted.add(recordset1.getField("UNNO"));
-				                    UNNO_Group_Actual.add(recordset2.getField("UNNO"));
-				                }
-				                
-				                if (recordset2.getField("Variant") == null
-				                        || !recordset1.getField("Variant").equals(recordset2.getField("Variant"))) {
-				                    failGroupCountMapnew.put("Variant", failGroupCountMapnew.getOrDefault("Variant", 0) + 1);
-				                    Variant_stownumber.add(stowageSheet1);
-				                    Variant_Group_Excepted.add(recordset1.getField("Variant"));
-				                    Variant_Group_Actual.add(recordset2.getField("Variant"));
-				                }
-				                
-				                if (recordset2.getField("FlashPoint") == null
-				                        || !recordset1.getField("FlashPoint").equals(recordset2.getField("FlashPoint"))) {
-				                    failGroupCountMapnew.put("FlashPoint", failGroupCountMapnew.getOrDefault("FlashPoint", 0) + 1);
-				                    FlashPoint_stownumber.add(stowageSheet1);
-				                    FlashPoint_Group_Excepted.add(recordset1.getField("FlashPoint"));
-				                    FlashPoint_Group_Actual.add(recordset2.getField("FlashPoint"));
-				                }
-				                
-				                if (recordset2.getField("DGLQ") == null
-				                        || !recordset1.getField("DGLQ").equals(recordset2.getField("DGLQ"))) {
-				                    failGroupCountMapnew.put("DGLQ", failGroupCountMapnew.getOrDefault("DGLQ", 0) + 1);
-				                    DGLQ_stownumber.add(stowageSheet1);
-				                    DGLQ_Group_Excepted.add(recordset1.getField("DGLQ"));
-				                    DGLQ_Group_Actual.add(recordset2.getField("DGLQ"));
-				                }
-				            }
-				            
-				            if (recordset1.getField("OOG") != null && recordset1.getField("OOG").contains("Yes")) {
-								if (recordset2.getField("OOG") == null
-										|| !recordset1.getField("OOG").equals(recordset2.getField("OOG"))) {
-									failGroupCountMapnew.put("OOG", failGroupCountMapnew.getOrDefault("OOG", 0) + 1);
-									OOG_stownumber.add(stowageSheet1);
-									OOG_Group_Excepted.add(recordset1.getField("OOG"));
-									OOG_Group_Actual.add(recordset2.getField("OOG"));
-								}
+						}
+
+						if (recordset1.getField("DG") != null && recordset1.getField("DG").contains("Yes")) {
+							if (recordset2.getField("DG") == null
+									|| !recordset1.getField("DG").equals(recordset2.getField("DG"))) {
+								failGroupCountMapnew.put("DG", failGroupCountMapnew.getOrDefault("DG", 0) + 1);
+								DG_stownumber.add(stowageSheet1);
+								DG_Group_Excepted.add(recordset1.getField("DG"));
+								DG_Group_Actual.add(recordset2.getField("DG"));
+							}
+						}
+
+						if ("Yes".equals(recordset1.getField("DG")) && "Yes".equals(recordset2.getField("DG"))) {
+							if (recordset2.getField("DG class") == null
+									|| !recordset1.getField("DG class").equals(recordset2.getField("DG class"))) {
+								failGroupCountMapnew.put("DG class",
+										failGroupCountMapnew.getOrDefault("DG class", 0) + 1);
+								DG_Class_stownumber.add(stowageSheet1);
+								DG_Class_Group_Excepted.add(recordset1.getField("DG class"));
+								DG_Class_Group_Actual.add(recordset2.getField("DG class"));
 							}
 
-				            if ("Yes".equals(recordset1.getField("OOG")) && "Yes".equals(recordset2.getField("OOG"))) {
-				                if (recordset2.getField("OOH (m)") == null
-				                        || !recordset1.getField("OOH (m)").equals(recordset2.getField("OOH (m)"))) {
-				                    failGroupCountMapnew.put("OOH (m)", failGroupCountMapnew.getOrDefault("OOH (m)", 0) + 1);
-				                    OOH_stownumber.add(stowageSheet1);
-				                    OOH_Group_Excepted.add(recordset1.getField("OOH (m)"));
-				                    OOH_Group_Actual.add(recordset2.getField("OOH (m)"));
-				                }
-				                
-				                if (recordset2.getField("OLA (m)") == null
-				                        || !recordset1.getField("OLA (m)").equals(recordset2.getField("OLA (m)"))) {
-				                    failGroupCountMapnew.put("OLA (m)", failGroupCountMapnew.getOrDefault("OLA (m)", 0) + 1);
-				                    OLA_stownumber.add(stowageSheet1);
-				                    OLA_Group_Excepted.add(recordset1.getField("OLA (m)"));
-				                    OLA_Group_Actual.add(recordset2.getField("OLA (m)"));
-				                }
-				                
-				                if (recordset2.getField("OLF (m)") == null
-				                        || !recordset1.getField("OLF (m)").equals(recordset2.getField("OLF (m)"))) {
-				                    failGroupCountMapnew.put("OLF (m)", failGroupCountMapnew.getOrDefault("OLF (m)", 0) + 1);
-				                    OLF_stownumber.add(stowageSheet1);
-				                    OLF_Group_Excepted.add(recordset1.getField("OLF (m)"));
-				                    OLF_Group_Actual.add(recordset2.getField("OLF (m)"));
-				                }
-				            
-				                if (recordset2.getField("OWP (m)") == null
-				                        || !recordset1.getField("OWP (m)").equals(recordset2.getField("OWP (m)"))) {
-				                    failGroupCountMapnew.put("OWP (m)", failGroupCountMapnew.getOrDefault("OWP (m)", 0) + 1);
-				                    OWP_stownumber.add(stowageSheet1);
-				                    OWP_Group_Excepted.add(recordset1.getField("OWP (m)"));
-				                    OWP_Group_Actual.add(recordset2.getField("OWP (m)"));
-				                }
-				        
-				                if (recordset2.getField("OWS (m)") == null
-				                        || !recordset1.getField("OWS (m)").equals(recordset2.getField("OWS (m)"))) {
-				                    failGroupCountMapnew.put("OWS (m)", failGroupCountMapnew.getOrDefault("OWS (m)", 0) + 1);
-				                    OWS_stownumber.add(stowageSheet1);
-				                    OWS_Group_Excepted.add(recordset1.getField("OWS (m)"));
-				                    OWS_Group_Actual.add(recordset2.getField("OWS (m)"));
-				                }
-				        
-				            }
-				            
-				            if (recordset1.getField("Is COD") != null && recordset1.getField("Is COD").contains("Yes")) {
-								if (recordset2.getField("Is COD") == null
-										|| !recordset1.getField("Is COD").equals(recordset2.getField("Is COD"))) {
-									failGroupCountMapnew.put("Is COD", failGroupCountMapnew.getOrDefault("Is COD", 0) + 1);
-									Is_COD_stownumber.add(stowageSheet1);
-									Is_COD_Group_Excepted.add(recordset1.getField("Is COD"));
-									Is_COD_Group_Actual.add(recordset2.getField("Is COD"));
-								}
+							if (recordset2.getField("mul Haz") == null
+									|| !recordset1.getField("mul Haz").equals(recordset2.getField("mul Haz"))) {
+								failGroupCountMapnew.put("mul Haz",
+										failGroupCountMapnew.getOrDefault("mul Haz", 0) + 1);
+								mul_Haz_stownumber.add(stowageSheet1);
+								mul_Haz_Group_Excepted.add(recordset1.getField("mul Haz"));
+								mul_Haz_Group_Actual.add(recordset2.getField("mul Haz"));
 							}
 
-				            if ("Yes".equals(recordset1.getField("Is COD")) && "Yes".equals(recordset2.getField("Is COD"))) {
-				            	
-				            	if (recordset2.getField("COD") == null
-				                        || !recordset1.getField("COD").equals(recordset2.getField("COD"))) {
-				                    failGroupCountMapnew.put("COD", failGroupCountMapnew.getOrDefault("COD", 0) + 1);
-				                    COD_stownumber.add(stowageSheet1);
-				                    COD_Group_Excepted.add(recordset1.getField("COD"));
-				                    COD_Group_Actual.add(recordset2.getField("COD"));
-				                }
-				            	
-				            }
-				            
-				            if (recordset1.getField("IsSpl") != null && recordset1.getField("IsSpl").contains("Yes")) {
-								if (recordset2.getField("IsSpl") == null
-										|| !recordset1.getField("IsSpl").equals(recordset2.getField("IsSpl"))) {
-									failGroupCountMapnew.put("IsSpl", failGroupCountMapnew.getOrDefault("IsSpl", 0) + 1);
-									IsSpl_stownumber.add(stowageSheet1);
-									IsSpl_Group_Excepted.add(recordset1.getField("IsSpl"));
-									IsSpl_Group_Actual.add(recordset2.getField("IsSpl"));
-								}
+							if (recordset2.getField("UNNO") == null
+									|| !recordset1.getField("UNNO").equals(recordset2.getField("UNNO"))) {
+								failGroupCountMapnew.put("UNNO", failGroupCountMapnew.getOrDefault("UNNO", 0) + 1);
+								UNNO_stownumber.add(stowageSheet1);
+								UNNO_Group_Excepted.add(recordset1.getField("UNNO"));
+								UNNO_Group_Actual.add(recordset2.getField("UNNO"));
 							}
-				       
-				            if (recordset1.getField("Rfr") != null && recordset1.getField("Rfr").contains("Yes")) {
-								if (recordset2.getField("Rfr") == null
-										|| !recordset1.getField("Rfr").equals(recordset2.getField("Rfr"))) {
-									failGroupCountMapnew.put("Rfr", failGroupCountMapnew.getOrDefault("Rfr", 0) + 1);
-									Rfr_stownumber.add(stowageSheet1);
-									Rfr_Group_Excepted.add(recordset1.getField("Rfr"));
-									Rfr_Group_Actual.add(recordset2.getField("Rfr"));
-								}
+
+							if (recordset2.getField("Variant") == null
+									|| !recordset1.getField("Variant").equals(recordset2.getField("Variant"))) {
+								failGroupCountMapnew.put("Variant",
+										failGroupCountMapnew.getOrDefault("Variant", 0) + 1);
+								Variant_stownumber.add(stowageSheet1);
+								Variant_Group_Excepted.add(recordset1.getField("Variant"));
+								Variant_Group_Actual.add(recordset2.getField("Variant"));
 							}
-				            
-				            
-//				            if ("Yes".equals(recordset1.getField("OOG")) && "Yes".equals(recordset2.getField("OOG"))) {
-//				            	
-//				            	
-//				            }
-				            
-				            
-				        }
-				   
-				        if (!matchFound) {
-							stowageNotInTest.add(stowageSheet1);
-				        }
-				    }
+
+							if (recordset2.getField("FlashPoint") == null
+									|| !recordset1.getField("FlashPoint").equals(recordset2.getField("FlashPoint"))) {
+								failGroupCountMapnew.put("FlashPoint",
+										failGroupCountMapnew.getOrDefault("FlashPoint", 0) + 1);
+								FlashPoint_stownumber.add(stowageSheet1);
+								FlashPoint_Group_Excepted.add(recordset1.getField("FlashPoint"));
+								FlashPoint_Group_Actual.add(recordset2.getField("FlashPoint"));
+							}
+
+							if (recordset2.getField("DGLQ") == null
+									|| !recordset1.getField("DGLQ").equals(recordset2.getField("DGLQ"))) {
+								failGroupCountMapnew.put("DGLQ", failGroupCountMapnew.getOrDefault("DGLQ", 0) + 1);
+								DGLQ_stownumber.add(stowageSheet1);
+								DGLQ_Group_Excepted.add(recordset1.getField("DGLQ"));
+								DGLQ_Group_Actual.add(recordset2.getField("DGLQ"));
+							}
+						}
+
+						if (recordset1.getField("OOG") != null && recordset1.getField("OOG").contains("Yes")) {
+							if (recordset2.getField("OOG") == null
+									|| !recordset1.getField("OOG").equals(recordset2.getField("OOG"))) {
+								failGroupCountMapnew.put("OOG", failGroupCountMapnew.getOrDefault("OOG", 0) + 1);
+								OOG_stownumber.add(stowageSheet1);
+								OOG_Group_Excepted.add(recordset1.getField("OOG"));
+								OOG_Group_Actual.add(recordset2.getField("OOG"));
+							}
+						}
+
+						if ("Yes".equals(recordset1.getField("OOG")) && "Yes".equals(recordset2.getField("OOG"))) {
+							if (recordset2.getField("OOH (m)") == null
+									|| !recordset1.getField("OOH (m)").equals(recordset2.getField("OOH (m)"))) {
+								failGroupCountMapnew.put("OOH (m)",
+										failGroupCountMapnew.getOrDefault("OOH (m)", 0) + 1);
+								OOH_stownumber.add(stowageSheet1);
+								OOH_Group_Excepted.add(recordset1.getField("OOH (m)"));
+								OOH_Group_Actual.add(recordset2.getField("OOH (m)"));
+							}
+
+							if (recordset2.getField("OLA (m)") == null
+									|| !recordset1.getField("OLA (m)").equals(recordset2.getField("OLA (m)"))) {
+								failGroupCountMapnew.put("OLA (m)",
+										failGroupCountMapnew.getOrDefault("OLA (m)", 0) + 1);
+								OLA_stownumber.add(stowageSheet1);
+								OLA_Group_Excepted.add(recordset1.getField("OLA (m)"));
+								OLA_Group_Actual.add(recordset2.getField("OLA (m)"));
+							}
+
+							if (recordset2.getField("OLF (m)") == null
+									|| !recordset1.getField("OLF (m)").equals(recordset2.getField("OLF (m)"))) {
+								failGroupCountMapnew.put("OLF (m)",
+										failGroupCountMapnew.getOrDefault("OLF (m)", 0) + 1);
+								OLF_stownumber.add(stowageSheet1);
+								OLF_Group_Excepted.add(recordset1.getField("OLF (m)"));
+								OLF_Group_Actual.add(recordset2.getField("OLF (m)"));
+							}
+
+							if (recordset2.getField("OWP (m)") == null
+									|| !recordset1.getField("OWP (m)").equals(recordset2.getField("OWP (m)"))) {
+								failGroupCountMapnew.put("OWP (m)",
+										failGroupCountMapnew.getOrDefault("OWP (m)", 0) + 1);
+								OWP_stownumber.add(stowageSheet1);
+								OWP_Group_Excepted.add(recordset1.getField("OWP (m)"));
+								OWP_Group_Actual.add(recordset2.getField("OWP (m)"));
+							}
+
+							if (recordset2.getField("OWS (m)") == null
+									|| !recordset1.getField("OWS (m)").equals(recordset2.getField("OWS (m)"))) {
+								failGroupCountMapnew.put("OWS (m)",
+										failGroupCountMapnew.getOrDefault("OWS (m)", 0) + 1);
+								OWS_stownumber.add(stowageSheet1);
+								OWS_Group_Excepted.add(recordset1.getField("OWS (m)"));
+								OWS_Group_Actual.add(recordset2.getField("OWS (m)"));
+							}
+
+						}
+
+						if (recordset1.getField("Is COD") != null && recordset1.getField("Is COD").contains("Yes")) {
+							if (recordset2.getField("Is COD") == null
+									|| !recordset1.getField("Is COD").equals(recordset2.getField("Is COD"))) {
+								failGroupCountMapnew.put("Is COD", failGroupCountMapnew.getOrDefault("Is COD", 0) + 1);
+								Is_COD_stownumber.add(stowageSheet1);
+								Is_COD_Group_Excepted.add(recordset1.getField("Is COD"));
+								Is_COD_Group_Actual.add(recordset2.getField("Is COD"));
+							}
+						}
+
+						if ("Yes".equals(recordset1.getField("Is COD"))
+								&& "Yes".equals(recordset2.getField("Is COD"))) {
+
+							if (recordset2.getField("COD") == null
+									|| !recordset1.getField("COD").equals(recordset2.getField("COD"))) {
+								failGroupCountMapnew.put("COD", failGroupCountMapnew.getOrDefault("COD", 0) + 1);
+								COD_stownumber.add(stowageSheet1);
+								COD_Group_Excepted.add(recordset1.getField("COD"));
+								COD_Group_Actual.add(recordset2.getField("COD"));
+							}
+
+						}
+
+						if (recordset1.getField("IsSpl") != null && recordset1.getField("IsSpl").contains("Yes")) {
+							if (recordset2.getField("IsSpl") == null
+									|| !recordset1.getField("IsSpl").equals(recordset2.getField("IsSpl"))) {
+								failGroupCountMapnew.put("IsSpl", failGroupCountMapnew.getOrDefault("IsSpl", 0) + 1);
+								IsSpl_stownumber.add(stowageSheet1);
+								IsSpl_Group_Excepted.add(recordset1.getField("IsSpl"));
+								IsSpl_Group_Actual.add(recordset2.getField("IsSpl"));
+							}
+						}
+
+						if (recordset1.getField("Rfr") != null && recordset1.getField("Rfr").contains("Yes")) {
+							if (recordset2.getField("Rfr") == null
+									|| !recordset1.getField("Rfr").equals(recordset2.getField("Rfr"))) {
+								failGroupCountMapnew.put("Rfr", failGroupCountMapnew.getOrDefault("Rfr", 0) + 1);
+								Rfr_stownumber.add(stowageSheet1);
+								Rfr_Group_Excepted.add(recordset1.getField("Rfr"));
+								Rfr_Group_Actual.add(recordset2.getField("Rfr"));
+							}
+						}
+
+					}
+
 				}
 
-				// Print Extent_group_table after the loop is completed
-				if (!DG_stownumber.isEmpty()) {
-				    for (int i = 0; i < DG_stownumber.size(); i++) {
-				        Extent_group_table(test, DG_stownumber.get(i), "DG Group", "DG", DG_Group_Excepted.get(i),
-				                DG_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(DG_stownumber.get(i));				        
-				    }
-				}
-				
-				if (!DG_Class_stownumber.isEmpty()) {
-				    for (int i = 0; i < DG_Class_stownumber.size(); i++) {
-				        Extent_group_table(test, DG_Class_stownumber.get(i), "DG Group", "DG Class", DG_Class_Group_Excepted.get(i),
-				        		DG_Class_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(DG_Class_stownumber.get(i));
-				    }
-				}
-				
-				if (!mul_Haz_stownumber.isEmpty()) {
-				    for (int i = 0; i < mul_Haz_stownumber.size(); i++) {
-				        Extent_group_table(test, mul_Haz_stownumber.get(i), "DG Group", "mul Haz", mul_Haz_Group_Excepted.get(i),
-				        		mul_Haz_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(mul_Haz_stownumber.get(i));
-				    }
-				}
-			
-				if (!UNNO_stownumber.isEmpty()) {
-				    for (int i = 0; i < UNNO_stownumber.size(); i++) {
-				        Extent_group_table(test, UNNO_stownumber.get(i), "DG Group", "UNNO", UNNO_Group_Excepted.get(i),
-				        		UNNO_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(UNNO_stownumber.get(i));
-				    }
-				}
-				
-				if (!Variant_stownumber.isEmpty()) {
-				    for (int i = 0; i < Variant_stownumber.size(); i++) {
-				        Extent_group_table(test, Variant_stownumber.get(i), "DG Group", "Variant", Variant_Group_Excepted.get(i),
-				        		Variant_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(Variant_stownumber.get(i));
-				    }
-				}
-			
-				if (!FlashPoint_stownumber.isEmpty()) {
-				    for (int i = 0; i < FlashPoint_stownumber.size(); i++) {
-				        Extent_group_table(test, FlashPoint_stownumber.get(i), "DG Group", "FlashPoint", FlashPoint_Group_Excepted.get(i),
-				        		FlashPoint_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(FlashPoint_stownumber.get(i));
-				    }
-				}
-				
-				if (!DGLQ_stownumber.isEmpty()) {
-				    for (int i = 0; i < DGLQ_stownumber.size(); i++) {
-				        Extent_group_table(test, DGLQ_stownumber.get(i), "DG Group", "DGLQ", DGLQ_Group_Excepted.get(i),
-				        		DGLQ_Group_Actual.get(i));
-				        DGGroupFailuresStowageNumbers.add(DGLQ_stownumber.get(i));
-				    }
-				}
-				
-				if (!OOG_stownumber.isEmpty()) {
-				    for (int i = 0; i < OOG_stownumber.size(); i++) {
-				        Extent_group_table(test, OOG_stownumber.get(i), "OOG Group", "OOG", OOG_Group_Excepted.get(i),
-				        		OOG_Group_Actual.get(i));
-				        OOGGroupFailuresStowageNumbers.add(OOG_stownumber.get(i));
-				    }
-				}		
-				
-				if (!OOH_stownumber.isEmpty()) {
-				    for (int i = 0; i < OOH_stownumber.size(); i++) {
-				        Extent_group_table(test, OOH_stownumber.get(i), "OOG Group", "OOH (m)", OOH_Group_Excepted.get(i),
-				        		OOH_Group_Actual.get(i));
-				        OOGGroupFailuresStowageNumbers.add(OOH_stownumber.get(i));
-				    }
-				}	
-				
-				if (!OLA_stownumber.isEmpty()) {
-				    for (int i = 0; i < OLA_stownumber.size(); i++) {
-				        Extent_group_table(test, OLA_stownumber.get(i), "OOG Group", "OLA (m)", OLA_Group_Excepted.get(i),
-				        		OLA_Group_Actual.get(i));
-				        OOGGroupFailuresStowageNumbers.add(OLA_stownumber.get(i));
-				    }
-				}	
-				
-				if (!OWS_stownumber.isEmpty()) {
-				    for (int i = 0; i < OWS_stownumber.size(); i++) {
-				        Extent_group_table(test, OWS_stownumber.get(i), "OOG Group", "OWS (m)", OWS_Group_Excepted.get(i),
-				        		OWS_Group_Actual.get(i));
-				        OOGGroupFailuresStowageNumbers.add(OWS_stownumber.get(i));
-				    }
-				}	
-				
-				if (!OWP_stownumber.isEmpty()) {
-				    for (int i = 0; i < OWP_stownumber.size(); i++) {
-				        Extent_group_table(test, OWP_stownumber.get(i), "OOG Group", "OWP (m)", OWP_Group_Excepted.get(i),
-				        		OWP_Group_Actual.get(i));
-				        OOGGroupFailuresStowageNumbers.add(OWP_stownumber.get(i));
-				    }
-				}	
-				
-				if (!Is_COD_stownumber.isEmpty()) {
-				    for (int i = 0; i < Is_COD_stownumber.size(); i++) {
-				        Extent_group_table(test, Is_COD_stownumber.get(i), "COD Group", "Is COD", Is_COD_Group_Excepted.get(i),
-				        		Is_COD_Group_Actual.get(i));
-				        CODGroupFailuresStowageNumbers.add(Is_COD_stownumber.get(i));
-				    }
-				}	
-				
-				if (!COD_stownumber.isEmpty()) {
-				    for (int i = 0; i < COD_stownumber.size(); i++) {
-				        Extent_group_table(test, COD_stownumber.get(i), "COD Group", "COD", COD_Group_Excepted.get(i),
-				        		COD_Group_Actual.get(i));
-				        CODGroupFailuresStowageNumbers.add(Is_COD_stownumber.get(i));
-				    }
-				}		
-				
-				if (!IsSpl_stownumber.isEmpty()) {
-				    for (int i = 0; i < IsSpl_stownumber.size(); i++) {
-				        Extent_group_table(test, IsSpl_stownumber.get(i), "Special Group", "IsSpl", IsSpl_Group_Excepted.get(i),
-				        		IsSpl_Group_Actual.get(i));
-				        SpecialGroupFailuresStowageNumbers.add(IsSpl_stownumber.get(i));
-				    }
-				}		
-		
-				if (!Rfr_stownumber.isEmpty()) {
-				    for (int i = 0; i < Rfr_stownumber.size(); i++) {
-				        Extent_group_table(test, Rfr_stownumber.get(i), "Reefer Group", "Rfr", Rfr_Group_Excepted.get(i),
-				        		Rfr_Group_Actual.get(i));
-				        ReeferGroupFailuresStowageNumbers.add(Rfr_stownumber.get(i));
-				    }
-				}		
+			}
 
-			System.out.println("Stowage numbers not present in the test sheet: " + stowageNotInTest);
+			// Print Extent_group_table after the loop is completed
+			if (!DG_stownumber.isEmpty()) {
+				for (int i = 0; i < DG_stownumber.size(); i++) {
+					Extent_group_table(test, DG_stownumber.get(i), "DG Group", "DG", DG_Group_Excepted.get(i),
+							DG_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(DG_stownumber.get(i));
+				}
+			}
+
+			if (!DG_Class_stownumber.isEmpty()) {
+				for (int i = 0; i < DG_Class_stownumber.size(); i++) {
+					Extent_group_table(test, DG_Class_stownumber.get(i), "DG Group", "DG Class",
+							DG_Class_Group_Excepted.get(i), DG_Class_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(DG_Class_stownumber.get(i));
+				}
+			}
+
+			if (!mul_Haz_stownumber.isEmpty()) {
+				for (int i = 0; i < mul_Haz_stownumber.size(); i++) {
+					Extent_group_table(test, mul_Haz_stownumber.get(i), "DG Group", "mul Haz",
+							mul_Haz_Group_Excepted.get(i), mul_Haz_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(mul_Haz_stownumber.get(i));
+				}
+			}
+
+			if (!UNNO_stownumber.isEmpty()) {
+				for (int i = 0; i < UNNO_stownumber.size(); i++) {
+					Extent_group_table(test, UNNO_stownumber.get(i), "DG Group", "UNNO", UNNO_Group_Excepted.get(i),
+							UNNO_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(UNNO_stownumber.get(i));
+				}
+			}
+
+			if (!Variant_stownumber.isEmpty()) {
+				for (int i = 0; i < Variant_stownumber.size(); i++) {
+					Extent_group_table(test, Variant_stownumber.get(i), "DG Group", "Variant",
+							Variant_Group_Excepted.get(i), Variant_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(Variant_stownumber.get(i));
+				}
+			}
+
+			if (!FlashPoint_stownumber.isEmpty()) {
+				for (int i = 0; i < FlashPoint_stownumber.size(); i++) {
+					Extent_group_table(test, FlashPoint_stownumber.get(i), "DG Group", "FlashPoint",
+							FlashPoint_Group_Excepted.get(i), FlashPoint_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(FlashPoint_stownumber.get(i));
+				}
+			}
+
+			if (!DGLQ_stownumber.isEmpty()) {
+				for (int i = 0; i < DGLQ_stownumber.size(); i++) {
+					Extent_group_table(test, DGLQ_stownumber.get(i), "DG Group", "DGLQ", DGLQ_Group_Excepted.get(i),
+							DGLQ_Group_Actual.get(i));
+					DGGroupFailuresStowageNumbers.add(DGLQ_stownumber.get(i));
+				}
+			}
+
+			if (!OOG_stownumber.isEmpty()) {
+				for (int i = 0; i < OOG_stownumber.size(); i++) {
+					Extent_group_table(test, OOG_stownumber.get(i), "OOG Group", "OOG", OOG_Group_Excepted.get(i),
+							OOG_Group_Actual.get(i));
+					OOGGroupFailuresStowageNumbers.add(OOG_stownumber.get(i));
+				}
+			}
+
+			if (!OOH_stownumber.isEmpty()) {
+				for (int i = 0; i < OOH_stownumber.size(); i++) {
+					Extent_group_table(test, OOH_stownumber.get(i), "OOG Group", "OOH (m)", OOH_Group_Excepted.get(i),
+							OOH_Group_Actual.get(i));
+					OOGGroupFailuresStowageNumbers.add(OOH_stownumber.get(i));
+				}
+			}
+
+			if (!OLA_stownumber.isEmpty()) {
+				for (int i = 0; i < OLA_stownumber.size(); i++) {
+					Extent_group_table(test, OLA_stownumber.get(i), "OOG Group", "OLA (m)", OLA_Group_Excepted.get(i),
+							OLA_Group_Actual.get(i));
+					OOGGroupFailuresStowageNumbers.add(OLA_stownumber.get(i));
+				}
+			}
+
+			if (!OWS_stownumber.isEmpty()) {
+				for (int i = 0; i < OWS_stownumber.size(); i++) {
+					Extent_group_table(test, OWS_stownumber.get(i), "OOG Group", "OWS (m)", OWS_Group_Excepted.get(i),
+							OWS_Group_Actual.get(i));
+					OOGGroupFailuresStowageNumbers.add(OWS_stownumber.get(i));
+				}
+			}
+
+			if (!OWP_stownumber.isEmpty()) {
+				for (int i = 0; i < OWP_stownumber.size(); i++) {
+					Extent_group_table(test, OWP_stownumber.get(i), "OOG Group", "OWP (m)", OWP_Group_Excepted.get(i),
+							OWP_Group_Actual.get(i));
+					OOGGroupFailuresStowageNumbers.add(OWP_stownumber.get(i));
+				}
+			}
+
+			if (!Is_COD_stownumber.isEmpty()) {
+				for (int i = 0; i < Is_COD_stownumber.size(); i++) {
+					Extent_group_table(test, Is_COD_stownumber.get(i), "COD Group", "Is COD",
+							Is_COD_Group_Excepted.get(i), Is_COD_Group_Actual.get(i));
+					CODGroupFailuresStowageNumbers.add(Is_COD_stownumber.get(i));
+				}
+			}
+
+			if (!COD_stownumber.isEmpty()) {
+				for (int i = 0; i < COD_stownumber.size(); i++) {
+					Extent_group_table(test, COD_stownumber.get(i), "COD Group", "COD", COD_Group_Excepted.get(i),
+							COD_Group_Actual.get(i));
+					CODGroupFailuresStowageNumbers.add(Is_COD_stownumber.get(i));
+				}
+			}
+
+			if (!IsSpl_stownumber.isEmpty()) {
+				for (int i = 0; i < IsSpl_stownumber.size(); i++) {
+					Extent_group_table(test, IsSpl_stownumber.get(i), "Special Group", "IsSpl",
+							IsSpl_Group_Excepted.get(i), IsSpl_Group_Actual.get(i));
+					SpecialGroupFailuresStowageNumbers.add(IsSpl_stownumber.get(i));
+				}
+			}
+
+			if (!Rfr_stownumber.isEmpty()) {
+				for (int i = 0; i < Rfr_stownumber.size(); i++) {
+					Extent_group_table(test, Rfr_stownumber.get(i), "Reefer Group", "Rfr", Rfr_Group_Excepted.get(i),
+							Rfr_Group_Actual.get(i));
+					ReeferGroupFailuresStowageNumbers.add(Rfr_stownumber.get(i));
+				}
+			}
 
 			for (Map.Entry<String, Set<String>> entry : failedStowageMap.entrySet()) {
 				String columnName = entry.getKey();
 				Set<String> failedStowageNumbers = entry.getValue();
 				System.out.println("Failed Stowage values for " + columnName + " are: " + failedStowageNumbers);
+				Extent_fail2(testDetail, "Failed Stowage values for " + columnName + " are: " + failedStowageNumbers);
+
 			}
 
 			for (Map.Entry<String, Integer> entry : failureCountByColumn.entrySet()) {
 				System.out.println("Failure count for column '" + entry.getKey() + "': " + entry.getValue());
 			}
 
-			for (Map.Entry<String, Integer> entry : failGroupCountMapnew.entrySet()) {
-				System.out.println("Group failure count for column '" + entry.getKey() + "': " + entry.getValue());
-			}
+//			Extent_fail2(test, "DG Group total fail count : " + DGGroupFailuresStowageNumbers.size());
+//			Extent_fail2(test, "OOG Group total fail count : " + OOGGroupFailuresStowageNumbers.size());
+//			Extent_fail2(test, "COD Group total fail count : " + CODGroupFailuresStowageNumbers.size());
+//			Extent_fail2(test, "Special Group total fail count : " + SpecialGroupFailuresStowageNumbers.size());
+//			Extent_fail2(test, "Reefer Group total fail count : " + ReeferGroupFailuresStowageNumbers.size());
+//
+//			System.out.println("DG Group total fail count : " + DGGroupFailuresStowageNumbers.size());
+//			System.out.println("OOG Group total fail count : " + OOGGroupFailuresStowageNumbers.size());
+//			System.out.println("COD Group total fail count : " + CODGroupFailuresStowageNumbers.size());
+//			System.out.println("Special Group total fail count : " + SpecialGroupFailuresStowageNumbers.size());
+//			System.out.println("Reefer Group total fail count : " + ReeferGroupFailuresStowageNumbers.size());
+
+//			for (Map.Entry<String, Integer> entry : failGroupCountMapnew.entrySet()) {
+//				System.out.println("Group failure count for column '" + entry.getKey() + "': " + entry.getValue());
+//				Extent_fail2(test, "Group failure count for column '" + entry.getKey() + "': " + entry.getValue());
+//
+//			}
 
 			int totalFailedCount = uniqueFailedStowageNumbers.size();
-			System.out.println("Total Failed count is : " + totalFailedCount);
+			
+			
 
-			System.out.println("DG Group total fail count : "+ DGGroupFailuresStowageNumbers.size());
-			System.out.println("OOG Group total fail count : "+ OOGGroupFailuresStowageNumbers.size());
-			System.out.println("COD Group total fail count : "+ CODGroupFailuresStowageNumbers.size());
-			System.out.println("Special Group total fail count : "+ SpecialGroupFailuresStowageNumbers.size());
-			System.out.println("Reefer Group total fail count : "+ ReeferGroupFailuresStowageNumbers.size());
-			
-			
 			recordset1.close();
 			recordset2.close();
 			connection1.close();
@@ -4979,117 +3427,1822 @@ public class Keywords extends ATUReports implements Solvermindslocator {
 		} catch (FilloException e) {
 			e.printStackTrace();
 		}
+
 	}
 
-//	@Test
-	/*
-	 * public void Newexcelcomparison() {
-	 * 
-	 * try {
-	 * 
-	 * System.setProperty("ROW", "11");//Table start row
-	 * 
-	 * Fillo fillo = new Fillo();
-	 * 
-	 * Connection connection1 =
-	 * fillo.getConnection("C:\\Users\\RBT\\Documents\\mas.xlsx"); Connection
-	 * connection2 = fillo.getConnection("C:\\Users\\RBT\\Documents\\act.xlsx");
-	 * 
-	 * String query1 = "Select * from `CARGO LIST`"; Recordset recordset1 =
-	 * connection1.executeQuery(query1);
-	 * 
-	 * String query2 = "Select * from `CARGO LIST`"; Recordset recordset2 =
-	 * connection2.executeQuery(query2);
-	 * 
-	 * List<String> columnsToCompare = Arrays.asList("ISO", "Weight(t)", "POL",
-	 * "POD", "Mty", "IsSpl", "Is COD", "Rfr", "OOG", "DG", "mul Haz", "DG class",
-	 * "UNNO", "OOH (m)", "OLF (m)", "OLA (m)", "OWP (m)", "OWS (m)", "Booking No",
-	 * "Variant", "FlashPoint", "DGLQ");
-	 * 
-	 * Map<String, Set<String>> failedStowageMap = new HashMap<>(); Map<String,
-	 * Integer> failureCountByColumn = new HashMap<>(); Set<String>
-	 * uniqueFailedStowageNumbers = new HashSet<>(); Set<String> stowageNotInTest =
-	 * new HashSet<>(); Map<String, Integer> failGroupCountMap1 = new HashMap<>();
-	 * 
-	 * while (recordset1.next()) { String stowageSheet1 =
-	 * recordset1.getField("Stowage");
-	 * 
-	 * recordset2.moveFirst();
-	 * 
-	 * boolean matchFound = false;
-	 * 
-	 * // Move these inside the loop List<String> DG_stownumber = new ArrayList<>();
-	 * List<String> DG_Group_Excepted = new ArrayList<>(); List<String>
-	 * DG_Group_Actual = new ArrayList<>();
-	 * 
-	 * while (recordset2.next()) { String stowageSheet2 =
-	 * recordset2.getField("Stowage");
-	 * 
-	 * if (stowageSheet1 != null && stowageSheet1.trim().equals(stowageSheet2 !=
-	 * null ? stowageSheet2.trim() : "")) { matchFound = true;
-	 * 
-	 * for (String columnName : columnsToCompare) { String valueSheet1Column =
-	 * recordset1.getField(columnName); String valueSheet2Column =
-	 * recordset2.getField(columnName);
-	 * 
-	 * if ((valueSheet1Column == null && valueSheet2Column == null) ||
-	 * ((stowageSheet1 == null || stowageSheet1.trim().isEmpty()) &&
-	 * "0".equals(stowageSheet2)) || ((stowageSheet2 == null ||
-	 * stowageSheet2.trim().isEmpty()) && "0".equals(stowageSheet1)) ||
-	 * (valueSheet1Column != null && valueSheet1Column.equals(valueSheet2Column))) {
-	 * // Extent_pass1(test, "Values are matched for " + "Stowage number : " + //
-	 * stowageSheet1 + "||" + " Column name is :" + columnName + "||" + " Master //
-	 * value: " + valueSheet1Column + "||" + " Test value: " + valueSheet2Column); }
-	 * else { uniqueFailedStowageNumbers.add(stowageSheet1);
-	 * failedStowageMap.computeIfAbsent(columnName, k -> new
-	 * HashSet<>()).add(stowageSheet1); // Extent_fail2(test,
-	 * "Values are not matched for " + "Stowage number : " + // stowageSheet1 + "||"
-	 * + "Column name is :" + columnName + "||" + " Master // value:
-	 * " + valueSheet1Column + "||" + " Test value: " + valueSheet2Column);
-	 * failureCountByColumn.put(columnName,
-	 * failureCountByColumn.getOrDefault(columnName, 0) + 1); } }
-	 * 
-	 * if (recordset1.getField("DG") != null &&
-	 * recordset1.getField("DG").contains("Yes")) { if (recordset2.getField("DG") ==
-	 * null || !recordset1.getField("DG").equals(recordset2.getField("DG"))) {
-	 * failGroupCountMap1.put("DG", failGroupCountMap1.getOrDefault("DG", 0) + 1);
-	 * DG_stownumber.add(stowageSheet1);
-	 * DG_Group_Excepted.add(recordset1.getField("DG"));
-	 * DG_Group_Actual.add(recordset2.getField("DG")); } } } }
-	 * 
-	 * 
-	 * if (!matchFound) { stowageNotInTest.add(stowageSheet1); }
-	 * 
-	 * if (DG_stownumber != null) { for (int i = 0; i < DG_stownumber.size(); i++) {
-	 * Extent_group_table(test, DG_stownumber.get(i), "DG Group", "DG",
-	 * DG_Group_Excepted.get(i), DG_Group_Actual.get(i)); } } }
-	 * 
-	 * System.out.println("Stowage numbers not present in the test sheet: " +
-	 * stowageNotInTest);
-	 * 
-	 * for (Map.Entry<String, Set<String>> entry : failedStowageMap.entrySet()) {
-	 * String columnName = entry.getKey(); Set<String> failedStowageNumbers =
-	 * entry.getValue(); System.out.println("Failed Stowage values for " +
-	 * columnName + " are: " + failedStowageNumbers); // Extent_fail1(test,
-	 * "Failed Stowage values for Column " + columnName + " are: " +
-	 * failedStowageNumbers); }
-	 * 
-	 * for (Map.Entry<String, Integer> entry : failureCountByColumn.entrySet()) {
-	 * System.out.println("Failure count for column '" + entry.getKey() + "': " +
-	 * entry.getValue()); }
-	 * 
-	 * for (Map.Entry<String, Integer> entry : failGroupCountMap1.entrySet()) {
-	 * System.out.println("Group failure count for column '" + entry.getKey() +
-	 * "': " + entry.getValue()); }
-	 * 
-	 * int totalFailedCount = uniqueFailedStowageNumbers.size();
-	 * System.out.println("Total Failed count is : " + totalFailedCount);
-	 * 
-	 * recordset1.close(); recordset2.close(); connection1.close();
-	 * connection2.close(); } catch (FilloException e) { // TODO Auto-generated
-	 * catch block e.printStackTrace(); }
-	 * 
-	 * }
-	 */
+
+	public static void Createexcel(String MasterplanExcel, String TestplanExcel, String Finalresultpath,ExtentTest test)
+			throws Exception {
+
+        workbook=new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("MastertoTest");
+		System.setProperty("ROW", "11");
+		Fillo fillo = new Fillo();
+		
+		Font boldFont = workbook.createFont();
+		boldFont.setBold(true);
+
+		// Create a cell style with the bold font
+		CellStyle boldCellStyle = workbook.createCellStyle();
+		boldCellStyle.setFont(boldFont);
+
+		Connection connection1 = fillo.getConnection(MasterplanExcel);
+		Connection connection2 = fillo.getConnection(TestplanExcel);
+
+		String query1 = "Select * from `CARGO LIST`";
+		Recordset recordset1 = connection1.executeQuery(query1);
+
+		String query2 = "Select * from `CARGO LIST`";
+		Recordset recordset2 = connection2.executeQuery(query2);
+
+		List<String> columnsToCompare = Arrays.asList("ISO", "Weight(t)", "POL", "POD", "Mty", "IsSpl", "Is COD", "COD",
+				"Rfr", "OOG", "DG", "mul Haz", "DG class", "UNNO", "OOH (m)", "OLF (m)", "OLA (m)", "OWP (m)",
+				"OWS (m)", "Booking No", "Variant", "FlashPoint", "DGLQ");
+
+		// Create a row and add headers outside of the loop
+		Row headerRow = sheet.createRow(0);
+
+		// Add headers for Stowage and columnsToCompare
+		String[] headers = new String[columnsToCompare.size() * 2 + 1];
+		headers[0] = "Stowage";
+		for (int i = 0; i < columnsToCompare.size(); i++) {
+			headers[i * 2 + 1] = "Master_" + columnsToCompare.get(i);
+			headers[i * 2 + 2] = "Test_" + columnsToCompare.get(i);
+		}
+		
+		for (int i = 0; i < headers.length; i++) {
+		    Cell cell = headerRow.createCell(i);
+		    cell.setCellValue(headers[i]);
+		    cell.setCellStyle(boldCellStyle); // Apply bold font style to header cells
+		}
+
+		int numberOfNewHeaders = 3;
+		
+		String[] newHeaders = {"MasterCombinedvalue", "TestCombinedvalue", "Comparisonstatus"};
+
+		// Add the new headers to the combined headers
+		String[] combinedHeaders = new String[headers.length + newHeaders.length];
+		System.arraycopy(headers, 0, combinedHeaders, 0, headers.length);
+		System.arraycopy(newHeaders, 0, combinedHeaders, headers.length, newHeaders.length);
+
+		// Set headers in the Excel sheet and make them bold
+		for (int i = 0; i < combinedHeaders.length; i++) {
+		    Cell cell = headerRow.createCell(i);
+		    cell.setCellValue(combinedHeaders[i]);
+		    cell.setCellStyle(boldCellStyle); // Apply bold font style to header cells
+		}
+
+		Set<String> processedStowages = new HashSet<>(); // Set to track processed stowage values
+
+		while (recordset1.next()) {
+			String stowageSheet1 = recordset1.getField("Stowage");
+
+			// Check if the stowage has already been processed
+			if (!processedStowages.contains(stowageSheet1)) {
+				Row row = sheet.createRow(sheet.getLastRowNum() + 1); // Start from the last row
+
+				Cell stowageCell = row.createCell(0); // Stowage is in the first column (index 0)
+				stowageCell.setCellValue(stowageSheet1);
+
+				boolean matchFound = false; // Flag to check if a match is found in recordset2
+
+				// Iterate through columnsToCompare and set cell values for recordset1
+				for (int i = 0; i < columnsToCompare.size(); i++) {
+					String columnName = columnsToCompare.get(i);
+					String valueSheet1Column = recordset1.getField(columnName);
+
+					Cell cell = row.createCell(i * 2 + 1);
+
+					if ((valueSheet1Column.matches("\\d+") && valueSheet1Column.equals("0"))
+							|| "0".equals(valueSheet1Column)) {
+						cell.setCellValue("");
+					} else {
+						cell.setCellValue(valueSheet1Column);
+					}
+				}
+				// Find the corresponding row in recordset2
+				// Reset recordset2 to the beginning
+				while (recordset2.next()) {
+					String stowageSheet2 = recordset2.getField("Stowage");
+
+					if (stowageSheet1.equals(stowageSheet2)) {
+						matchFound = true;
+
+						// Iterate through columnsToCompare and set cell values for recordset2
+						for (int i = 0; i < columnsToCompare.size(); i++) {
+							String columnName = columnsToCompare.get(i);
+							String valueSheet2Column = recordset2.getField(columnName);
+
+							Cell cell = row.createCell(i * 2 + 2);
+
+							if ((valueSheet2Column.matches("\\d+") && valueSheet2Column.equals("0"))
+									|| "0".equals(valueSheet2Column)) {
+								cell.setCellValue("");
+							} else {
+								cell.setCellValue(valueSheet2Column);
+							}
+						}
+					}
+				}
+
+				// Create a new row for recordset1 if no match is found in recordset2
+				if (!matchFound) {
+					for (int i = 0; i < columnsToCompare.size(); i++) {
+						String columnName = columnsToCompare.get(i);
+						String valueSheet1Column = recordset1.getField(columnName);
+
+						Cell cell = row.createCell(i * 2 + 1);
+						cell.setCellValue(valueSheet1Column);
+					}
+				}
+
+				processedStowages.add(stowageSheet1);
+				recordset2.moveFirst();
+				// Add the processed stowage to the set
+			}
+
+		}
+		// Write the workbook to a file
+		try (FileOutputStream fileOut = new FileOutputStream(Finalresultpath)) {
+			System.out.println("Excel path : " +Finalresultpath);
+			workbook.write(fileOut);
+			System.out.println("Excel file created successfully.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		recordset1.close(); // Close the recordset after use
+		recordset2.close();
+		connection1.close();
+		connection2.close();
+
+		Testtomastercomparison(MasterplanExcel,TestplanExcel,Finalresultpath,test);
+		Concatenation(Finalresultpath,test);
+	}
+
+	
+	public static void Concatenation(String Finalresultpath, ExtentTest test) {
+
+		try {
+			FileInputStream file = new FileInputStream(Finalresultpath);
+			Workbook workbook = WorkbookFactory.create(file);
+			Sheet sheet = workbook.getSheet("MastertoTest");
+
+			// Get the first row for headings
+			Row headingRow = sheet.getRow(0);
+
+			// Process each row starting from the second row
+			for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+				Row currentRow = sheet.getRow(rowIndex);
+
+				StringBuilder concatenatedValues_M = new StringBuilder();
+				StringBuilder concatenatedValues_T = new StringBuilder();
+
+				// Concatenate cell values under specific headings for Master and Test
+				for (int cellIndex = 0; cellIndex < headingRow.getLastCellNum() - 3; cellIndex++) {
+					String heading = headingRow.getCell(cellIndex).getStringCellValue();
+
+					if (heading.startsWith("Master_")) {
+						Cell currentCell = currentRow.getCell(cellIndex);
+						if (currentCell != null) {
+							// concatenatedValues_M.append(currentCell.getStringCellValue())
+							switch (currentCell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								concatenatedValues_M.append(currentCell.getStringCellValue());
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								concatenatedValues_M.append(currentCell.getNumericCellValue());
+								break;
+
+							default:
+
+							}
+						}
+					} else if (heading.startsWith("Test_")) {
+						Cell currentCell = currentRow.getCell(cellIndex);
+						if (currentCell != null) {
+							// concatenatedValues_T.append(currentCell.getStringCellValue());
+
+							switch (currentCell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								concatenatedValues_T.append(currentCell.getStringCellValue());
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								concatenatedValues_T.append(currentCell.getNumericCellValue());
+								break;
+
+							default:
+
+							}
+
+						}
+					}
+				}
+
+				int masterFullCellIndex = headingRow.getLastCellNum() - 3; // Adjust index to the appropriate column
+				Cell masterFullCell = currentRow.getCell(masterFullCellIndex);
+				if (masterFullCell == null) {
+					// If the cell doesn't exist, create a new one
+					masterFullCell = currentRow.createCell(masterFullCellIndex);
+				}
+				masterFullCell.setCellValue(concatenatedValues_M.toString());
+
+				int testFullCellIndex = headingRow.getLastCellNum() - 2; // Adjust index to the appropriate column
+				Cell testFullCell = currentRow.getCell(testFullCellIndex);
+				if (testFullCell == null) {
+					testFullCell = currentRow.createCell(testFullCellIndex);
+				}
+				testFullCell.setCellValue(concatenatedValues_T.toString());
+
+//				System.out.println("Row Completed ..." + rowIndex);
+			}
+
+			// Write the changes to the Excel file
+			FileOutputStream outFile = new FileOutputStream(Finalresultpath);
+			workbook.write(outFile);
+			outFile.close();
+			workbook.close();
+
+			System.out.println("Completed...................!!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Finalcomparison(Finalresultpath,test);
+	}
+
+	
+	public static void Finalcomparison(String Finalresultpath,ExtentTest test) {
+
+		try {
+			FileInputStream fileInputStream = new FileInputStream(Finalresultpath);
+			Workbook workbook = WorkbookFactory.create(fileInputStream);
+
+			Sheet sheet = workbook.getSheet("MastertoTest");
+
+			int columnIndexToUpdate = findColumnIndex(sheet, "Comparisonstatus");
+			
+			int truecount = 0;
+			int falsecount = 0;
+			int NACount=0;
+
+			// Iterate through the rows in the sheet
+			for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+				Row row = sheet.getRow(rowIndex);
+				Cell masterCell = row.getCell(findColumnIndex(sheet, "MasterCombinedvalue"));
+				Cell testCell = row.getCell(findColumnIndex(sheet, "TestCombinedvalue"));
+
+				masterCell.toString();
+				testCell.toString();
+
+				// Compare values and write the result in the existing column
+				Cell resultCell = row.createCell(columnIndexToUpdate);
+
+				if (masterCell != null) {
+					String masterValue = getCellValueAsString(masterCell);
+
+					if (testCell == null || testCell.getCellTypeEnum() == CellType.BLANK) {
+						// MasterValue is a string, and TestValue is null or blank
+						resultCell.setCellValue("NA");
+						NACount++;
+					} else {
+						String testValue = getCellValueAsString(testCell);
+
+						if (masterValue.equals(testValue)) {
+							resultCell.setCellValue("True");
+							truecount++;
+						} else if (testValue.isEmpty()) {
+							resultCell.setCellValue("NA");
+							NACount++;
+						} else {
+							resultCell.setCellValue("False");
+							falsecount++;
+						}
+					}
+				} else {
+					// Handle the case where MasterCell is null
+					resultCell.setCellValue("NA");
+					NACount++;
+				}
+			}
+			
+			System.out.println("Total Pass count is : " + truecount);
+			System.out.println("Total fail count is : "+ falsecount);
+			System.out.println("Total NA count is : "+ NACount);
+			
+			Extent_pass1(test,"Total Pass count is : " + truecount);
+			Extent_pass1(test,"Total fail count is : "+ falsecount);
+			Extent_pass1(test,"Total NA count is : "+ NACount);
+			
+			
+			try (FileOutputStream fileOut = new FileOutputStream(Finalresultpath)) {
+				workbook.write(fileOut);
+				System.out.println("Updated Excel file created successfully.");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			workbook.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Extent_passLink(test,"Final excel file",Finalresultpath);
+		String[] groups = { "Master_IsSpl", "Master_Rfr", "Master_DG", "Master_Mty", "Master_OOG" };
+
+		for (int j = 0; j < groups.length; j++) {
+			filterGroups(Finalresultpath, groups[j],test);
+		}
+	}
+
+	
+	public static void filterGroups(String Finalresultpath, String group,ExtentTest test) {
+
+		int trueCount = 0;
+		int falseCount = 0;
+		int NA_Count = 0;
+		int totalCount = 0;
+
+		ArrayList<String> StowageNumberList_true = new ArrayList<String>();
+		ArrayList<String> StowageNumberList_false = new ArrayList<String>();
+		ArrayList<String> StowageNumberList_NA = new ArrayList<String>();
+
+		String masterCheck = group;
+
+		try (FileInputStream fileInputStream = new FileInputStream(Finalresultpath);
+				Workbook workbook = new XSSFWorkbook(fileInputStream)) {
+
+			Sheet sheet = workbook.getSheet("MastertoTest");
+
+			Sheet newSheet = workbook.createSheet(masterCheck);// -
+
+			Row headerRow = sheet.getRow(0);
+			int Master_index = -1;
+			int Result_index = -1;
+			int Stowage_index = -1;
+
+			for (Cell cell : headerRow) {
+				String cellValue = cell.getStringCellValue();
+				if (cellValue.equals(masterCheck)) {
+					Master_index = cell.getColumnIndex();//
+				} else if (cellValue.equals("Comparisonstatus")) {
+					Result_index = cell.getColumnIndex();
+				} else if (cellValue.equals("Stowage")) {
+					Stowage_index = cell.getColumnIndex();
+				}
+			}
+
+			// Iterate through rows
+			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+				Row row = sheet.getRow(i);
+
+				Cell Master_Cell = row.getCell(Master_index); //
+
+				Cell Result_Cell = row.getCell(Result_index);
+				Cell Stowage_Cell = row.getCell(Stowage_index);
+
+				if (Master_Cell != null && Master_Cell.getStringCellValue().equalsIgnoreCase("Yes")) {
+
+					totalCount++;
+
+					if (Result_Cell != null && Result_Cell.getStringCellValue().equalsIgnoreCase("True")) {
+						String result_true = Stowage_Cell.getStringCellValue();
+						StowageNumberList_true.add(result_true);
+						trueCount++;
+					} else if (Result_Cell != null && Result_Cell.getStringCellValue().equalsIgnoreCase("False")) {
+						String result_false = Stowage_Cell.getStringCellValue();
+						StowageNumberList_false.add(result_false);
+						falseCount++;
+					} else if (Result_Cell != null && Result_Cell.getStringCellValue().equalsIgnoreCase("NA")) {
+						String result_NA = Stowage_Cell.getStringCellValue();
+						StowageNumberList_NA.add(result_NA);
+						NA_Count++;
+					}
+				
+				}
+				
+			}
+
+			System.out.println("Count checking for " + masterCheck + "...................");
+			System.out.println("Total Count for : " + totalCount);
+			System.out.println("True Count: " + trueCount + " || " + "False Count: " + falseCount + " || "
+					+ "NA Count: " + NA_Count);
+			Extent_fail1(test, masterCheck+" True count : "+trueCount+" || "+ " False count "+falseCount + " || "+ " NA Count "+NA_Count);
+			Extent_fail1(test, masterCheck + " false stowage numbers are : "+ StowageNumberList_false);
+			Extent_fail1(test, masterCheck + " NA stowage numbers are : "+ StowageNumberList_NA);
+			
+			
+			System.out.println();
+			
+//			System.out.println("***********************************************************");
+//			System.out.println("True stowage list for " + masterCheck);
+//			for (int k = 0; k < StowageNumberList_true.size(); k++) {
+//				
+//				System.out.println(StowageNumberList_true.get(k));
+//			}
+
+			System.out.println("***********************************************************");
+			System.out.println("False stowage list for " + masterCheck);
+			for (int k = 0; k < StowageNumberList_false.size(); k++) {
+				System.out.println(StowageNumberList_false.get(k));
+				
+			}
+
+			System.out.println("***********************************************************");
+			System.out.println("NA stowage list " + masterCheck);
+			for (int k = 0; k < StowageNumberList_NA.size(); k++) {
+		
+				System.out.println(StowageNumberList_NA.get(k));
+			}
+
+			System.out.println();
+			System.out.println("************************ Finished  ***********************************");
+			System.out.println();
+
+			int a = StowageNumberList_NA.size();
+			int b = StowageNumberList_true.size();
+			int c = StowageNumberList_false.size();
+
+			int rowCreateCount = findLargest(a, b, c);
+			for (int i = 0; i <= rowCreateCount + 5; i++) {
+				Row rowNewSheet = newSheet.createRow(i);
+			}
+			
+			Font boldFont = workbook.createFont();
+			boldFont.setBold(true);
+
+			// Create a cell style with the bold font
+			CellStyle boldCellStyle = workbook.createCellStyle();
+			boldCellStyle.setFont(boldFont);
+
+			// Assuming you have created the new sheet elsewhere in your code
+			Row headerNewSheet = newSheet.getRow(0);
+
+			// Create headers
+			String[] headers = {masterCheck, "Yes", "StowageNumberList_false", "StowageNumberList_NA"};
+
+			// Set headers in the Excel sheet and make them bold
+			for (int i = 0; i < headers.length; i++) {
+			    Cell cell = headerNewSheet.createCell(i);
+			    cell.setCellValue(headers[i]);
+			    cell.setCellStyle(boldCellStyle); // Apply bold font style to header cells
+			}
+
+//			Row headerNewSheet = newSheet.getRow(0);
+//			headerNewSheet.createCell(0).setCellValue(masterCheck);
+//			headerNewSheet.createCell(1).setCellValue("Yes");
+//			headerNewSheet.createCell(2).setCellValue("StowageNumberList_false");
+//			headerNewSheet.createCell(3).setCellValue("StowageNumberList_NA");
+
+			Row trueCountRow = newSheet.getRow(1);
+			if (trueCountRow == null) {
+				trueCountRow = newSheet.createRow(2); // Create the row if it's null
+			}
+			trueCountRow.createCell(0).setCellValue("TrueCount");
+			trueCountRow.createCell(1).setCellValue(trueCount);
+			
+//			Row trueCountRow = newSheet.getRow(1);
+//			trueCountRow.createCell(0).setCellValue("TrueCount");
+//			trueCountRow.createCell(1).setCellValue(trueCount);
+
+			Row falseCountRow = newSheet.getRow(2);
+			if (falseCountRow == null) {
+			    falseCountRow = newSheet.createRow(2); // Create the row if it's null
+			}
+			falseCountRow.createCell(0).setCellValue("FalseCount");
+			falseCountRow.createCell(1).setCellValue(falseCount);
+
+			Row naCountRow = newSheet.getRow(3);
+			if (naCountRow == null) {
+			    naCountRow = newSheet.createRow(3); // Create the row if it's null
+			}
+			naCountRow.createCell(0).setCellValue("NA_Count");
+			naCountRow.createCell(1).setCellValue(NA_Count);
+
+			Row totalCountRow = newSheet.getRow(4);
+			if (totalCountRow == null) {
+			    totalCountRow = newSheet.createRow(4); // Create the row if it's null
+			}
+			totalCountRow.createCell(0).setCellValue("TotalCount");
+			totalCountRow.createCell(1).setCellValue(totalCount);
+
+
+			for (int i = 1; i <= StowageNumberList_false.size(); i++) {
+				Row stowageRow = newSheet.getRow(i);
+				stowageRow.createCell(2).setCellValue(StowageNumberList_false.get(i - 1));
+			}
+
+			for (int i = 1; i <= StowageNumberList_NA.size(); i++) {
+				Row stowageRow = newSheet.getRow(i);
+				stowageRow.createCell(3).setCellValue(StowageNumberList_NA.get(i - 1));
+			}
+
+			try (FileOutputStream outputStream = new FileOutputStream(Finalresultpath)) {
+				workbook.write(outputStream);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void Testtomastercomparison(String MasterplanExcel, String TestplanExcel, String Finalresultpath,ExtentTest test)
+			throws Exception {
+
+		Sheet sheet = workbook.createSheet("Testtomaster");
+		System.setProperty("ROW", "11");
+		Fillo fillo = new Fillo();
+
+		Connection connection1 = fillo.getConnection(TestplanExcel);
+		Connection connection2 = fillo.getConnection(MasterplanExcel);
+
+		String query1 = "Select * from `CARGO LIST`";
+		Recordset recordset1 = connection1.executeQuery(query1);
+
+		String query2 = "Select * from `CARGO LIST`";
+		Recordset recordset2 = connection2.executeQuery(query2);
+
+		List<String> columnsToCompare = Arrays.asList("ISO", "Weight(t)", "POL", "POD", "Mty", "IsSpl", "Is COD", "COD",
+				"Rfr", "OOG", "DG", "mul Haz", "DG class", "UNNO", "OOH (m)", "OLF (m)", "OLA (m)", "OWP (m)",
+				"OWS (m)", "Booking No", "Variant", "FlashPoint", "DGLQ");
+
+		Font boldFont = workbook.createFont();
+		boldFont.setBold(true);
+
+		// Create a cell style with the bold font
+		CellStyle boldCellStyle = workbook.createCellStyle();
+		boldCellStyle.setFont(boldFont);
+
+		
+		// Create a row and add headers outside of the loop
+		Row headerRow = sheet.createRow(0);
+
+		// Add headers for Stowage and columnsToCompare
+		String[] headers = new String[columnsToCompare.size() * 2 + 1];
+		headers[0] = "Stowage";
+		for (int i = 0; i < columnsToCompare.size(); i++) {
+			headers[i * 2 + 1] = "Test_" + columnsToCompare.get(i);
+			headers[i * 2 + 2] = "Master_" + columnsToCompare.get(i);
+		}
+
+		int numberOfNewHeaders = 3;
+
+		String[] newHeaders = {"MasterCombinedvalue", "TestCombinedvalue", "Comparisonstatus"};
+
+		// Add the new headers to the combined headers
+		String[] combinedHeaders = new String[headers.length + newHeaders.length];
+		System.arraycopy(headers, 0, combinedHeaders, 0, headers.length);
+		System.arraycopy(newHeaders, 0, combinedHeaders, headers.length, newHeaders.length);
+
+		// Set headers in the Excel sheet and make them bold
+		for (int i = 0; i < combinedHeaders.length; i++) {
+		    Cell cell = headerRow.createCell(i);
+		    cell.setCellValue(combinedHeaders[i]);
+		    cell.setCellStyle(boldCellStyle); // Apply bold font style to header cells
+		}
+		
+		Set<String> processedStowages = new HashSet<>(); // Set to track processed stowage values
+
+		while (recordset1.next()) {
+			String stowageSheet1 = recordset1.getField("Stowage");
+
+			// Check if the stowage has already been processed
+			if (!processedStowages.contains(stowageSheet1)) {
+				Row row = sheet.createRow(sheet.getLastRowNum() + 1); // Start from the last row
+
+				Cell stowageCell = row.createCell(0); // Stowage is in the first column (index 0)
+				stowageCell.setCellValue(stowageSheet1);
+
+				boolean matchFound = false; // Flag to check if a match is found in recordset2
+
+				// Iterate through columnsToCompare and set cell values for recordset1
+				for (int i = 0; i < columnsToCompare.size(); i++) {
+					String columnName = columnsToCompare.get(i);
+					String valueSheet1Column = recordset1.getField(columnName);
+
+					Cell cell = row.createCell(i * 2 + 1);
+
+					if ((valueSheet1Column.matches("\\d+") && valueSheet1Column.equals("0"))
+							|| "0".equals(valueSheet1Column)) {
+						cell.setCellValue("");
+					} else {
+						cell.setCellValue(valueSheet1Column);
+					}
+				}
+				// Find the corresponding row in recordset2
+				// Reset recordset2 to the beginning
+				while (recordset2.next()) {
+					String stowageSheet2 = recordset2.getField("Stowage");
+
+					if (stowageSheet1.equals(stowageSheet2)) {
+						matchFound = true;
+
+						// Iterate through columnsToCompare and set cell values for recordset2
+						for (int i = 0; i < columnsToCompare.size(); i++) {
+							String columnName = columnsToCompare.get(i);
+							String valueSheet2Column = recordset2.getField(columnName);
+
+							Cell cell = row.createCell(i * 2 + 2);
+
+							if ((valueSheet2Column.matches("\\d+") && valueSheet2Column.equals("0"))
+									|| "0".equals(valueSheet2Column)) {
+								cell.setCellValue("");
+							} else {
+								cell.setCellValue(valueSheet2Column);
+							}
+						}
+					}
+				}
+
+				// Create a new row for recordset1 if no match is found in recordset2
+				if (!matchFound) {
+					for (int i = 0; i < columnsToCompare.size(); i++) {
+						String columnName = columnsToCompare.get(i);
+						String valueSheet1Column = recordset1.getField(columnName);
+
+						Cell cell = row.createCell(i * 2 + 1);
+						cell.setCellValue(valueSheet1Column);
+					}
+				}
+
+				processedStowages.add(stowageSheet1);
+				recordset2.moveFirst();
+				// Add the processed stowage to the set
+			}
+
+		}
+		// Write the workbook to a file
+		try (FileOutputStream fileOut = new FileOutputStream(Finalresultpath)) {
+			workbook.write(fileOut);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		recordset1.close(); // Close the recordset after use
+		recordset2.close();
+		connection1.close();
+		connection2.close();
+
+		Concatenation1(Finalresultpath);
+	}
+
+	
+	public static void Concatenation1(String Finalresultpath) {
+
+		try {
+			FileInputStream file = new FileInputStream(Finalresultpath);
+			Workbook workbook = WorkbookFactory.create(file);
+			Sheet sheet = workbook.getSheet("Testtomaster");
+
+			// Get the first row for headings
+			Row headingRow = sheet.getRow(0);
+
+			// Process each row starting from the second row
+			for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+				Row currentRow = sheet.getRow(rowIndex);
+
+				StringBuilder concatenatedValues_M = new StringBuilder();
+				StringBuilder concatenatedValues_T = new StringBuilder();
+
+				// Concatenate cell values under specific headings for Master and Test
+				for (int cellIndex = 0; cellIndex < headingRow.getLastCellNum() - 3; cellIndex++) {
+					String heading = headingRow.getCell(cellIndex).getStringCellValue();
+
+					if (heading.startsWith("Test_")) {
+						Cell currentCell = currentRow.getCell(cellIndex);
+						if (currentCell != null) {
+							// concatenatedValues_M.append(currentCell.getStringCellValue())
+							switch (currentCell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								concatenatedValues_M.append(currentCell.getStringCellValue());
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								concatenatedValues_M.append(currentCell.getNumericCellValue());
+								break;
+
+							default:
+
+							}
+						}
+					} else if (heading.startsWith("Master_")) {
+						Cell currentCell = currentRow.getCell(cellIndex);
+						if (currentCell != null) {
+							// concatenatedValues_T.append(currentCell.getStringCellValue());
+
+							switch (currentCell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								concatenatedValues_T.append(currentCell.getStringCellValue());
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								concatenatedValues_T.append(currentCell.getNumericCellValue());
+								break;
+
+							default:
+
+							}
+
+						}
+					}
+				}
+
+				int masterFullCellIndex = headingRow.getLastCellNum() - 3; // Adjust index to the appropriate column
+				Cell masterFullCell = currentRow.getCell(masterFullCellIndex);
+				if (masterFullCell == null) {
+					// If the cell doesn't exist, create a new one
+					masterFullCell = currentRow.createCell(masterFullCellIndex);
+				}
+				masterFullCell.setCellValue(concatenatedValues_M.toString());
+
+				int testFullCellIndex = headingRow.getLastCellNum() - 2; // Adjust index to the appropriate column
+				Cell testFullCell = currentRow.getCell(testFullCellIndex);
+				if (testFullCell == null) {
+					testFullCell = currentRow.createCell(testFullCellIndex);
+				}
+				testFullCell.setCellValue(concatenatedValues_T.toString());
+
+//				System.out.println("Row Completed ..." + rowIndex);
+			}
+
+			// Write the changes to the Excel file
+			FileOutputStream outFile = new FileOutputStream(Finalresultpath);
+			workbook.write(outFile);
+			outFile.close();
+			workbook.close();
+
+			System.out.println("Completed...................!!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Finalcomparison1(Finalresultpath);
+	}
+
+	
+	public static void Finalcomparison1(String Finalresultpath) {
+
+		try {
+			FileInputStream fileInputStream = new FileInputStream(Finalresultpath);
+			Workbook workbook = WorkbookFactory.create(fileInputStream);
+
+			Sheet sheet = workbook.getSheet("Testtomaster");
+
+			int columnIndexToUpdate = findColumnIndex(sheet, "Comparisonstatus");
+
+			for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+				Row row = sheet.getRow(rowIndex);
+				Cell masterCell = row.getCell(findColumnIndex(sheet, "MasterCombinedvalue"));
+				Cell testCell = row.getCell(findColumnIndex(sheet, "TestCombinedvalue"));
+
+				masterCell.toString();
+				testCell.toString();
+
+				Cell resultCell = row.createCell(columnIndexToUpdate);
+
+				if (testCell != null) {
+					String testValue = getCellValueAsString(testCell);
+
+					if (masterCell == null || masterCell.getCellTypeEnum() == CellType.BLANK) {
+						resultCell.setCellValue("NA");
+					} else {
+						String mastervalue = getCellValueAsString(masterCell);
+
+						if (testValue.equals(mastervalue)) {
+							resultCell.setCellValue("True");
+						} else if (mastervalue.isEmpty()) {
+							resultCell.setCellValue("NA");
+						} else {
+							resultCell.setCellValue("False");
+						}
+					}
+				} else {
+					resultCell.setCellValue("NA");
+				}
+			}
+			try (FileOutputStream fileOut = new FileOutputStream(Finalresultpath)) {
+				workbook.write(fileOut);
+				System.out.println("Updated Excel file created successfully.");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			workbook.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		String[] groups = { "Master_IsSpl", "Master_Rfr", "Master_DG", "Master_Mty", "Master_OOG" };
+//
+//		for (int j = 0; j < groups.length; j++) {
+//			filterGroups1(Finalresultpath, groups[j]);
+//		}
+	}
+
+	
+//	public static void filterGroups1(String Finalresultpath, String group) {
+//
+//		int trueCount = 0;
+//		int falseCount = 0;
+//		int NA_Count = 0;
+//		int totalCount = 0;
+//
+//		ArrayList<String> StowageNumberList_true = new ArrayList<String>();
+//		ArrayList<String> StowageNumberList_false = new ArrayList<String>();
+//		ArrayList<String> StowageNumberList_NA = new ArrayList<String>();
+//
+//		String masterCheck = group;
+//
+//		try (FileInputStream fileInputStream = new FileInputStream(Finalresultpath);
+//				Workbook workbook = new XSSFWorkbook(fileInputStream)) {
+//
+//			Sheet sheet = workbook.getSheet("MastertoTest");
+//
+//			Sheet newSheet = workbook.createSheet(masterCheck);// -
+//
+//			Row headerRow = sheet.getRow(0);
+//			int Master_index = -1;
+//			int Result_index = -1;
+//			int Stowage_index = -1;
+//
+//			for (Cell cell : headerRow) {
+//				String cellValue = cell.getStringCellValue();
+//				if (cellValue.equals(masterCheck)) {
+//					Master_index = cell.getColumnIndex();//
+//				} else if (cellValue.equals("Comparisonstatus")) {
+//					Result_index = cell.getColumnIndex();
+//				} else if (cellValue.equals("Stowage")) {
+//					Stowage_index = cell.getColumnIndex();
+//				}
+//			}
+//
+//			// Iterate through rows
+//			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+//				Row row = sheet.getRow(i);
+//
+//				Cell Master_Cell = row.getCell(Master_index); //
+//
+//				Cell Result_Cell = row.getCell(Result_index);
+//				Cell Stowage_Cell = row.getCell(Stowage_index);
+//
+//				if (Master_Cell != null && Master_Cell.getStringCellValue().equalsIgnoreCase("Yes")) {
+//
+//					totalCount++;
+//
+//					if (Result_Cell != null && Result_Cell.getStringCellValue().equalsIgnoreCase("True")) {
+//						String result_true = Stowage_Cell.getStringCellValue();
+//						StowageNumberList_true.add(result_true);
+//						trueCount++;
+//					} else if (Result_Cell != null && Result_Cell.getStringCellValue().equalsIgnoreCase("False")) {
+//						String result_false = Stowage_Cell.getStringCellValue();
+//						StowageNumberList_false.add(result_false);
+//						falseCount++;
+//					} else if (Result_Cell != null && Result_Cell.getStringCellValue().equalsIgnoreCase("NA")) {
+//						String result_NA = Stowage_Cell.getStringCellValue();
+//						StowageNumberList_NA.add(result_NA);
+//						NA_Count++;
+//					}
+//				
+//				}
+//				
+//			}
+//
+//			System.out.println("Count checking for " + masterCheck + "...................");
+//			System.out.println("Total Count for : " + totalCount);
+//			System.out.println("True Count: " + trueCount + " || " + "False Count: " + falseCount + " || "
+//					+ "NA Count: " + NA_Count);
+//			Extent_fail1(test, masterCheck+" True count : "+trueCount+" || "+ " False count "+falseCount + " || "+ " NA Count "+NA_Count);
+//			Extent_fail1(test, masterCheck + " false stowage numbers are : "+ StowageNumberList_false);
+//			Extent_fail1(test, masterCheck + " NA stowage numbers are : "+ StowageNumberList_NA);
+//			
+//			
+//			System.out.println();
+//			
+//			System.out.println("***********************************************************");
+//			System.out.println("True stowage list for " + masterCheck);
+//			for (int k = 0; k < StowageNumberList_true.size(); k++) {
+//				
+//				System.out.println(StowageNumberList_true.get(k));
+//			}
+//
+//			System.out.println("***********************************************************");
+//			System.out.println("False stowage list for " + masterCheck);
+//			for (int k = 0; k < StowageNumberList_false.size(); k++) {
+//				System.out.println(StowageNumberList_false.get(k));
+//				
+//			}
+//
+//			System.out.println("***********************************************************");
+//			System.out.println("NA stowage list " + masterCheck);
+//			for (int k = 0; k < StowageNumberList_NA.size(); k++) {
+//		
+//				System.out.println(StowageNumberList_NA.get(k));
+//			}
+//
+//			System.out.println();
+//			System.out.println("************************ Finished  ***********************************");
+//			System.out.println();
+//
+//			int a = StowageNumberList_NA.size();
+//			int b = StowageNumberList_true.size();
+//			int c = StowageNumberList_false.size();
+//
+//			int rowCreateCount = findLargest(a, b, c);
+//			for (int i = 0; i <= rowCreateCount + 1; i++) {
+//				Row rowNewSheet = newSheet.createRow(i);
+//			}
+//
+//			Row headerNewSheet = newSheet.getRow(0);
+//			headerNewSheet.createCell(0).setCellValue(masterCheck);
+//			headerNewSheet.createCell(1).setCellValue("Yes");
+//			headerNewSheet.createCell(2).setCellValue("StowageNumberList_false");
+//			headerNewSheet.createCell(3).setCellValue("StowageNumberList_NA");
+//
+//			Row trueCountRow = newSheet.getRow(1);
+//			trueCountRow.createCell(0).setCellValue("TrueCount");
+//			trueCountRow.createCell(1).setCellValue(trueCount);
+//
+//			Row falseCountRow = newSheet.getRow(2);
+//			falseCountRow.createCell(0).setCellValue("FalseCount");
+//			falseCountRow.createCell(1).setCellValue(falseCount);
+//
+//			Row naCountRow = newSheet.getRow(3);
+//			naCountRow.createCell(0).setCellValue("NA_Count");
+//			naCountRow.createCell(1).setCellValue(NA_Count);
+//
+//			Row totalCountRow = newSheet.getRow(4);
+//			totalCountRow.createCell(0).setCellValue("TotalCount");
+//			totalCountRow.createCell(1).setCellValue(totalCount);
+//
+//			for (int i = 1; i <= StowageNumberList_false.size(); i++) {
+//				Row stowageRow = newSheet.getRow(i);
+//				stowageRow.createCell(2).setCellValue(StowageNumberList_false.get(i - 1));
+//			}
+//
+//			for (int i = 1; i <= StowageNumberList_NA.size(); i++) {
+//				Row stowageRow = newSheet.getRow(i);
+//				stowageRow.createCell(3).setCellValue(StowageNumberList_NA.get(i - 1));
+//			}
+//
+//			try (FileOutputStream outputStream = new FileOutputStream(Finalresultpath)) {
+//				workbook.write(outputStream);
+//			}
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+
+	private static String getCellValueAsString(Cell cell) {
+		switch (cell.getCellTypeEnum()) {
+		case STRING:
+			return cell.getStringCellValue();
+		case NUMERIC:
+			// Handle numeric values if needed
+			return String.valueOf(cell.getNumericCellValue());
+		default:
+			return "";
+		}
+	}
+
+	public static int findLargest(int a, int b, int c) {
+		if (a >= b && a >= c) {
+			return a;
+		} else if (b >= a && b >= c) {
+			return b;
+		} else {
+			return c;
+		}
+	}
+
+	private static int findColumnIndex(Sheet sheet, String header) {
+		int columnIndex = -1;
+
+		// Assuming the header is in the first row (index 0)
+		Row headerRow = sheet.getRow(0);
+
+		for (Cell cell : headerRow) {
+			if (cell.getStringCellValue().equalsIgnoreCase(header)) {
+				columnIndex = cell.getColumnIndex();
+				break;
+			}
+		}
+
+		return columnIndex;
+	}
+
+	public String Vesselname(String str) {
+
+		if (str.length() < 3) {
+			return str;
+		} else {
+			return str.substring(0, 3);
+		}
+	}
+	
+	   public static void compareContainerData(String masterFilePath, String testFilePath) throws IOException {
+	        FileInputStream masterFileInputStream = new FileInputStream(masterFilePath);
+	        FileInputStream testFileInputStream = new FileInputStream(testFilePath);
+
+	        Workbook masterWorkbook = new XSSFWorkbook(masterFileInputStream);
+	        Workbook testWorkbook = new XSSFWorkbook(testFileInputStream);
+
+	        Sheet masterSheet = masterWorkbook.getSheetAt(0);
+	        Sheet testSheet = testWorkbook.getSheetAt(0);
+
+	        // Get headings from both sheets
+	        Row masterHeaderRow = masterSheet.getRow(0);
+	        Row testHeaderRow = testSheet.getRow(0);
+
+	        List<String> masterHeadings = getHeadings(masterHeaderRow);
+	        List<String> testHeadings = getHeadings(testHeaderRow);
+//
+	        int testSheetLastRow=testSheet.getLastRowNum();
+	        
+	        // Check for new headings in test file
+	        for (String heading : testHeadings) {
+	            if (!masterHeadings.contains(heading)) {
+	                System.out.println("New heading in test file: " + heading);
+	                String result_1="New heading in test file: " + heading;
+	                Extent_fail2(test,result_1);
+	                
+	                int newHeadIndex=0;
+	                
+	                for (Cell cell : testHeaderRow) {
+	    				String cellValue = cell.getStringCellValue();
+	    				if (cellValue.contains(heading)) {
+	    					newHeadIndex = cell.getColumnIndex();//
+	    				}
+	    				
+	    			}
+	                
+	               // int headIndex=r.get
+	        		System.out.println();
+	        		System.out.println("New Cell Values under "+heading +" heading  :  ");
+	        		String result_2="New Cell Values under "+heading +" heading  :  ";
+	        		Extent_fail2(test,result_2);
+	                
+	                for(int r=1;r<=testSheetLastRow;r++) {
+	                	
+	                	Row newRow=testSheet.getRow(r);
+	    	        	Cell newCell=newRow.getCell(newHeadIndex);
+	    	        	String newCellValue=newCell.getStringCellValue();
+	  
+	    	        	String sPodValue=newRow.getCell(0).getStringCellValue();
+    	        		System.out.println(sPodValue+" & "+heading+ "  :  "+newCellValue);
+    	        		String result_3=sPodValue+" & "+heading+ "  :  "+newCellValue;
+    	        		Extent_fail2(test,result_3);
+    	                
+	                }
+	            }
+	        }
+	        
+	        boolean containerMatch=false;
+	        Row masHeadrow=masterSheet.getRow(0);
+	        for(int m=1;m<masHeadrow.getLastCellNum();m++) {
+	        	Cell masHeadCell=masHeadrow.getCell(m);
+               String mastHead=masHeadCell.getStringCellValue();
+	        for (int i = 1; i <= masterSheet.getLastRowNum(); i++) {
+	            
+	        	Row masRow=masterSheet.getRow(i);
+	        	Cell masCell=masRow.getCell(m);
+	        	String mastCellValue=masCell.getStringCellValue();
+	        	
+	        	
+	        	Row testHeadRow=testSheet.getRow(0);
+	        	
+	        	for (int k=1;k<testHeadRow.getLastCellNum();k++) {
+	        		Cell testHeadCell=testHeadRow.getCell(k);
+	                String testHead=testHeadCell.getStringCellValue();
+	        		if(testHead.equals(mastHead)) {
+	        			Row testRow=testSheet.getRow(i);
+	    	        	Cell testCell=testRow.getCell(k);
+	    	        	String testCellValue=testCell.getStringCellValue();
+	    	        	
+	    	        	if(testCellValue.equals(mastCellValue)) {
+	    	        		String sPodValue=masRow.getCell(0).getStringCellValue();
+	    	        		System.out.println();
+	    	        		System.out.println("Passed..");
+	    	        		System.out.println("Master and test value matched for "+sPodValue+" & "+mastHead+ " : ");
+	    	        		System.out.println("Master value : "+mastCellValue+ "  ||  "+"Test Value : "+testCellValue);
+	    	        	}else {
+	    	        		String sPodValue=masRow.getCell(0).getStringCellValue();
+	    	        		System.out.println();
+	    	        		System.out.println("Failed..!");
+	    	        		String failed_result1="Master and test value Mismatched for "+sPodValue+" & "+mastHead+ " : ";
+	    	        		String failed_result2="Master value : "+mastCellValue+ "  ||  "+"Test Value : "+testCellValue;
+	    	        		
+	    	        		Extent_fail2(test,failed_result1);
+	    	        		Extent_fail2(test,failed_result2);
+	    	        		
+	    	        		System.out.println(failed_result1);
+	    	        		System.out.println(failed_result2);
+	    	        	}
+	    	        	
+	    	        	break;
+	        		}
+	        		
+	        		//new condition for testing 
+	        		if(k==(testHeadRow.getLastCellNum()-1)) {
+	        			if(!testHead.equals(mastHead)) {
+	        				if(containerMatch==false) {
+	    	        		System.out.println();
+	    	        		System.out.println("Failed..!");
+	        				System.out.println(mastHead+" row is not present in Test Result...");
+	        				String resultFail=mastHead+" row is not present in Test Result...";
+	    	        		Extent_fail2(test,resultFail);
+	        				System.out.println();
+	        				containerMatch=true;
+	        				}
+	        			}
+	        		}
+	        	}
+	        }
+
+	        }
+	        
+	        
+	        masterWorkbook.close();
+	        testWorkbook.close();
+	        masterFileInputStream.close();
+	        testFileInputStream.close();
+	    }
+
+	    private static List<String> getHeadings(Row headerRow) {
+	        List<String> headings = new ArrayList<>();
+	        Iterator<Cell> cellIterator = headerRow.cellIterator();
+	        while (cellIterator.hasNext()) {
+	            Cell cell = cellIterator.next();
+	            headings.add(cell.getStringCellValue());
+	        }
+	        return headings;
+	    }
+	
+	    public void Tankdetailscomparison(String Master, String Test, ExtentTest test, ExtentTest testDetail, String detailreportPath) {
+	        try {
+	        	System.setProperty("ROW", "2");
+	        	Fillo fillo = new Fillo();
+
+	        	Connection connection1 = fillo.getConnection(Master);
+	        	Connection connection2 = fillo.getConnection(Test);
+
+	        	String query1 = "Select * from `Tank Details`";
+	        	Recordset recordset1 = connection1.executeQuery(query1);
+
+	        	String query2 = "Select * from `Tank Details`";
+	        	Recordset recordset2 = connection2.executeQuery(query2);
+
+	        	List<String> columnsToCompare = Arrays.asList("Tank Category", "Tank Name", "Weight", "Tank Code");
+
+	        	Set<String> uniqueFailedTanknames = new HashSet<>();
+	        	Set<String> uniquePassedTanknames = new HashSet<>();
+	        	Set<String> missingTankNames = new HashSet<>();
+
+//	        	Extent_passLink(test, "Detailed Result", detailreportPath);
+	        	String passReportpath=detailreportPath+"_Pass"+".html";
+				String failReportPath=detailreportPath+"_Fail"+".html";
+				Extent_passLink(test,"Detailed Pass Result",passReportpath);
+				Extent_passLink(test,"Detailed Failed Result",failReportPath);
+
+	        	while (recordset1.next()) {
+	        	    String Tankdetails1 = recordset1.getField("Tank Name");
+	        	    String columnName = "";
+	        	    String valueSheet1Column = "";
+	        	    String valueSheet2Column = "";
+
+	        	    recordset2.moveFirst();
+
+	        	    boolean matchFound = false;
+	        	    boolean allColumnsMatch = true; // Flag to track if all columns match
+
+	        	    while (recordset2.next()) {
+	        	        String Tankdetails2 = recordset2.getField("Tank Name");
+
+	        	        if (Tankdetails1 != null && Tankdetails1.trim().equals(Tankdetails2 != null ? Tankdetails2.trim() : "")) {
+	        	            matchFound = true;
+
+	        	            for (String colName : columnsToCompare) {
+	        	                columnName = colName;
+	        	                valueSheet1Column = recordset1.getField(colName);
+	        	                valueSheet2Column = recordset2.getField(colName);
+
+	        	                if ((valueSheet1Column == null && valueSheet2Column == null) ||
+	        	                        ((Tankdetails1 == null || Tankdetails1.trim().isEmpty()) && "0".equals(Tankdetails2)) ||
+	        	                        ((Tankdetails2 == null || Tankdetails2.trim().isEmpty()) && "0".equals(Tankdetails1)) ||
+	        	                        (valueSheet1Column != null && valueSheet1Column.equals(valueSheet2Column))) {
+	        	                    // Values match, continue to next column
+	        	                } else {
+	        	                    // Values don't match, set flag to false and break the loop
+	        	                    allColumnsMatch = false;
+	        	                    break;
+	        	                }
+	        	            }
+
+	        	            if (allColumnsMatch) {
+	        	                uniquePassedTanknames.add(Tankdetails1); // Add passed Tank Name to set
+	        	                
+	        	                Extent_pass1(test2,
+										"Values are matched for " + "Tank Name : " + Tankdetails1 + "||"
+												+ " Column name is :" + columnName + "||" + " Master value: "
+												+ valueSheet1Column + "||" + " Test value: " + valueSheet2Column);
+	        	            } else {
+	        	                uniqueFailedTanknames.add(Tankdetails1); // Add failed Tank Name to set
+	        	                Extent_fail1(testDetail, "Values are not matched for Tank Name : " + Tankdetails1 + "||" +
+	        	                        " Column name is :" + columnName + "||" +
+	        	                        " Master value: " + valueSheet1Column + "||" +
+	        	                        " Test value: " + valueSheet2Column);
+	        	        		Extent_group_table1(test, Tankdetails1,columnName, valueSheet1Column, valueSheet2Column);
+
+	        	            }
+
+	        	            // Reset the flag for the next iteration
+	        	            allColumnsMatch = true;
+	        	        }
+	        	    }
+
+	        	    if (!matchFound) {
+	        	        // No matching Tank Name found in the test dataset
+	        	        missingTankNames.add(Tankdetails1); // Add missing Tank Name to set
+	        	        Extent_fail1(testDetail, "Tank Name not found in test dataset: " + Tankdetails1);
+	        	    }
+	        	}
+
+	        	// Print missing Tank Names as "NA"
+	        
+
+	        	// Count unique passed and failed rows
+	        	int passRowCount = uniquePassedTanknames.size();
+	        	int failRowCount = uniqueFailedTanknames.size();
+
+	        	// Print unique passed Tank Names
+	        	System.out.println("Unique passed Tank Names:");
+	        	for (String tankName : uniquePassedTanknames) {
+	        	    System.out.println(tankName);
+	        	}
+        	
+	        	System.out.println("Total pass count is : "+passRowCount);
+				System.out.println("Total fail count is : "+failRowCount);
+				System.out.println("Failed tank names are : "+ uniqueFailedTanknames);
+				Extent_fail1(test, "Total pass count is : "+passRowCount);
+				Extent_fail1(test, "Total fail count is : "+failRowCount);
+				Extent_fail1(test, "Failed tank names are : "+ uniqueFailedTanknames);
+							
+	        	
+	        	for (String missingTank : missingTankNames) {
+	        	    System.out.println("Missing tank names are : " + missingTank);
+	        	}
+
+	            recordset1.close();
+	            recordset2.close();
+	            connection1.close();
+	            connection2.close();
+	        } catch (FilloException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public void Tankdetailscomparison1(String Master, String Test, ExtentTest test, ExtentTest testDetail, String detailreportPath) {
+	        try {
+	        	System.setProperty("ROW", "2");
+	        	Fillo fillo = new Fillo();
+
+	        	Connection connection1 = fillo.getConnection(Master);
+	        	Connection connection2 = fillo.getConnection(Test);
+
+	        	String query1 = "Select * from `Tank Details`";
+	        	Recordset recordset1 = connection1.executeQuery(query1);
+
+	        	String query2 = "Select * from `Tank Details`";
+	        	Recordset recordset2 = connection2.executeQuery(query2);
+
+	        	List<String> columnsToCompare = Arrays.asList("Tank Category", "Tank Name", "Weight", "Tank Code");
+
+	        	Set<String> uniqueFailedTanknames = new HashSet<>();
+	        	Set<String> uniquePassedTanknames = new HashSet<>();
+	        	Set<String> missingTankNames = new HashSet<>();
+
+//	        	Extent_passLink(test, "Detailed Result", detailreportPath);
+	        	String passReportpath=detailreportPath+"_Pass"+".html";
+				String failReportPath=detailreportPath+"_Fail"+".html";
+				Extent_passLink(test,"Detailed Pass Result",passReportpath);
+				Extent_passLink(test,"Detailed Failed Result",failReportPath);
+
+	        	while (recordset1.next()) {
+	        	    String Tankdetails1 = recordset1.getField("Tank Name");
+	        	    String columnName = "";
+	        	    String valueSheet1Column = "";
+	        	    String valueSheet2Column = "";
+
+	        	    recordset2.moveFirst();
+
+	        	    boolean matchFound = false;
+	        	    boolean allColumnsMatch = true; // Flag to track if all columns match
+
+	        	    while (recordset2.next()) {
+	        	        String Tankdetails2 = recordset2.getField("Tank Name");
+
+	        	        if (Tankdetails1 != null && Tankdetails1.trim().equals(Tankdetails2 != null ? Tankdetails2.trim() : "")) {
+	        	            matchFound = true;
+
+	        	            for (String colName : columnsToCompare) {
+	        	                columnName = colName;
+	        	                valueSheet1Column = recordset1.getField(colName);
+	        	                valueSheet2Column = recordset2.getField(colName);
+
+	        	                if ((valueSheet1Column == null && valueSheet2Column == null) ||
+	        	                        ((Tankdetails1 == null || Tankdetails1.trim().isEmpty()) && "0".equals(Tankdetails2)) ||
+	        	                        ((Tankdetails2 == null || Tankdetails2.trim().isEmpty()) && "0".equals(Tankdetails1)) ||
+	        	                        (valueSheet1Column != null && valueSheet1Column.equals(valueSheet2Column))) {
+	        	                    // Values match, continue to next column
+	        	                } else {
+	        	                    // Values don't match, set flag to false and break the loop
+	        	                    allColumnsMatch = false;
+	        	                    break;
+	        	                }
+	        	            }
+
+	        	            if (allColumnsMatch) {
+	        	                uniquePassedTanknames.add(Tankdetails1); // Add passed Tank Name to set
+	        	                
+	        	                Extent_pass1(test2,
+										"Values are matched for " + "Tank Name : " + Tankdetails1 + "||"
+												+ " Column name is :" + columnName + "||" + " Master value: "
+												+ valueSheet1Column + "||" + " Test value: " + valueSheet2Column);
+	        	            } else {
+	        	                uniqueFailedTanknames.add(Tankdetails1); // Add failed Tank Name to set
+	        	                Extent_fail1(testDetail, "Values are not matched for Tank Name : " + Tankdetails1 + "||" +
+	        	                        " Column name is :" + columnName + "||" +
+	        	                        " Master value: " + valueSheet1Column + "||" +
+	        	                        " Test value: " + valueSheet2Column);
+	        	        		Extent_group_table1(test, Tankdetails1,columnName, valueSheet1Column, valueSheet2Column);
+
+	        	            }
+
+	        	            // Reset the flag for the next iteration
+	        	            allColumnsMatch = true;
+	        	        }
+	        	    }
+
+	        	    if (!matchFound) {
+	        	        // No matching Tank Name found in the test dataset
+	        	        missingTankNames.add(Tankdetails1); // Add missing Tank Name to set
+	        	        Extent_fail1(testDetail, "Tank Name not found in test dataset: " + Tankdetails1);
+	        	    }
+	        	}
+
+	        	// Print missing Tank Names as "NA"
+	        	 
+	        	int passRowCount = uniquePassedTanknames.size();
+	        	int failRowCount = uniqueFailedTanknames.size();
+	        	int NARowCount = missingTankNames.size();
+	        	int totalcount = passRowCount + failRowCount + NARowCount;
+
+	        	// Print unique passed Tank Names
+	        	System.out.println("Unique passed Tank Names:");
+	        	for (String tankName : uniquePassedTanknames) {
+	        	    System.out.println(tankName);
+	        	}
+        	
+	        	System.out.println("Total pass count is : "+passRowCount);
+				System.out.println("Total fail count is : "+failRowCount);
+				System.out.println("NA Tank count is : "+ NARowCount);
+				System.out.println("Failed tank names are : "+ uniqueFailedTanknames);
+				Extent_pass1(test, "Total row count is : "+totalcount);
+				Extent_pass1(test, "Total pass count is : "+passRowCount);
+				Extent_fail1(test, "Total fail count is : "+failRowCount);
+				Extent_fail1(test, "NA Tank count is : "+ NARowCount);
+				Extent_fail1(test, "Failed tank names are : "+ uniqueFailedTanknames);
+							
+	        	
+	        	for (String missingTank : missingTankNames) {
+	        	    System.out.println("Missing tank names are : " + missingTank);
+	        	}
+
+	            recordset1.close();
+	            recordset2.close();
+	            connection1.close();
+	            connection2.close();
+	        } catch (FilloException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+
+	    
+//		public void uploadFileAutoIT(String filelocation) {
+//		try {
+//			String autoitscriptpath = System.getProperty("user.dir") + "\\" + "File_upload_selenium_webdriver.au3";
+//
+//			Runtime.getRuntime().exec("cmd.exe /c Start AutoIt3.exe " + autoitscriptpath + " \"" + filelocation + "\"");
+//
+//		} catch (Exception exp) {
+//
+//			Assert.fail();
+//		}
+//	}
+//		public void clear(WebDriver driver, String xpaths) {
+//		String[] values = splitXpath(xpaths);
+//		try {
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			webElement.clear();
+//			add(driver, "Clear on " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to clear on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.PASSED, true,
+//					values[0]);
+//
+//			Assert.fail();
+//		}
+//	}
+//	
+//	public void selectCheckBox(WebDriver driver, String xpaths) {
+//		String[] values = splitXpath(xpaths);
+//		try {
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//			WebElement element = driver.findElement(By.xpath(values[1]));
+//			if (element.isSelected()) {
+//			} else {
+//				element.click();
+//			}
+//			add(driver, "Select the checkbox on " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to select the checkbox on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED,true, values[0]);
+//
+//			Assert.fail();
+//		}
+//	}
+////
+//	public void jsClickByXPath(WebDriver driver, String Xpath) {
+//		String[] values = splitXpath(Xpath);
+//		try {
+//			// waitForElement(driver,Xpath);
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//			WebElement element = driver.findElement(By.xpath(values[1]));
+//			JavascriptExecutor executor = (JavascriptExecutor) driver;
+//			executor.executeScript("arguments[0].click();", element);
+//			add(driver, "Click on " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to click on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
+//					values[0]);
+//			Assert.fail();
+//		}
+//	}
+//      
+//	public String clearAndType(WebDriver driver, String xpaths, String keysToSend) {
+//		String[] values = splitXpath(xpaths);
+//		try {
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//			WebDriverWait wait1 = new WebDriverWait(driver, 20);
+//			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(values[1])));
+//
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			JavascriptExecutor js = (JavascriptExecutor) driver;
+//			js.executeScript("arguments[0].value='';", webElement);
+//			js.executeScript("arguments[0].click();", webElement);
+//			// webElement.clear();
+//			// webElement.sendKeys(keysToSend, Keys.ENTER);
+//			// JavascriptExecutor jse = (JavascriptExecutor)driver;
+//
+//			wait(driver, "1");
+//			js.executeScript("arguments[0].value=" + "\'" + keysToSend + "\'" + ";", webElement);
+//			// js.executeScript("arguments[0].click();", webElement);
+//			webElement.sendKeys(Keys.ENTER);
+//
+//			add(driver, "Clear and Type on " + values[0], keysToSend, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), keysToSend, true,values[0]);
+//			Assert.fail();
+//		}
+//		return keysToSend;
+//	}
+//
+//	public String actionType(WebDriver driver, String xpath, String keysToSend) {
+//		String[] values = splitXpath(xpath);
+//		try {
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			Actions action = new Actions(driver);
+//			action.sendKeys(webElement, keysToSend).build().perform();
+//			add(driver, "Type on " + values[0], keysToSend, true, values[0]);
+//		} catch (StaleElementReferenceException e) {
+//			add1(driver, "Unable to type on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,values[0]);
+//			Assert.fail();
+//		}
+//		return keysToSend;
+//	}
+//	public void deSelectCheckBox(WebDriver driver, String xpaths) {
+//		String[] values = splitXpath(xpaths);
+//		try {
+//			WebElement element = driver.findElement(By.xpath(values[1]));
+//			if (element.isSelected()) {
+//				element.click();
+//			} else {
+//			}
+//			add(driver, "Deselect the checkbox on " + values[0], LogAs.PASSED, true, values[0]);
+//		} catch (Exception e) {
+//			add1(driver, "Unable to deselect the checkbox on " + values[0] + "- " + e.getLocalizedMessage(),LogAs.FAILED, true, values[0]);
+//
+//			Assert.fail();
+//		}
+//	}
+//
+//	
+
+//		public String promptBox(WebDriver driver, String path, String inputData) {
+//			String[] values = splitXpath(path);
+//			try {
+	//
+//				WebElement element = driver.findElement(By.xpath(values[1]));
+//				element.click();
+//				Alert alert = driver.switchTo().alert();
+//				driver.switchTo().alert().sendKeys(inputData);
+//				String alertText = alert.getText();
+//				alert.accept();
+//				return alertText;
+//			} catch (Exception e) {
+//				return null;
+//			}
+//		}
+	//
+//		public void partialTextVerify(String sentence, String word) {
+//			if (sentence.contains(word)) {
+//			} else {
+//			}
+	//
+//		}
+	//
+//		public void waitForElementNotpresent(WebDriver driver, String xpath) {
+//			String[] values = splitXpath(xpath);
+//			try {
+//				WebDriverWait wait = new WebDriverWait(driver, WaitElementSeconds);
+//				wait.until(ExpectedConditions.not(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath))));
+//				add(driver, "Wait till the Element is visible " + values[0], LogAs.PASSED, true, values[0]);
+//			} catch (Exception e) {
+//				add1(driver, "Element is not visible " + values[0] + "- " + e.getLocalizedMessage(), LogAs.FAILED, true,
+//						values[0]);
+//			}
+//		}
+	//
+//		public String enterUniquePhone(WebDriver driver, String path) {
+//			String[] values = splitXpath(path);
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			webElement.clear();
+//			try {
+//				Thread.sleep(500);
+//				String phonenumber = new SimpleDateFormat("MMddHHmmss").format(Calendar.getInstance().getTime());
+//				sendKeys(driver, path, phonenumber);
+//				return phonenumber;
+//			} catch (InterruptedException e) {
+//				return null;
+//			}
+	//
+//		}
+	//
+	////	
+//		public void goForward(WebDriver driver) {
+//			try {
+//				driver.navigate().forward();
+	//
+//			} catch (Exception e) {
+	//
+//				Assert.fail();
+//			}
+//		}
+	//
+	//	
+//		public String dynamicTypeName(WebDriver driver, String inputData, String webElementxPath) {
+//			String[] values = splitXpath(webElementxPath);
+//			WebElement webElement = driver.findElement(By.xpath(values[1]));
+//			webElement.clear();
+//			try {
+//				Thread.sleep(500);
+//				String currenttime = new SimpleDateFormat("HH_mmss").format(Calendar.getInstance().getTime());
+//				String combinedValues = inputData + currenttime;
+//				sendKeys(driver, webElementxPath, combinedValues);
+//				return combinedValues;
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return null;
+//			}
+//		}
+	//
+//		public String sumOfTwoNumbers(String GetText1, String GetText2) {
+//			try {
+//				int string1 = Integer.parseInt(GetText1);
+//				int string2 = Integer.parseInt(GetText2);
+//				int sum1 = string1 + string2;
+//				String sum = Integer.toString(sum1);
+//				return sum;
+//			} catch (Exception e) {
+//				return null;
+//			}
+//		}
+	//
+	//
+//		public void switchToFrame(WebDriver driver, String frameName) {
+//			String[] values = splitXpath(frameName);
+//			try {
+//				WebElement element = driver.findElement(By.xpath(values[1]));
+//				driver.switchTo().frame(element);
+	//
+//			} catch (NoSuchFrameException e) {
+	//
+//			}
+//		}
+	//
+//		public void switchToDefaultFrame(WebDriver driver) {
+//			try {
+//				driver.switchTo().defaultContent();
+//			} catch (Exception e) {
+	//
+//				Assert.fail();
+//			}
+//		}
+
+	    public void clear(WebDriver driver, String xpaths) {
+			String[] values = splitXpath(xpaths);
+			try {
+				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+				WebElement webElement = driver.findElement(By.xpath(values[1]));
+				webElement.clear();
+				add(driver, "Clear on " + values[0], LogAs.PASSED, true, values[0]);
+			} catch (Exception e) {
+				add1(driver, "Unable to clear on " + values[0] + "- " + e.getLocalizedMessage(), LogAs.PASSED, true,
+						values[0]);
+				((JavascriptExecutor) driver).executeScript("lambda-status=failed");
+				Assert.fail();
+			}
+		}
+	    public static ITestResult convertToITestResult1(int value) {
+	        ITestResult result = new CustomTestResult();
+	        result.setStatus(value);
+	        return result;
+	    }
+  
+	    public static ITestResult convertToITestResult(ExtentTest extentTest) {
+	        ITestResult result = new CustomTestResult();
+	        result.setStatus(getTestNGStatus(extentTest.getStatus()));
+	        return result;
+	    }
+
+	    private static int getTestNGStatus(Status extentStatus) {
+	        switch (extentStatus) {
+	            case PASS:
+	                return ITestResult.SUCCESS;
+	            case FAIL:
+	                return ITestResult.FAILURE;
+	            case SKIP:
+	                return ITestResult.SKIP;
+	            default:
+	                return ITestResult.FAILURE; // Default to failure if status is unknown
+	        }
+	    }
+
+	    // Custom implementation of ITestResult for simplicity
+	    private static class CustomTestResult implements ITestResult {
+	        private int status;
+
+	        @Override
+	        public int getStatus() {
+	            return status;
+	        }
+
+	        public void setStatus(int status) {
+	            this.status = status;
+	        }
+
+			@Override
+			public Object getAttribute(String name) {
+				// TODO Auto-generated method stub
+				return name;
+			}
+
+			
+			@Override
+			public void setAttribute(String name, Object value) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public Set<String> getAttributeNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Object removeAttribute(String name) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public int compareTo(ITestResult o) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public ITestNGMethod getMethod() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Object[] getParameters() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setParameters(Object[] parameters) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public IClass getTestClass() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Throwable getThrowable() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void setThrowable(Throwable throwable) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public long getStartMillis() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public long getEndMillis() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public void setEndMillis(long millis) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public boolean isSuccess() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public String getHost() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Object getInstance() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getTestName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getInstanceName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public ITestContext getTestContext() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+	        // Other methods from ITestResult interface can be implemented as needed
+	        // For simplicity, we only include methods required for setting status in this example
+	    }
+	    
+//	    ITestResult.SUCCESS for pass status, which has an integer value of 1.
+//	    ITestResult.FAILURE for failure status, which has an integer value of 2.
+//	    ITestResult.SKIP for skip status, which has an integer value of 3.
 
 }

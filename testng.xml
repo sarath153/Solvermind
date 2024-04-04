@@ -6,6 +6,15 @@
 		</classes>
 		<methods>
 			<include name="Scenario1" priority="1" />
+			<include name="Scenario2" priority="2" />
+			<include name="Scenario3" priority="3" />
+			<include name="Scenario5" priority="5" />
+			<include name="Scenario6" priority="6" />
+			<include name="Scenario7" priority="7" />
+			<include name="Scenario8" priority="8" />
+			<include name="Scenario9" priority="9" />
+			<include name="Scenario10" priority="10" />
+			<include name="Scenario11" priority="11" />
 		</methods>
 	</test>
 	<listeners>

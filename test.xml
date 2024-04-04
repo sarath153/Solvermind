@@ -81,6 +81,19 @@ $(".brand-logo").hide();
 
 .logo > img { float:left;height: 30%;margin-right: 30px;margin-top: 3px;width: auto;border: 1px solid red; }
 
+.scroller {
+    height: 10px; 
+    width: 10px; 
+}
+
+
+.scroller::-webkit-scrollbar-thumb {
+    background-color: #DC143C;
+}
+
+.scroller::-webkit-scrollbar-thumb:hover {
+    background-color: #98FB98;
+}
 
 ]]>
 

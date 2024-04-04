@@ -2,7 +2,7 @@ Sleep(1000)
 ConsoleWrite("Before ControlFocus: " & @CRLF)
 ControlFocus("Save As", "", "Edit1")
 
-Sleep(1000)
+Sleep(3000)
 ControlSend("Save As", "", "Edit1", "^a")
 Sleep(1000)
 

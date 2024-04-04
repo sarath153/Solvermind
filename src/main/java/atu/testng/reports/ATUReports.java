@@ -56,9 +56,18 @@ public class ATUReports {
 	static ExtentTest test;
 	static ExtentReports extent;
 	
+	static ExtentSparkReporter spark1;
+	static ExtentTest test1;
+	static ExtentReports extent1;
+	
+	static ExtentSparkReporter spark2;
+	static ExtentTest test2;
+	static ExtentReports extent2;
+	
+	
 	static long StartTime;
 	static WebDriver driver;
-	public static String URL = "https://www.loginextsolutions.com/";
+	public static String URL = "https://sonata.solverminds.net/";
 	
 //	public  void setWebDriver(WebDriver driver) {
 //		this.atudriver = driver;
@@ -527,29 +536,35 @@ private  void takeScreenShot1(WebDriver driver,String object) {
 		spark.viewConfigurer().viewOrder()
 				.as(new ViewName[] { ViewName.DASHBOARD, ViewName.TEST, ViewName.CATEGORY, ViewName.AUTHOR });
 		StartTime = System.currentTimeMillis();
+		
+		
 		return extent;
 	}
 
-	public static void teardown(WebDriver driver, ITestResult result, ExtentTest test) throws Throwable {
-
+//	public String Afterexecution(WebDriver driver,ExtentTest test) {
+//		String path = base64(driver);
+//		test.addScreenCaptureFromBase64String(path, "");
+//		return path;
+//		
+//	}
+	public static void teardown(WebDriver driver, ITestResult result, ExtentTest test,String vesselName) throws Throwable {		
 		if (result.getStatus() == ITestResult.FAILURE) {
 			System.out.println("Test is failed");
-			test.log(Status.FAIL, "<b><i>Test case Failed is " + result.getName() + "</i><b>");
-			test.log(Status.FAIL, "Test case Failed is " + result.getThrowable());
+			test.log(Status.FAIL, "<b><i>Test case Failed "+vesselName+"</i><b>");
+//			test.log(Status.FAIL, "Test case Failed is " + result.getThrowable());
 			String path = base64(driver);
-			test.addScreenCaptureFromBase64String(path, result.getName());
+			test.addScreenCaptureFromBase64String(path, vesselName);
+			test.fail("Test Case Failed for "+vesselName);
 		} else if (result.getStatus() == ITestResult.SKIP) {
-
-			test.log(Status.SKIP, "<b><i>Test case Skipped is " + result.getName() + "</i><b>");
+			test.log(Status.SKIP, "<b><i>Test case Skipped "+vesselName+"</i><b>");
 			String path = takescreenshot2(driver, result.getName());
 			test.addScreenCaptureFromPath(path);
 			System.out.println("Test is Skipped");
 		} else if (result.getStatus() == ITestResult.SUCCESS) {
-			test.log(Status.PASS, "<b><i>Test case Passed is " + result.getName() + "</i><b>");
+			test.log(Status.PASS, "<b><i>Test case Passed is " + vesselName + "</i><b>");
 			String path = base64(driver);
-			test.addScreenCaptureFromBase64String(path, result.getName());
-			System.out.println("Test is Passed");
-
+			test.addScreenCaptureFromBase64String(path, vesselName);
+			test.pass("Test Case Passed for "+vesselName);
 		}
 
 	}
@@ -633,7 +648,7 @@ private  void takeScreenShot1(WebDriver driver,String object) {
 		String aligned = "<div style='text-align: " + "left; color: red;font-weight: bold;font-family: "
 				+ "Times New Roman'>" + values + "</div>";
 
-		test.info(aligned, MediaEntityBuilder.createScreenCaptureFromBase64String(base64(driver)).build());
+		test.fail(aligned, MediaEntityBuilder.createScreenCaptureFromBase64String(base64(driver)).build());
 
 	}
 
@@ -867,7 +882,34 @@ private  void takeScreenShot1(WebDriver driver,String object) {
 	    test.fail(aligned);
 	}
 
-	
+
+	public static void Extent_group_table1(ExtentTest test, String stow, String colhead, String master, String act) {
+
+	    String tableopen = "<table border=\"1\" width=\"110%\"><tr><th>";
+
+	    String thead = "</th><th>";
+	    String header1 = "TankDetails";
+	    String header3 = "Column name";
+	    String header4 = "Master_Value";
+	    String header5 = "Test_Value";
+
+	    String rowclose = "</th></tr>";
+
+	    String nextrow = "<tr><th>";
+	    String nextrow1 = "<tr>";
+	    String rowclose1 = "</th></tr>";
+
+	    String tableclose = "</table>";
+
+	    String finalstr1 = tableopen + header1 + thead + header3 + thead + header4 + thead + header5 + rowclose + nextrow;
+	    String finalstr2 =  stow + thead +  colhead + thead + master + thead + act + rowclose1 + tableclose;
+
+	    String finalstr = finalstr1 + finalstr2;
+
+	    String aligned = "<div style='text-align: left; color: red; font-weight: bold; font-family: Times New Roman'>" + finalstr + "</div>";
+	    test.fail(aligned);
+	}
+
 	
 	public static void Extent_table_fail(ExtentTest test, String MasterSno, String TestSno, String StowNumber, String MasterISO, String TestISO, String ExpectedWeight, String TestWeight, String MasterPOL, String TestPOL, String MasterPOD, String TestPOD, String MasterMty, String TestMty, String MasterIsSpl, String TestIsSpl, String MasterRfr, String TestRfr, String MasterOOG, String TestOOG, String MasterDG, String TestDG, String MasterMulHaz, String TestMulHaz, String MasterDGClass, String TestDGClass, String MasterUNNO, String TestUNNO, String MasterOOH, String TestOOH, String MasterOLF, String TestOLF, String MasterOLA, String TestOLA, String MasterOWP, String MasterOWS, String TestOWS, String MasterBookingNo, String TestBookingNo, String MasterVariant, String TestVariant, String MasterFlashPoint, String TestFlashPoint, String MasterDGLQ, String TestDGLQ) {
 
@@ -877,5 +919,218 @@ private  void takeScreenShot1(WebDriver driver,String object) {
 	    test.fail(aligned);
 	}
 
+	
+	public static ExtentReports reportsetup1(String Path) throws IOException {
+//		String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmm"));
+//        String path=System.getProperty("user.dir") + "/Extent/TestReport_1_" + timeStamp + ".html";
+		spark1 = new ExtentSparkReporter(Path);
+		extent1 = new ExtentReports();
+		extent1.attachReporter(spark1);
+		spark1.loadXMLConfig(new File("test.xml"));
+		extent1.setSystemInfo("OS", System.getProperty("os.name"));
+		extent1.setSystemInfo("JAVA", System.getProperty("java.version"));
+		extent1.setSystemInfo("APP URL", URL);
+		extent1.setSystemInfo("Bowser", "Chrome");
+		spark1.viewConfigurer().viewOrder()
+				.as(new ViewName[] { ViewName.TEST, ViewName.CATEGORY, ViewName.AUTHOR });
+		StartTime = System.currentTimeMillis();
+		
+		
+		return extent1;
+	}
+
+// report 3 pass
+	public static ExtentReports reportsetup2(String Path) throws IOException {
+		spark2 = new ExtentSparkReporter(Path);
+		extent2 = new ExtentReports();
+		extent2.attachReporter(spark2);
+		spark2.loadXMLConfig(new File("test.xml"));
+		extent2.setSystemInfo("OS", System.getProperty("os.name"));
+		extent2.setSystemInfo("JAVA", System.getProperty("java.version"));
+		extent2.setSystemInfo("APP URL", URL);
+		extent2.setSystemInfo("Bowser", "Chrome");
+		spark2.viewConfigurer().viewOrder()
+				.as(new ViewName[] { ViewName.TEST, ViewName.CATEGORY, ViewName.AUTHOR });
+		StartTime = System.currentTimeMillis();
+		
+		
+		return extent2;
+	}
+	
+
+	public static void Aftertest1(ExtentTest test) {
+
+		long EndTime = System.currentTimeMillis();
+		double executionTime = (EndTime - StartTime) / 1000;
+		test.log(Status.INFO, "Total Execution time: " + executionTime);
+		extent1.flush();
+	}
+
+	public static void Aftertest2(ExtentTest test) {
+
+		long EndTime = System.currentTimeMillis();
+		double executionTime = (EndTime - StartTime) / 1000;
+		test.log(Status.INFO, "Total Execution time: " + executionTime);
+		extent2.flush();
+	}
+
+
+
+//	public static void Extent_pass(WebDriver driver, String values, ExtentTest test) {
+//		if (driver != null) {
+//			String aligned = "<div style='text-align: left; " + "color: green;font-weight: bold;"
+//					+ "font-family: Times New Roman'>" + values + "</div>";
+//
+//			test.pass(aligned, MediaEntityBuilder.createScreenCaptureFromBase64String(base64(driver)).build());
+//
+//		} else {
+//			System.out.println("driver null");
+//		}
+//
+//	}
+
+//	public static void Extent_pass1(ExtentTest test, String values) {
+//
+//		String aligned = "<div style='text-align: left; " + "color: green;font-weight: bold;"
+//				+ "font-family: Times New Roman'>" + values + "</div>";
+//
+//		test.pass(aligned);
+//
+//	}
+	
+
+
+//	public static void Extent_fail(WebDriver driver, String values, ExtentTest test) {
+//		String aligned = "<div style='text-align: " + "left; color: red;font-weight: bold;font-family: "
+//				+ "Times New Roman'>" + values + "</div>";
+//
+//		test.info(aligned, MediaEntityBuilder.createScreenCaptureFromBase64String(base64(driver)).build());
+//
+//	}
+
+//	public static void Extent_fail1(ExtentTest test, String values) {
+//		String aligned = "<div style='text-align: " + "left; color: red;font-weight: bold;font-family: "
+//				+ "Times New Roman'>" + values + "</div>";
+//		
+//
+//		test.fail(aligned);
+//
+//	}
+	
+//	public static void Extent_fail2(ExtentTest test, String values) {
+//		String aligned = "<div style='text-align: " + "left; color: red;font-weight: bold;font-family: "
+//				+ "Times New Roman'>" + values + "</div>";
+//		
+//
+//		test.fail(aligned);
+//
+//	}
+//	
+	
+//	public static void Extent_fail3(ExtentTest test, String category, String Stow_number, List<String> stowageValues) {
+//	    StringBuilder valuesWithLinks = new StringBuilder();
+//
+//	    for (String stowageValue : stowageValues) {
+//	        String link = "<a href='" + generateStowageValueLink1( stowageValue) + "'>" + Stow_number + "</a>";
+//	        valuesWithLinks.append(link).append(", ");
+//	    }
+//
+//	    // Remove the trailing comma and space
+//	    if (valuesWithLinks.length() > 0) {
+//	        valuesWithLinks.setLength(valuesWithLinks.length() - 2);
+//	    }
+//
+//	    String aligned = "<div style='text-align: left; color: red; font-weight: bold; font-family: Times New Roman'>"
+//	            + category + " - Failed Stowage Values for Stow_number " + Stow_number + ": " + valuesWithLinks + "</div>";
+//
+//	    test.fail(aligned);
+//	}
+//	
+	
+//	private static String generateStowageValueLink(String stowNumber) {
+//	    String fileUrl = "file:///D:/solver/Solver_Minds/Extent/TestReport_" + stowNumber + ".html";
+//	    return fileUrl + "#failedStowNumber_" + stowNumber;
+//	}
+
+
+
+//	private static String generateStowageValueLink1( String StowNumber) {
+//	    // Customize the link URL based on your requirements
+//	    // You can use the category, Stow_number, and stowageValue to create a unique link for each value
+//		return "#"+StowNumber;
+//	}
+
+
+	
+//	public static void Extent_cal(ExtentTest test, String values) {
+//
+//		String aligned = "<div style='text-align: left; " + "color: orange;font-weight: bold;"
+//				+ "font-family: Times New Roman'>" + values + "</div>";
+//
+//		test.info(aligned);
+//
+//	}
+
+	public static void Extent_final1(WebDriver driver, String values) {
+		String aligned = "<div style='text-align: " + "left; color: blue;font-weight: bold;font-family: "
+				+ "Times New Roman'>" + values + "</div>";
+
+		test1.info(aligned, MediaEntityBuilder.createScreenCaptureFromBase64String(base64(driver)).build());
+
+	}
+
+	public static void Info1(String values) {
+		String aligned = "<div style='text-align: " + "left; color: blue;font-weight: bold;font-family: "
+				+ "Times New Roman'>" + values + "</div>";
+
+		test1.info(aligned);
+
+	}	
+
+	
+	public static void Extent_fail4(ExtentTest test, String category, List<String> stowageValues) {
+	    StringBuilder valuesWithLinks = new StringBuilder();
+
+	    for (String stowageValue : stowageValues) {
+	        String link = "<a href='" + generateStowageValueLink1( stowageValue) + "'>" + stowageValue + "</a>";
+	        valuesWithLinks.append(link).append(", ");
+	    }
+
+	    // Remove the trailing comma and space
+	    if (valuesWithLinks.length() > 0) {
+	        valuesWithLinks.setLength(valuesWithLinks.length() - 2);
+	    }
+
+	    String aligned = "<div style='text-align: left; color: red; font-weight: bold; font-family: Times New Roman'>"
+	            + category + " Group False Stowage Number List : "+ valuesWithLinks + "</div>";
+
+	    test.fail(aligned);
+	}
+
+	public static void Extent_NA1(ExtentTest test, String category, List<String> stowageValues) {
+	    StringBuilder valuesWithLinks = new StringBuilder();
+
+	    for (String stowageValue : stowageValues) {
+	        String link = "<a href='" + generateStowageValueLink1( stowageValue) + "'>" + stowageValue + "</a>";
+	        valuesWithLinks.append(link).append(", ");
+	    }
+
+	    // Remove the trailing comma and space
+	    if (valuesWithLinks.length() > 0) {
+	        valuesWithLinks.setLength(valuesWithLinks.length() - 2);
+	    }
+
+	    String aligned = "<div style='text-align: left; color: brown; font-weight: bold; font-family: Times New Roman'>"
+	            + category +" Group NA Stowage Number List : " + valuesWithLinks + "</div>";
+
+	    test.fail(aligned);
+	}
+	
+	public static void Extent_passLink(ExtentTest test, String values,String path) {
+
+        String aligned="<a href='file:///"+path+"'  target='_blank'>"+values+"</a>";
+		test.pass(aligned);
+        
+	}
 
 }

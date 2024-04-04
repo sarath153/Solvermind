@@ -73,15 +73,15 @@ public class TestNgXml {
 		return values;
 	}
 
-	public static HashMap<String,String> getdatafromExecution1() {
-		values = new HashMap<String, String>();
-		List<String> TestcaseID = extractExcelContentByColumnIndex(4);
-		List<String> Vessel = extractExcelContentByColumnIndex(7);
-		for (int k=0;k<TestcaseID.size();k++) {
-			values.put(TestcaseID.get(k), Vessel.get(k));
-		}
-		return values;
-	}
+//	public static HashMap<String,String> getdatafromExecution1() {
+//		values = new HashMap<String, String>();
+//		List<String> TestcaseID = extractExcelContentByColumnIndex(4);
+//		List<String> Vessel = extractExcelContentByColumnIndex(7);
+//		for (int k=0;k<TestcaseID.size();k++) {
+//			values.put(TestcaseID.get(k), Vessel.get(k));
+//		}
+//		return values;
+//	}
 	
 //	static HashMap<String, String> flagvalues ;
 //	public static HashMap<String,String> getFlagValueFromExecution() {

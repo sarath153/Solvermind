@@ -69,7 +69,6 @@ public class Utils {
 	{
 		String requiredCellVal = "";
 		try {
-			//FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"/data/TestConfiguration.xlsx");
 			FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"/data/TestConfiguration.xlsx");
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
 			XSSFSheet ws = wb.getSheet("Sheet1");

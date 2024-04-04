@@ -1,6 +1,5 @@
 package scripts;
 
-import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -8,8 +7,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
 
+import atu.testng.reports.logging.LogAs;
 import commonMethods.Keywords;
 import commonMethods.TestNgXml;
 import commonMethods.Utils;
@@ -31,22 +33,27 @@ public class Scenario3 extends Keywords {
 	String Password = Utils.getDataFromTestData("Solverminds", "Password");
 	boolean flag = true;
 	boolean flag3 = false;
-	String Vessel = TestNgXml.getdatafromExecution1().get("Scenario3");
-	String DSW_GM = Utils.getDataFromTestData(Vessel, "DSW_GM");
-	String MasterPlanFile = Utils.getDataFromTestData(Vessel, "MasterPlanFile");
-	String TestPlanFile = Utils.getDataFromTestData(Vessel, "TestPlanFile");
-	
-
+	private static LocalDateTime currentDateTime = LocalDateTime.now();
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmm");
+	private static String formattedDateTime = currentDateTime.format(formatter) + "_";
 	public static ExtentTest test;
 
 	@SuppressWarnings("deprecation")
-	public void Semiautorun3(WebDriver driver) throws AWTException {
-
-		Robot robot = new Robot();
-		WebDriverWait wait = new WebDriverWait(driver, 20);
+	public void Semiautorun3(WebDriver driver, String vessel2,ExtentTest test ,ExtentTest testDetail,String detailreportPath) throws Exception {
+		String vessel=vessel2;
+		String DSW_GM = Utils.getDataFromTestData(vessel, "DSW_GM");
+		String VWR_ = Utils.getDataFromTestData(vessel, "VWR");
+		String PlanType = Utils.getDataFromTestData(vessel, "PlanTemplate");		
+		String MasterPlanFile = Utils.getDataFromTestData(vessel, "MasterPlanFile");
+		String TestPlanFile = Utils.getDataFromTestData(vessel, "TestPlanFile");
+		String Vesselcode = Vesselname(vessel);
+		String NewTime = formattedDateTime+Vesselcode;
+		String Finalresultpath = System.getProperty("user.dir") + "/Uploads/Scenario3/Resultexcel"+NewTime+".xlsx";
+		String path = NewTime;
+	
+		WebDriverWait wait = new WebDriverWait(driver, 60);
 
 		navigateUrl(driver, URL);
-		Actions action = new Actions(driver);
 		waitForElement(driver, username);
 		sendKeys(driver, username, Username);
 
@@ -59,15 +66,13 @@ public class Scenario3 extends Keywords {
 		waitForElement(driver, selectvessel);
 		click(driver, selectvessel);
 
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'"+Vessel+"')]")));
-		
-		driver.findElement(By.xpath("//*[contains(text(),'"+Vessel+"')]")).click();
+		clickVessel(driver,vessel);
 
 		waitForElement(driver, Openplantop);
 		driver.findElement(By.xpath("//*[contains(text(),'Single Screen Plan')]/preceding::input[@type='checkbox']"))
 				.click();
 
-		waitForElement(driver, Openplantop);
+		waitForElement(driver, Bay1);
 		click(driver, Openplantop);
 
 		waitForElement(driver, Globalplan);
@@ -75,17 +80,31 @@ public class Scenario3 extends Keywords {
 
 		waitForElement(driver, clickOk);
 		click(driver, clickOk);
-
-		WebElement Masterfile = driver.findElement(By.xpath("//*[contains(text(),'" + MasterPlanFile + "')]"));
-		wait.until(ExpectedConditions.elementToBeClickable(Masterfile));
-
-		Actions action1 = new Actions(driver).doubleClick(Masterfile);
-		action1.build().perform();
 		
-		wait(driver, "5");
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='demo-simple-select-autowidth']")));
-		driver.findElement(By.xpath("//*[@id='demo-simple-select-autowidth']")).click();
 
+		waitForElement(driver, Plandescription);
+		click(driver, Plandescription);
+		
+		sendKeys(driver, Plandescription, MasterPlanFile);
+
+        clickPlan(driver,MasterPlanFile);
+
+        waitForElement(driver, planOpened);
+
+		String plan = getText(driver, planOpened);
+
+		if (plan.contains(MasterPlanFile)) {
+			System.out.println("Correct Plan is Opened");
+			add(driver, "Correct Plan is Opened : " + plan, LogAs.PASSED, true, "");
+		} else {
+			System.out.println("Different Plan is Opened");
+			add1(driver, "Different Plan is opened : " + plan, LogAs.FAILED, true, "");
+		}
+		
+		wait(driver, "3");
+		
+		waitForElement(driver, dropdown);
+		click(driver, dropdown);
 		waitForElement(driver, Planpattern);
 		click(driver, Planpattern);
 
@@ -100,6 +119,10 @@ public class Scenario3 extends Keywords {
 
 		wait(driver, "2");
 
+		if (flag == true) {
+			takescreenshot1(driver, "/Expected_screenshot/Scenario3/Bay1");
+			}
+		
 		int i = 2;
 		while (isDisplayed(driver, PreviousBay)) {
 		    click(driver, PreviousBay);
@@ -114,7 +137,28 @@ public class Scenario3 extends Keywords {
 		    i++;
 		}
 
+		
+		
+	    driver.findElement(By.xpath("//*[contains(text(),'Single Screen Plan')]/preceding::input[@type='checkbox']")).click();
+		
+		wait(driver,"3");
+		
+		// Master container data ...
+				int colCount_M = columnCountValue(driver);
+				int rowCount_M = RowCountValue(driver);
 
+				ArrayList<String> headerList_M = headerValueList(driver, colCount_M);
+
+				Map<String, ArrayList<String>> cellmap_M = cellListMap(driver, colCount_M, rowCount_M, headerList_M);
+
+				// important
+				String filePath_M = System.getProperty("user.dir") + "\\uploads\\Scenario3\\ContainerPoolData\\MasterData_"
+						+ path + ".xlsx";
+
+				System.out.println("Path_T : "+filePath_M);
+				createExcelForContainerPool(colCount_M, rowCount_M, headerList_M, cellmap_M, filePath_M);
+
+		
 		waitForElement(driver, Search);
 		click(driver, Search);
 
@@ -124,33 +168,29 @@ public class Scenario3 extends Keywords {
 		waitForElement(driver, Selectlist1);
 		click(driver, Selectlist1);
 
-		waitForElement(driver, ExportExcel);
-		click(driver, ExportExcel);
+		waitForElement(driver, tablevalues);
 
-		wait(driver, "7");
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@alt='Export As Excel']")));
 		
-		LocalDateTime currentDateTime = LocalDateTime.now();
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmm");
-		String formattedDateTime = currentDateTime.format(formatter)+"_";
-		wait(driver,"1");
-		String path= formattedDateTime;
-
-//		String fileName = "C:\\Users\\RBT\\Desktop\\Solver_Minds\\uploads\\03Master_" + path + ".xlsx";
-//		
-//		File Master = new File(System.getProperty("user.dir") + "/Uploads/03Masterfile_" + path + ".xlsx");
-//	//	File MasterDownloadfile = new File(System.getProperty("user.dir") + "/driver/MasterDownloadfile.exe " + path + ".png");
-//
-////		String autoITExecutable = "C:\\Users\\RBT\\Desktop\\Solver_Minds\\driver\\MasterDownloadfile.exe " + Master;
-//		String autoITExecutable = System.getProperty("user.dir") + "/driver/MasterDownloadfile.exe " + Master;
-//
-//		try {
-//		    Runtime.getRuntime().exec(autoITExecutable);
-//		} catch (IOException e) {
-//		    e.printStackTrace();
-//		}
+		WebElement Exportexcel = driver.findElement(By.xpath("//*[@alt='Export As Excel']"));
+		Actions builder = new Actions(driver);
+		builder.moveToElement(Exportexcel).build().perform();
+		Exportexcel.click();
 		
-		String Master = System.getProperty("user.dir") + "\\Uploads\\03Masterfile_" + path + ".xlsx";
+		wait(driver, "6");
+		while(isDisplayed(driver,excelcheck)) {
+			System.out.println("ReClicked.");
+			try {
+			Exportexcel.click();
+			}catch(Exception e) {
+			  System.out.println("Not able click export excel.");	
+			}
+			wait(driver, "6");
+		}
+		
+		wait(driver, "8");
+		
+		String Master = System.getProperty("user.dir") + "\\Uploads\\Scenario3\\MasterFiles\\Masterfile_" + path + ".xlsx";
 		String autoITExecutable = System.getProperty("user.dir") + "/driver/MasterDownloadfile.exe " + Master;
 
 		try {
@@ -166,23 +206,21 @@ public class Scenario3 extends Keywords {
 		wait(driver, "3");
 		newTab2(driver);
 		wait(driver, "2");
-		switchtotab(driver, 1);
-		robot.keyRelease(KeyEvent.VK_CONTROL);
 		navigateUrl(driver, URL);
-//		if (isDisplayed(driver, username)) {
-//
-//			sendKeys(driver, username, Username);
-//			waitForElement(driver, password);
-//			sendKeys(driver, password, Password);
-//			waitForElement(driver, login);
-//			click(driver, login);
-//			waitForElement(driver, selectvessel);
-//			click(driver, selectvessel);
-//
-//			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'"+Vessel+"')]")));
-//			
-//			driver.findElement(By.xpath("//*[contains(text(),'"+Vessel+"')]")).click();
-//		} else if (isDisplayed(driver, Home_Icon)) {
+		if (isDisplayed1(driver, username)) {
+
+			sendKeys(driver, username, Username);
+			waitForElement(driver, password);
+			sendKeys(driver, password, Password);
+			waitForElement(driver, login);
+			click(driver, login);
+			waitForElement(driver, selectvessel);
+			click(driver, selectvessel);
+
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'"+vessel+"')]")));
+			
+			driver.findElement(By.xpath("//*[contains(text(),'"+vessel+"')]")).click();
+		} else if (isDisplayed1(driver, Home_Icon)) {
 		    waitForElement(driver, Home_Icon);
 			click(driver, Home_Icon);
 			waitForElement(driver, Exit_popup);
@@ -190,12 +228,13 @@ public class Scenario3 extends Keywords {
 			click(driver, ExitBtn);
 			waitForElement(driver, selectvessel);
 			click(driver, selectvessel);
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'"+Vessel+"')]")));
 			
-			driver.findElement(By.xpath("//*[contains(text(),'"+Vessel+"')]")).click();
+			clickVessel(driver,vessel);
 
-
+		}
 		waitForElement(driver, Openplantop);
+		driver.findElement(By.xpath("//*[contains(text(),'Single Screen Plan')]/preceding::input[@type='checkbox']")).click();
+		waitForElement(driver,Bay1);
 		click(driver, Openplantop);
 
 		waitForElement(driver, Globalplan);
@@ -206,18 +245,32 @@ public class Scenario3 extends Keywords {
 
 //		waitForElement(driver, TesTIRPlan);
 //		doubleClick(driver, TesTIRPlan);
-
-		WebElement Testfile = driver.findElement(By.xpath("//*[contains(text(),'" + TestPlanFile + "')]"));
-		wait.until(ExpectedConditions.elementToBeClickable(Testfile));
-
-		Actions action2 = new Actions(driver).doubleClick(Testfile);
-		action2.build().perform();
 		
+
+		waitForElement(driver, Plandescription);
+		click(driver, Plandescription);
+		
+		sendKeys(driver, Plandescription, TestPlanFile);
+
+        clickPlan(driver,TestPlanFile);
+
+        waitForElement(driver, planOpened);
+
+		String plan1 = getText(driver, planOpened);
+
+		if (plan1.contains(TestPlanFile)) {
+			System.out.println("Correct Plan is Opened");
+			add(driver, "Correct Plan is Opened : " + plan1, LogAs.PASSED, true, "");
+		} else {
+			System.out.println("Different Plan is Opened");
+			add1(driver, "Different Plan is opened : " + plan1, LogAs.FAILED, true, "");
+		}
 		wait(driver, "5");
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='demo-simple-select-autowidth']")));
-		driver.findElement(By.xpath("//*[@id='demo-simple-select-autowidth']")).click();
-//		waitForElement(driver, dropdown);
-//		click(driver, dropdown);
+		
+//		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='demo-simple-select-autowidth']")));
+//		driver.findElement(By.xpath("//*[@id='demo-simple-select-autowidth']")).click();
+		waitForElement(driver, dropdown);
+		click(driver, dropdown);
 
 		waitForElement(driver, Planpattern);
 		click(driver, Planpattern);
@@ -234,15 +287,20 @@ public class Scenario3 extends Keywords {
 		waitForElement(driver, Plantemplate);
 		click(driver, Plantemplate);
 
-		waitForElement(driver, Lashing);
-		click(driver, Lashing);
-
+//		waitForElement(driver, Lashing);
+//		click(driver, Lashing);
+		
+		clickPlanTemplate(driver,PlanType);
+		
 		waitForElement(driver, VWR);
 		click(driver, VWR);
 
-		waitForElement(driver, select2);
-		click(driver, select2);
+		clickVWR(driver,VWR_);
 
+		click(driver,DSWGM);
+		wait(driver,"1");
+		doubleClick(driver,DSWGM);
+		wait(driver,"1");
 		sendKeys(driver, DSWGM, DSW_GM);
 
 		waitForElement(driver, Run);
@@ -268,7 +326,7 @@ public class Scenario3 extends Keywords {
 		waitForElement(driver, Saveinput);
 		click(driver, Saveinput);
 				
-		sendKeys(driver,Saveinput , "TD Testplan Scenario3");
+		sendKeys(driver,Saveinput , "TD Testplan Scenario3 "+NewTime);
 
 		waitForElement(driver, Clickplanok);
 		click(driver, Clickplanok);
@@ -310,33 +368,59 @@ public class Scenario3 extends Keywords {
 		    j++;
 		}
 
-	
+		wait(driver,"1");
+		driver.findElement(By.xpath("//*[contains(text(),'Single Screen Plan')]/preceding::input[@type='checkbox']")).click();
+		
+		wait(driver,"3");
+		
+		// Test container data ...
+				int colCount_T = columnCountValue(driver);
+				int rowCount_T = RowCountValue(driver);
 
+				ArrayList<String> headerList_T = headerValueList(driver, colCount_T);
+
+				Map<String, ArrayList<String>> cellmap_T = cellListMap(driver, colCount_T, rowCount_T, headerList_T);
+
+				// important
+				String filePath_T = System.getProperty("user.dir") + "\\uploads\\Scenario3\\ContainerPoolData\\TestData_"
+						+ path + ".xlsx";
+
+				System.out.println("Path_T : "+filePath_T);
+				createExcelForContainerPool(colCount_T, rowCount_T, headerList_T, cellmap_T, filePath_T);
+
+		
 		waitForElement(driver, Search);
 		click(driver, Search);
 
 		waitForElement(driver, SearchInput);
 		sendKeys(driver, SearchInput, "Cargo list");
 
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='react-autowhatever-1--item-0']")));
-		driver.findElement(By.xpath("//*[@id='react-autowhatever-1--item-0']")).click();
-
+		waitForElement(driver, Selectlist1);
+		click(driver, Selectlist1);
 		wait(driver, "2");
+		waitForElement(driver, tablevalues);
+	
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@alt='Export As Excel']")));
-		waitForElement(driver, ExportExcel);
-		click(driver, ExportExcel);
-		wait(driver, "15");
+		WebElement Exportexcel1 = driver.findElement(By.xpath("//*[@alt='Export As Excel']"));
+		builder.moveToElement(Exportexcel1).build().perform();
+		Exportexcel1.click();		
+		wait(driver, "6");
+		while(isDisplayed(driver,excelcheck)) {
+			System.out.println("ReClicked.");
+			try {
+			Exportexcel.click();
+			}catch(Exception e) {
+			  System.out.println("Not able click export excel.");	
+			}
+			wait(driver, "6");
+		}
 		
-		LocalDateTime currentDateTime1 = LocalDateTime.now();
-		String formattedDateTime1 = currentDateTime1.format(formatter)+"_";
+		wait(driver, "8");
+		
+		
+		String Test = System.getProperty("user.dir") + "\\Uploads\\Scenario3\\TestFiles\\Testfile_" + path + ".xlsx";
 
-		wait(driver,"1");
-		String Testpath= formattedDateTime1;
-		
-		
-		String Test = System.getProperty("user.dir") + "\\Uploads\\03Testfile_" + Testpath + ".xlsx";
-
-		String autoITExecutableTest = System.getProperty("user.dir") + "./driver/TestDownloadfile.exe " + Test;
+		String autoITExecutableTest = System.getProperty("user.dir") + "/driver/TestDownloadfile.exe " + Test;
 
 		try {
 			Runtime.getRuntime().exec(autoITExecutableTest);
@@ -347,13 +431,12 @@ public class Scenario3 extends Keywords {
 		wait.until(ExpectedConditions
 				.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Created successfully')]")));
 
-//		try {
-//			Excel1(Master,Test);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		Fillocomparison(Master,Test,test,testDetail,detailreportPath);
 		
-
+		Createexcel(Master,Test,Finalresultpath,test);
+		
+		compareContainerData(filePath_M,filePath_T);
+		
 	}
 
 }

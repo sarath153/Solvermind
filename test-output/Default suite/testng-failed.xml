@@ -3,11 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="commonMethods.Keywords">
+      <class name="scripts.Fillonewcomparison">
         <methods>
-          <include name="Fillocomparison"/>
+          <include name="Comparison"/>
         </methods>
-      </class> <!-- commonMethods.Keywords -->
+      </class> <!-- scripts.Fillonewcomparison -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
